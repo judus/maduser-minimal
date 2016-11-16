@@ -1,4 +1,4 @@
-<?php namespace Maduser\Maduser\Minimal\Base\Core;
+<?php namespace Maduser\Minimal\Base\Core;
 
 /**
  * Class IOC
