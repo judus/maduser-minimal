@@ -5,16 +5,16 @@ use Maduser\Minimal\Base\Interfaces\ConfigInterface;
 use Maduser\Minimal\Base\Interfaces\RequestInterface;
 use Maduser\Minimal\Base\Interfaces\RouterInterface;
 use Maduser\Minimal\Base\Interfaces\RouteInterface;
-use Maduser\Minimal\Base\Interfaces\TemplateInterface;
+use Maduser\Minimal\Base\Interfaces\ViewInterface;
 use Maduser\Minimal\Base\Interfaces\AssetInterface;
 use Maduser\Minimal\Base\Interfaces\ResponseInterface;
 
 /**
- * Class PageController
+ * Class PagesController
  *
- * @package Minimal\Base\Controllers
+ * @package Maduser\Minimal\Base\Controllers
  */
-class PageController extends Controller
+class PagesController extends Controller
 {
 	/**
 	 * @var ConfigInterface
@@ -37,9 +37,9 @@ class PageController extends Controller
 	 */
 	protected $response;
 	/**
-	 * @var TemplateInterface
+	 * @var ViewInterface
 	 */
-	protected $template;
+	protected $view;
 	/**
 	 * @var AssetInterface
 	 */
@@ -53,7 +53,7 @@ class PageController extends Controller
 	 * @param RouterInterface   $router
 	 * @param RouteInterface    $route
 	 * @param ResponseInterface $response
-	 * @param TemplateInterface $template
+	 * @param ViewInterface $template
 	 * @param AssetInterface    $asset
 	 */
 	public function __construct(
@@ -62,7 +62,7 @@ class PageController extends Controller
 		RouterInterface $router,
 		RouteInterface $route,
 		ResponseInterface $response,
-		TemplateInterface $template,
+		ViewInterface $view,
 		AssetInterface $asset
 	) {
 		$this->config = $config;
@@ -70,12 +70,12 @@ class PageController extends Controller
 		$this->router = $router;
 		$this->route = $route;
 		$this->response = $response;
-		$this->template = $template;
+		$this->view = $view;
 		$this->asset = $asset;
 
-		$this->template->setBaseDir(MINIMAL_BASEDIR.'Base/Assets');
-		$this->template->setTheme('theme-name');
-		$this->template->setViewDir('views');
+		$this->view->setBaseDir('base/resources/views');
+		$this->view->setTheme('my-theme');
+		$this->view->setViewDir('views');
 	}
 
 

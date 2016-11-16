@@ -1,6 +1,7 @@
 <?php
 
 require "../vendor/autoload.php";
+require "../helpers/common.php";
 
 use Maduser\Minimal\Base\Core\IOC;
 use Maduser\Minimal\Base\Core\Config;
