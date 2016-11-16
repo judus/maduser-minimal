@@ -1,9 +1,9 @@
 <?php namespace Maduser\Minimal\Base\Interfaces;
 
 /**
- * Interface FrontController
+ * Interface FrontControllerInterface
  *
- * @package Minimal\Base\Interfaces
+ * @package Maduser\Minimal\Base\Interfaces
  */
 interface FrontControllerInterface
 {

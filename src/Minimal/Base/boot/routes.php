@@ -9,13 +9,13 @@ $route->get('/', function() {
 });
 
 // Using controller and method
-$route->get('contact', 'Maduser\Minimal\\Base\\Controllers\\PageController@contact');
-
-// Display page for url (:any)
-$route->get('(:any)', 'Maduser\Minimal\\Base\\Controllers\\PageController@getPage');
+$route->get('contact', 'Maduser\Minimal\\Base\\Controllers\\PagesController@contact');
 
 // Display dev info
-$route->get('info', 'Maduser\Minimal\\Base\\Controllers\\PageController@info');
+$route->get('info', 'Maduser\Minimal\\Base\\Controllers\\PagesController@info');
+
+// Display page for url (:any)
+$route->get('(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@getPage');
 
 /**
  * Grouped routes example
@@ -42,32 +42,32 @@ $route->group([
 	], function() use ($route) {
 
 		$route->get('users', [
-			'controller' => 'UserController',
+			'controller' => 'UsersController',
 			'action' => 'listUsers' // Show a list of users
 		]);
 
 		$route->get('users/create', [
-			'controller' => 'UserController',
+			'controller' => 'UsersController',
 			'action' => 'createUser' // Show a empty user form
 		]);
 
 		$route->post('users', [
-			'controller' => 'UserController',
+			'controller' => 'UsersController',
 			'action' => 'saveAsNew' // Save a new user
 		]);
 
 		$route->get('users/edit/(:num)', [
-			'controller' => 'UserController',
+			'controller' => 'UsersController',
 			'action' => 'editUser' // Show a form with user id = (:num)
 		]);
 
 		$route->put('users/(:num)', [
-			'controller' => 'UserController',
+			'controller' => 'UsersController',
 			'action' => 'saveExistingUser' // Save user with id = (:num)
 		]);
 
 		$route->delete('users/(:num)', [
-			'controller' => 'UserController',
+			'controller' => 'UsersController',
 			'action' => 'deleteUser' // Delete user with id = (:num)
 		]);
 
@@ -115,6 +115,6 @@ $route->get('huge/data/table', [
 	// disable cache: 0 or null
 	'cache' => (60*60*24),
 	'namespace' => 'Maduser\\\Minimal\\Base\\Controllers',
-	'controller' => 'UserController',
+	'controller' => 'UsersController',
 	'action' => 'timeConsumingAction'
 ]);

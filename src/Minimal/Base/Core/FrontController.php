@@ -7,7 +7,7 @@ use Maduser\Minimal\Base\Interfaces\ResponseInterface;
 /**
  * Class FrontController
  *
- * @package Minimal\Base\Core
+ * @package Maduser\Minimal\Base\Core
  */
 class FrontController implements FrontControllerInterface
 {

@@ -3,7 +3,7 @@
 /**
  * Interface ExceptionInterface
  *
- * @package Minimal\Base\Interfaces
+ * @package Maduser\Minimal\Base\Interfaces
  */
 interface ExceptionInterface
 {

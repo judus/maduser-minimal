@@ -1,9 +1,9 @@
 <?php namespace Maduser\Minimal\Base\Interfaces;
 
 /**
- * Interface Asset
+ * Interface AssetInterface
  *
- * @package Minimal\Base\Interfaces
+ * @package Maduser\Minimal\Base\Interfaces
  */
 interface AssetInterface
 {

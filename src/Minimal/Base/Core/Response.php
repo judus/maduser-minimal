@@ -1,11 +1,11 @@
-<?php namespace Minimal\Base\Core;
+<?php namespace Maduser\Minimal\Base\Core;
 
 use Maduser\Minimal\Base\Interfaces\ResponseInterface;
 
 /**
  * Class Response
  *
- * @package Minimal\Base\Core
+ * @package Maduser\Minimal\Base\Core
  */
 class Response implements ResponseInterface
 {

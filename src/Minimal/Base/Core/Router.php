@@ -1,4 +1,4 @@
-<?php namespace Minimal\Base\Core;
+<?php namespace Maduser\Minimal\Base\Core;
 
 use Maduser\Minimal\Base\Interfaces\RouterInterface;
 use Maduser\Minimal\Base\Interfaces\ConfigInterface;
@@ -8,9 +8,9 @@ use Maduser\Minimal\Base\Interfaces\ResponseInterface;
 use Maduser\Minimal\Base\Core\Collection;
 
 /**
- * Class Routes
+ * Class Router
  *
- * @package Minimal\Base\Core
+ * @package Maduser\Minimal\Base\Core
  */
 class Router implements RouterInterface
 {
@@ -325,12 +325,20 @@ class Router implements RouterInterface
 		$this->routeNotFound();
 	}
 
-	public function matchLiteral($uriPattern)
+    /**
+     * @param $uriPattern
+     *
+     * @return bool
+     */public function matchLiteral($uriPattern)
 	{
 		return $uriPattern == $this->request->getUriString();
 	}
 
-	public function matchWildcard($uriPattern)
+    /**
+     * @param $uriPattern
+     *
+     * @return null
+     */public function matchWildcard($uriPattern)
 	{
 		// Convert wildcards to RegEx
 		$str = str_replace(
@@ -355,7 +363,10 @@ class Router implements RouterInterface
 		return $this->fetchRoute();
 	}
 
-	public function routeNotFound()
+    /**
+     *
+     */
+    public function routeNotFound()
 	{
 		$this->response->setHeader('HTTP/1.1 500 Internal Server Error');
 		$this->response->setContent('500 Route not found');

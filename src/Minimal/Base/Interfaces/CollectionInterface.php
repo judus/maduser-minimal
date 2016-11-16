@@ -3,7 +3,7 @@
 /**
  * Interface CollectionInterface
  *
- * @package Minimal\Base\Interfaces
+ * @package Maduser\Minimal\Base\Interfaces
  */
 interface CollectionInterface
 {

@@ -6,7 +6,7 @@ use Maduser\Minimal\Base\Interfaces\CollectionInterface;
 /**
  * Class Collection
  *
- * @package Minimal\Base\Core
+ * @package Maduser\Minimal\Base\Core
  */
 class Collection implements CollectionInterface
 {

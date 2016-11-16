@@ -1,11 +1,11 @@
 <?php namespace Maduser\Minimal\Base\Interfaces;
 
 /**
- * Interface Template
+ * Interface ViewInterface
  *
- * @package Minimal\Base\Interfaces
+ * @package Maduser\Minimal\Base\Interfaces
  */
-interface TemplateInterface
+interface ViewInterface
 {
 	/**
 	 * @return mixed

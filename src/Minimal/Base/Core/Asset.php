@@ -5,7 +5,7 @@ use Maduser\Minimal\Base\Interfaces\AssetInterface;
 /**
  * Class Asset
  *
- * @package Minimal\Base\Core
+ * @package Maduser\Minimal\Base\Core
  */
 class Asset implements AssetInterface
 {

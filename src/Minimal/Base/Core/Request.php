@@ -1,11 +1,11 @@
-<?php namespace Minimal\Base\Core;
+<?php namespace Maduser\Minimal\Base\Core;
 
 use Maduser\Minimal\Base\Interfaces\RequestInterface;
 
 /**
  * Class Request
  *
- * @package Minimal\Base\Core
+ * @package Maduser\Minimal\Base\Core
  */
 class Request implements RequestInterface
 {

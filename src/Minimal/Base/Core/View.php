@@ -1,13 +1,13 @@
-<?php namespace Minimal\Base\Core;
+<?php namespace Maduser\Minimal\Base\Core;
 
-use Maduser\Minimal\Base\Interfaces\TemplateInterface;
+use Maduser\Minimal\Base\Interfaces\ViewInterface;
 
 /**
- * Class Template
+ * Class View
  *
- * @package Minimal\Base\Core
+ * @package Maduser\Minimal\Base\Core
  */
-class Template implements TemplateInterface
+class View implements ViewInterface
 {
 	/**
 	 * @var

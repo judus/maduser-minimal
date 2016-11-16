@@ -5,7 +5,7 @@ use Maduser\Minimal\Base\Interfaces\ConfigInterface;
 /**
  * Class Config
  *
- * @package Minimal\Base\Core
+ * @package Maduser\Minimal\Base\Core
  */
 class Config implements ConfigInterface
 {

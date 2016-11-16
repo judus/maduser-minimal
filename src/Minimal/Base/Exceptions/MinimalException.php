@@ -5,7 +5,7 @@ use Maduser\Minimal\Base\Interfaces\ExceptionInterface;
 /**
  * Class MinimalException
  *
- * @package Minimal\Base\Exceptions
+ * @package Maduser\Minimal\Base\Exceptions
  */
 abstract class MinimalException extends \Exception implements ExceptionInterface
 {

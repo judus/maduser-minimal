@@ -3,7 +3,7 @@
 /**
  * Interface RouteInterface
  *
- * @package Minimal\Base\Interfaces
+ * @package Maduser\Minimal\Base\Interfaces
  */
 interface RouteInterface
 {

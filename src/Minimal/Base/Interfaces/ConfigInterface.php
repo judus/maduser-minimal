@@ -3,7 +3,7 @@
 /**
  * Interface ConfigInterface
  *
- * @package Minimal\Base\Interfaces
+ * @package Maduser\Minimal\Base\Interfaces
  */
 interface ConfigInterface
 {
