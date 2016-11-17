@@ -121,9 +121,12 @@ $route->get('huge/data/table', [
     'action' => 'timeConsumingAction'
 ]);
 
-//$route->get('(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@getPage');
 
 // Catch all
+$route->get('(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@getPage');
+
+// TODO: Catch all in Closure
+/* Problem: Closure are executed in registration, before the uri matching loop
 $route->get('(:any)', function ($one) use ($view, $response) {
     $view->setBaseDir('../resources/views');
     $view->setTheme('my-theme');
@@ -132,7 +135,6 @@ $route->get('(:any)', function ($one) use ($view, $response) {
 
     if (!file_exists($view->getFullViewPath())) {
         $response->setHeader('HTTP/1.1 404 File not found');
-
         $content = '<h1>404 File not found</h1>';
         $content.= $view->getFullViewPath();
         $response->setContent($content);
@@ -142,3 +144,4 @@ $route->get('(:any)', function ($one) use ($view, $response) {
 
     return $view->render(null, ['content' => $one]);
 });
+*/

@@ -137,7 +137,10 @@ class View implements ViewInterface
 	{
 		!$data or extract($data);
 		ob_start();
-		include $this->getFullViewPath();
+
+        $this->setView($viewPath);
+		include rtrim($this->getFullViewPath(),
+                $this->getFileExt()) . $this->getFileExt();
 		$rendered = ob_get_contents();
 		ob_end_clean();
 		return $rendered;
