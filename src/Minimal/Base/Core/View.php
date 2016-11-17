@@ -19,12 +19,54 @@ class View implements ViewInterface
 	 */
 	private $theme;
 
-	/**
-	 * @var
-	 */
-	private $viewDir;
+    /**
+     * @var
+     */
+    private $viewDir;
 
-	/**
+    /**
+     * @var
+     */
+    private $fileExt = '.php';
+
+    /**
+     * @var
+     */
+    private $view;
+
+    /**
+     * @return mixed
+     */
+    public function getView()
+    {
+        return $this->view;
+    }
+
+    /**
+     * @param mixed $view
+     */
+    public function setView($view)
+    {
+        $this->view = $view;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFileExt()
+    {
+        return $this->fileExt;
+    }
+
+    /**
+     * @param mixed $fileExt
+     */
+    public function setFileExt($fileExt)
+    {
+        $this->fileExt = $fileExt;
+    }
+
+    /**
 	 * @return mixed
 	 */
 	public function getBaseDir()
@@ -80,6 +122,11 @@ class View implements ViewInterface
 		return $this->getBaseDir() . $this->getTheme() . $this->getViewDir();
 	}
 
+	public function getFullViewPath()
+    {
+        return $this->getPath() . $this->getView() . $this->getFileExt();
+    }
+
 	/**
 	 * @param       $viewPath
 	 * @param array $data
@@ -90,9 +137,10 @@ class View implements ViewInterface
 	{
 		!$data or extract($data);
 		ob_start();
-		include $this->getPath() . $viewPath;
+		include $this->getFullViewPath();
 		$rendered = ob_get_contents();
 		ob_end_clean();
 		return $rendered;
 	}
+
 }

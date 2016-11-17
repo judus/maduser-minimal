@@ -276,7 +276,7 @@ class Router implements RouterInterface
         unset($callback);
 
         $vars = compact(array_keys(get_defined_vars()));
-        $vars['namespace'] = $this->getGroupNamespace();
+        $vars['namespace'] = isset($vars['namespace']) ? $vars['namespace'] : $this->getGroupNamespace();
 
         $route = new Route($vars);
 

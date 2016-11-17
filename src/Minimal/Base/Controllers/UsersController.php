@@ -41,4 +41,9 @@ class UsersController
         return 'Create form';
     }
 
+    public function timeConsumingAction()
+    {
+        return 'timeConsumingAction()';
+    }
+
 }
