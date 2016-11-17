@@ -10,11 +10,11 @@ use Maduser\Minimal\Base\Core\Route;
 use Maduser\Minimal\Base\Core\Router;
 use Maduser\Minimal\Base\Core\Response;
 use Maduser\Minimal\Base\Core\Asset;
-use Maduser\Minimal\Base\Core\Template;
+use Maduser\Minimal\Base\Core\View;
 use Maduser\Minimal\Base\Core\Controller;
 use Maduser\Minimal\Base\Core\FrontController;
 
-use Maduser\Minimal\Base\Controllers\PageController;
+use Maduser\Minimal\Base\Controllers\PagesController;
 
 // Register the Config class
 IOC::register(
@@ -60,12 +60,36 @@ IOC::register(
     return $response;
 });
 
+// Register the Asset class
+IOC::register(
+/**
+ * @return Asset
+ */
+    'Asset', function () {
+    $asset = new Asset();
+
+    return $asset;
+});
+
+// Register the Template class
+IOC::register(
+/**
+ * @return View
+ */
+    'View', function () {
+    $view = new View();
+
+    return $view;
+});
+
+
 // Register the Routes class
 IOC::register(
 /**
  * @return Router
  */
     'Router', function () {
+    $view = IOC::resolve('View');
     $response = IOC::resolve('Response');
     $route = new Router(
         IOC::resolve('Config'),
@@ -77,29 +101,6 @@ IOC::register(
 
     return $route;
 });
-
-// Register the Template class
-IOC::register(
-/**
- * @return Template
- */
-    'Template', function () {
-    $template = new Template();
-
-    return $template;
-});
-
-// Register the Asset class
-IOC::register(
-/**
- * @return Asset
- */
-    'Asset', function () {
-    $response = new Asset();
-
-    return $response;
-});
-
 
 // Register the Controller class
 IOC::register(
@@ -113,7 +114,7 @@ IOC::register(
         IOC::resolve('Router'),
         IOC::resolve('Route'),
         IOC::resolve('Response'),
-        IOC::resolve('Template'),
+        IOC::resolve('View'),
         IOC::resolve('Asset')
     );
 
@@ -125,8 +126,8 @@ IOC::register(
 /**
  * @return PageController
  */
-    'Maduser\Minimal\Base\Controllers\PageController', function () {
-    $pageController = new PageController(
+    'Maduser\Minimal\Base\Controllers\PagesController', function () {
+    $pageController = new PagesController(
         IOC::resolve('Config'),
         IOC::resolve('Request'),
         IOC::resolve('Router'),
