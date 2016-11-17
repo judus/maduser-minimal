@@ -30,11 +30,6 @@ class Router implements RouterInterface
     private $route;
 
     /**
-     * @var RoutesCollection
-     */
-    private $routesCollection;
-
-    /**
      * @var Routes
      */
     private $routes;
@@ -48,6 +43,11 @@ class Router implements RouterInterface
      * @var
      */
     private $groupUriPrefix;
+
+    /**
+     * @var
+     */
+    private $groupNamespace;
 
     /**
      * @var array
@@ -75,7 +75,17 @@ class Router implements RouterInterface
      */
     public function setGroupUriPrefix($path)
     {
-        $this->groupUriPrefix = empty($path) ? '' : rtrim($path, '/') . '/';
+        $this->groupUriPrefix = is_null($path) || empty($path) ?
+            '' : rtrim($path, '/') . '/';
+    }
+
+    /**
+     * @param $path
+     */
+    public function setGroupNamespace($path)
+    {
+        $this->groupNamespace = is_null($path) || empty($path) ?
+            '' : rtrim($path, '\\') . '\\';
     }
 
     /**
@@ -84,6 +94,14 @@ class Router implements RouterInterface
     public function getGroupUriPrefix()
     {
         return $this->groupUriPrefix;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGroupNamespace()
+    {
+        return $this->groupNamespace;
     }
 
     /**
@@ -174,6 +192,7 @@ class Router implements RouterInterface
         $callback();
 
         $this->setGroupUriPrefix(null);
+        $this->setGroupNamespace(null);
     }
 
     /**
@@ -257,6 +276,7 @@ class Router implements RouterInterface
         unset($callback);
 
         $vars = compact(array_keys(get_defined_vars()));
+        $vars['namespace'] = $this->getGroupNamespace();
 
         $route = new Route($vars);
 
