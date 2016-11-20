@@ -53,7 +53,7 @@ class PagesController extends Controller
      * @param RouterInterface   $router
      * @param RouteInterface    $route
      * @param ResponseInterface $response
-     * @param ViewInterface     $template
+     * @param ViewInterface     $view
      * @param AssetInterface    $asset
      */
     public function __construct(
@@ -83,9 +83,10 @@ class PagesController extends Controller
     /**
      * @return string
      */
-    public function welcome()
+    public function welcome($name = null)
     {
-        return 'Welcome to the PageController!';
+        $name = $name ? ' '.ucfirst($name) : '';
+        return 'Welcome'.$name.'!';
     }
 
     /**
@@ -101,10 +102,10 @@ class PagesController extends Controller
      *
      * @return string
      */
-    public function getPage($uri)
+    public function getStaticPage($uri)
     {
         return $this->view->render('sample.php', [
-            'content' => 'Would load page for ' . $uri
+            'content' => 'Would load page ' . "'".str_replace('/', '-' , $uri)."'"
         ]);
     }
 

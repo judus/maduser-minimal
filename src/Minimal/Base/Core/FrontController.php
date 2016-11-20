@@ -1,6 +1,12 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
+use Maduser\Minimal\Base\Exceptions\UnresolvedDependenciesException;
 use Maduser\Minimal\Base\Interfaces\FrontControllerInterface;
+use Maduser\Minimal\Base\Interfaces\MinimalFactoryInterface;
+use Maduser\Minimal\Base\Interfaces\ModelFactoryInterface;
+use Maduser\Minimal\Base\Interfaces\RouteInterface;
+use Maduser\Minimal\Base\Interfaces\ViewFactoryInterface;
+use Maduser\Minimal\Base\Interfaces\ControllerFactoryInterface;
 use Maduser\Minimal\Base\Interfaces\RouterInterface;
 use Maduser\Minimal\Base\Interfaces\ResponseInterface;
 
@@ -11,7 +17,7 @@ use Maduser\Minimal\Base\Interfaces\ResponseInterface;
  */
 class FrontController implements FrontControllerInterface
 {
-	/**
+    /**
 	 * @var RouterInterface
 	 */
 	private $router;
@@ -21,8 +27,23 @@ class FrontController implements FrontControllerInterface
 	 */
 	private $response;
 
-	/**
-	 * @var
+    /**
+     * @var ResponseInterface
+     */
+    protected $modelFactory;
+
+    /**
+     * @var ResponseInterface
+     */
+    protected $viewFactory;
+
+    /**
+     * @var ResponseInterface
+     */
+    protected $controllerFactory;
+
+    /**
+	 * @var RouteInterface
 	 */
 	private $route;
 
@@ -291,68 +312,178 @@ class FrontController implements FrontControllerInterface
 		$this->params = $params;
 	}
 
-	/**
-	 * FrontController constructor.
-	 *
-	 * @param RouterInterface   $router
-	 * @param ResponseInterface $response
-	 */
-	public function __construct(RouterInterface $router, ResponseInterface $response)
-	{
+    /**
+     * FrontController constructor.
+     *
+     * @param RouterInterface            $router
+     * @param ResponseInterface          $response
+     * @param ModelFactoryInterface      $modelFactory
+     * @param ViewFactoryInterface       $viewFactory
+     * @param ControllerFactoryInterface $controllerFactory
+     */
+    public function __construct(
+	    RouterInterface $router,
+        ResponseInterface $response,
+        ModelFactoryInterface $modelFactory,
+        ViewFactoryInterface $viewFactory,
+        ControllerFactoryInterface $controllerFactory
+    ) {
+        /** @var \Maduser\Minimal\Base\Core\Router $router */
 		$this->router = $router;
 		$this->response = $response;
+        $this->modelFactory = $modelFactory;
+        $this->viewFactory = $viewFactory;
+        $this->controllerFactory = $controllerFactory;
 		$this->route = $this->router->getRoute();
-	}
+    }
 
-	/**
-	 *
-	 */
-	public function execute()
+    public function setLexicalsFromRoute()
+    {
+        //$this->setController($this->route->getController());
+        $this->setAction($this->route->getAction());
+        $this->setModel($this->route->getModel());
+        $this->setMethod($this->route->getMethod());
+        $this->setView($this->route->getView());
+        $this->setParams($this->route->getParams());
+    }
+
+    public function handleModel($model, $method = null, array $params = null)
+    {
+        $this->setModel(
+            $this->modelFactory->createInstance(
+                $model,
+                $this->fetchDependencies($model)
+            )
+        );
+
+        if (!is_null($method)) {
+            $this->setModelResult(
+                $this->executeMethod($this->getModel(), $method, $params)
+            );
+        }
+
+    }
+
+    public function handleView($view, $method = null, array $params = null)
+    {
+        $this->setView(
+            $this->viewFactory->createInstance(
+                $view,
+                $this->fetchDependencies($view)
+            )
+        );
+
+        if (!is_null($method)) {
+            $this->setViewResult(
+                $this->executeMethod($this->getView(), $method)
+            );
+        }
+
+    }
+
+    public function handleController($controller, $action = null, array $params = null)
+    {
+        $this->setController(
+            $this->controllerFactory->createInstance(
+                $controller,
+                $this->fetchDependencies($controller))
+        );
+
+        if (!is_null($action)) {
+            $this->setControllerResult(
+                $this->executeMethod($this->getController(), $action, $params)
+            );
+        }
+    }
+
+    public function executeMethod($class, $method, array $params = null)
+    {
+        if (!method_exists($class, $method)) {
+            throw new MethodNotExistsException(
+                'Method ' . $method() . ' does not exist in 
+                ' . get_class($class)
+            );
+        }
+
+        $params = $params ? $params : [];
+
+        return call_user_func_array([$class, $method], $params);
+    }
+
+	public function execute(RouteInterface $route = null)
 	{
-		$this->controller = $this->route->getController();
-		$this->action = $this->route->getAction();
-		$this->model = $this->route->getModel();
-		$this->method = $this->route->getMethod();
-		$this->view = $this->route->getView();
-		$this->params = $this->route->getParams();
+        $route ? $this->setRoute($route) : null;
 
-		if (!empty($this->model)) {
-			$this->model = new $this->model();
-			if (!is_null($this->method)) {
-				if (!method_exists($this->model, $this->method)) {
-					die('Method ' . $this->method . ' does not exist in ' . get_class($this->model));
-				}
-				$this->modelResult = call_user_func_array([
-					$this->model, $this->method
-				]);
-			}
+		if (!empty($this->route->getController())) {
+            $this->handleController(
+                $this->route->getController(),
+                $this->route->getAction(),
+                $this->route->getParams()
+            );
 		};
 
-		if (!empty($this->controller)) {
-			if (IOC::registered(basename($this->controller)))
-			{
-				$this->controller = IOC::resolve($this->controller);
-			} else {
-				$this->controller = new $this->controller();
-			}
+        if (!empty($this->route->getModel)) {
+            $this->handleModel(
+                $this->route->getModel(),
+                $this->route->getMethod(),
+                null // TODO: implement model params
+            );
+        };
 
-			if (!is_null($this->action)) {
-				if (!method_exists($this->controller, $this->action)) {
-					die('Method '.$this->action.' does not exist in '. get_class($this->controller));
-				}
-				$this->controllerResult = call_user_func_array([
-					$this->controller, $this->action
-				], $this->params);
-			}
+        if (!empty($this->route->getView())) {
+            $this->handleView(
+                $this->route->getView(),
+                null, // TODO: implement view method
+                null // TODO: implement view params
+            );
+        };
 
-		};
-
-		if (!empty($this->view)) {
-			$this->view = new $this->view();
-		};
-
-		return $this;
+        return $this;
 	}
+
+	public function fetchDependencies($class)
+    {
+        $reflected = new \ReflectionClass($class);
+        $params = $reflected->getConstructor()->getParameters();
+
+        $dependencies = [];
+
+        foreach ($params as $param) {
+
+            $requiredInterface = $param->getClass()->name;
+
+            foreach (IOC::$registry as $key => $registeredClass) {
+
+                $reflectedIocItem = new \ReflectionClass($registeredClass);
+
+                if ($reflectedIocItem->name == 'Closure') {
+                    $testObject = IOC::resolve($key);
+                    $testObject = new \ReflectionClass($testObject);
+                } else {
+                    $testObject = $reflectedIocItem;
+                }
+
+                foreach ($testObject->getInterfaceNames() as $item) {
+
+                    if ($item == $requiredInterface) {
+                        $dependencies[$key] = IOC::resolve($key);
+                    }
+
+                }
+            }
+        }
+
+        if (count($params) != count($dependencies)) {
+            throw new UnresolvedDependenciesException([
+                'Required' => count($params),
+                'Fetched' => count($dependencies),
+                'Required classes' => $params,
+                'Fetched classes' => $dependencies
+            ]);
+        }
+
+        return $dependencies;
+    }
 
 	/**
 	 * @return mixed

@@ -1,5 +1,6 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
+use Maduser\Minimal\Base\Exceptions\InvalidKeyException;
 use Maduser\Minimal\Base\Exceptions\KeyInUseException;
 use Maduser\Minimal\Base\Interfaces\CollectionInterface;
 
@@ -37,9 +38,11 @@ class Collection implements CollectionInterface
 		return $this;
 	}
 
-	/**
-	 * @param $key
-	 */
+    /**
+     * @param $key
+     *
+     * @throws InvalidKeyException
+     */
 	public function delete($key)
 	{
 		if (isset($this->items[$key])) {
@@ -49,11 +52,12 @@ class Collection implements CollectionInterface
 		}
 	}
 
-	/**
-	 * @param $key
-	 *
-	 * @return mixed
-	 */
+    /**
+     * @param $key
+     *
+     * @return mixed
+     * @throws InvalidKeyException
+     */
 	public function get($key)
 	{
 		if (isset($this->items[$key])) {

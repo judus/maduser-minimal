@@ -21,9 +21,10 @@ class Config implements ConfigInterface
 	 * @return mixed
 	 */
 	public function item($name, $value = NULL) {
-		if (!is_null($value)) {
-			$this->config[$name] = $value;
-		}
+	    if (func_num_args() > 1) {
+            $this->config[$name] = $value;
+        }
+
 		return $this->config[$name];
 	}
 }

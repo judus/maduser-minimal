@@ -1,15 +1,17 @@
 <?php
 
-/**
- *  Route examples
- */
+/** @var \Maduser\Minimal\Base\Core\Router $route */
+
 // Direct output
 $route->get('/', function () {
-    return 'Welcome!';
+    return 'Hello from Minimal!';
 });
 
 // Using controller and method
 $route->get('contact', 'Maduser\Minimal\\Base\\Controllers\\PagesController@contact');
+$route->get('welcome/(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@welcome');
+$route->get('welcome', 'Maduser\Minimal\\Base\\Controllers\\PagesController@welcome');
+$route->get('page/(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@getStaticPage');
 
 // Display dev info
 $route->get('info', 'Maduser\Minimal\\Base\\Controllers\\PagesController@info');
@@ -123,7 +125,7 @@ $route->get('huge/data/table', [
 
 
 // Catch all
-$route->get('(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@getPage');
+//$route->get('(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@getPage');
 
 // TODO: Catch all in Closure
 /* Problem: Closure are executed in registration, before the uri matching loop
@@ -145,3 +147,4 @@ $route->get('(:any)', function ($one) use ($view, $response) {
     return $view->render(null, ['content' => $one]);
 });
 */
+

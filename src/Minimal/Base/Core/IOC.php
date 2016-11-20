@@ -1,5 +1,7 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
+use Maduser\Minimal\Base\Exceptions\IocNotResolvableException;
+
 /**
  * Class IOC
  *
@@ -7,18 +9,28 @@
  */
 class IOC {
 
-	/**
-	 * @var array
-	 */
-	public static $registry = array();
+    /**
+     * @var array
+     */
+    public static $registry = array();
 
-	/**
-	 * @param                  $name
-	 * @param \Closure|Closure $resolve
-	 */
-	public static function register($name, \Closure $resolve)
+    /**
+     * @var array
+     */
+    public static $singleton = array();
+
+    /**
+     * @param                  $name
+     * @param \Closure|Closure $resolve
+     * @param bool             $singleton
+     */
+	public static function register($name, \Closure $resolve, $singleton = false)
 	{
-		static::$registry[$name] = $resolve;
+        if ($singleton) {
+            static::$registry[$name] = $resolve();
+        } else {
+            static::$registry[$name] = $resolve;
+        }
 	}
 
 	/**
@@ -29,13 +41,17 @@ class IOC {
 	 */
 	public static function resolve($name)
 	{
-		if ( static::registered($name) )
-		{
-			$name = static::$registry[$name];
-			return $name();
-		}
+        try {
+            if (static::registered($name)) {
+                $name = static::$registry[$name];
 
-		throw new \Exception("IOC could not resolve '".$name."'.");
+                return is_callable($name) ? $name() : $name;
+            }
+        } catch (\Exception $e) {
+            throw new IocNotResolvableException($e);
+        }
+
+
 	}
 
 	/**

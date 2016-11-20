@@ -1,5 +1,6 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
+use Maduser\Minimal\Base\Exceptions\RouteNotFoundException;
 use Maduser\Minimal\Base\Interfaces\RouterInterface;
 use Maduser\Minimal\Base\Interfaces\ConfigInterface;
 use Maduser\Minimal\Base\Interfaces\RequestInterface;
@@ -316,18 +317,20 @@ class Router implements RouterInterface
     }
 
     /**
-     * @return Route
+     * @param null $uriString
+     *
+     * @return RouteInterface
+     * @throws RouteNotFoundException
      */
-    private function fetchRoute()
+    private function fetchRoute($uriString = null): RouteInterface
     {
         // Get the current uri string
-        $uri = $this->request->getUriString();
+        $uri = $uriString ? $uriString : $this->request->getUriString();
 
         // Get the registered routes by http request method
         $routes = $this->list(
             $this->request->getRequestMethod()
         )->getArray();
-
 
         // Look for a literal match
         if (isset($routes[$uri])) {
@@ -343,7 +346,9 @@ class Router implements RouterInterface
             }
         }
 
-        $this->routeNotFound();
+        throw new RouteNotFoundException(
+            "Route for '".$uriString."' not found", $this
+        );
     }
 
     /**
@@ -381,20 +386,13 @@ class Router implements RouterInterface
     }
 
     /**
-     * @return Route
+     * @param null $uriString
+     *
+     * @return RouteInterface
      */
-    public function getRoute()
+    public function getRoute($uriString = null): RouteInterface
     {
-        return $this->fetchRoute();
+        return $this->fetchRoute($uriString);
     }
 
-    /**
-     *
-     */
-    public function routeNotFound()
-    {
-        $this->response->setHeader('HTTP/1.1 500 Internal Server Error');
-        $this->response->setContent('500 Route not found');
-        $this->response->send();
-    }
 }

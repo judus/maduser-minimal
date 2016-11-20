@@ -7,8 +7,10 @@
  */
 interface RouterInterface
 {
-	/**
-	 * @return mixed
-	 */
-	public function getRoute();
+    /**
+     * @param null $uriString
+     *
+     * @return RouteInterface
+     */
+    public function getRoute($uriString = null): RouteInterface;
 }
