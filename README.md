@@ -12,4 +12,4 @@ You may contribute.
 
 ### License
 
-The Minimal packages is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+The Minimal package is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
