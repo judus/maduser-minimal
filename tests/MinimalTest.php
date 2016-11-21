@@ -6,8 +6,8 @@ class MinimalTest extends PHPUnit_Framework_TestCase {
  
   public function testMinimalHasPhpCode()
   {
-    $nacho = new Minimal;
-    $this->assertTrue($nacho->hasPhpCode());
+    $minimal = new Minimal;
+    $this->assertTrue($minimal->hasPhpCode());
   }
  
 }
