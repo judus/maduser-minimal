@@ -18,14 +18,14 @@ use Maduser\Minimal\Base\Interfaces\ResponseInterface;
 class FrontController implements FrontControllerInterface
 {
     /**
-	 * @var RouterInterface
-	 */
-	private $router;
+     * @var RouterInterface
+     */
+    private $router;
 
-	/**
-	 * @var ResponseInterface
-	 */
-	private $response;
+    /**
+     * @var ResponseInterface
+     */
+    private $response;
 
     /**
      * @var ResponseInterface
@@ -43,274 +43,274 @@ class FrontController implements FrontControllerInterface
     protected $controllerFactory;
 
     /**
-	 * @var RouteInterface
-	 */
-	private $route;
+     * @var RouteInterface
+     */
+    private $route;
 
-	/**
-	 * @var
-	 */
-	private $model;
+    /**
+     * @var
+     */
+    private $model;
 
-	/**
-	 * @var
-	 */
-	private $method;
+    /**
+     * @var
+     */
+    private $method;
 
-	/**
-	 * @var
-	 */
-	private $controller;
+    /**
+     * @var
+     */
+    private $controller;
 
-	/**
-	 * @var
-	 */
-	private $action;
+    /**
+     * @var
+     */
+    private $action;
 
-	/**
-	 * @var
-	 */
-	private $view;
+    /**
+     * @var
+     */
+    private $view;
 
-	/**
-	 * @var
-	 */
-	private $result;
+    /**
+     * @var
+     */
+    private $result;
 
-	/**
-	 * @var
-	 */
-	private $modelResult;
+    /**
+     * @var
+     */
+    private $modelResult;
 
-	/**
-	 * @var
-	 */
-	private $controllerResult;
+    /**
+     * @var
+     */
+    private $controllerResult;
 
-	/**
-	 * @var
-	 */
-	private $viewResult;
+    /**
+     * @var
+     */
+    private $viewResult;
 
-	/**
-	 * @var
-	 */
-	private $params;
+    /**
+     * @var
+     */
+    private $params;
 
-	/**
-	 * @return RouterInterface
-	 */
-	public function getRouter(): RouterInterface
-	{
-		return $this->router;
-	}
+    /**
+     * @return RouterInterface
+     */
+    public function getRouter(): RouterInterface
+    {
+        return $this->router;
+    }
 
-	/**
-	 * @param RouterInterface $router
-	 */
-	public function setRouter(RouterInterface $router)
-	{
-		$this->router = $router;
-	}
+    /**
+     * @param RouterInterface $router
+     */
+    public function setRouter(RouterInterface $router)
+    {
+        $this->router = $router;
+    }
 
-	/**
-	 * @return ResponseInterface
-	 */
-	public function getResponse(): ResponseInterface
-	{
-		return $this->response;
-	}
+    /**
+     * @return ResponseInterface
+     */
+    public function getResponse(): ResponseInterface
+    {
+        return $this->response;
+    }
 
-	/**
-	 * @param ResponseInterface $response
-	 */
-	public function setResponse(ResponseInterface $response)
-	{
-		$this->response = $response;
-	}
+    /**
+     * @param ResponseInterface $response
+     */
+    public function setResponse(ResponseInterface $response)
+    {
+        $this->response = $response;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getRoute()
-	{
-		return $this->route;
-	}
+    /**
+     * @return mixed
+     */
+    public function getRoute()
+    {
+        return $this->route;
+    }
 
-	/**
-	 * @param mixed $route
-	 */
-	public function setRoute($route)
-	{
-		$this->route = $route;
-	}
+    /**
+     * @param mixed $route
+     */
+    public function setRoute($route)
+    {
+        $this->route = $route;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getModel()
-	{
-		return $this->model;
-	}
+    /**
+     * @return mixed
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
 
-	/**
-	 * @param mixed $model
-	 */
-	public function setModel($model)
-	{
-		$this->model = $model;
-	}
+    /**
+     * @param mixed $model
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getMethod()
-	{
-		return $this->method;
-	}
+    /**
+     * @return mixed
+     */
+    public function getMethod()
+    {
+        return $this->method;
+    }
 
-	/**
-	 * @param mixed $method
-	 */
-	public function setMethod($method)
-	{
-		$this->method = $method;
-	}
+    /**
+     * @param mixed $method
+     */
+    public function setMethod($method)
+    {
+        $this->method = $method;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getController()
-	{
-		return $this->controller;
-	}
+    /**
+     * @return mixed
+     */
+    public function getController()
+    {
+        return $this->controller;
+    }
 
-	/**
-	 * @param mixed $controller
-	 */
-	public function setController($controller)
-	{
-		$this->controller = $controller;
-	}
+    /**
+     * @param mixed $controller
+     */
+    public function setController($controller)
+    {
+        $this->controller = $controller;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getAction()
-	{
-		return $this->action;
-	}
+    /**
+     * @return mixed
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
 
-	/**
-	 * @param mixed $action
-	 */
-	public function setAction($action)
-	{
-		$this->action = $action;
-	}
+    /**
+     * @param mixed $action
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getView()
-	{
-		return $this->view;
-	}
+    /**
+     * @return mixed
+     */
+    public function getView()
+    {
+        return $this->view;
+    }
 
-	/**
-	 * @param mixed $view
-	 */
-	public function setView($view)
-	{
-		$this->view = $view;
-	}
+    /**
+     * @param mixed $view
+     */
+    public function setView($view)
+    {
+        $this->view = $view;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getResult()
-	{
-		return ((!empty($this->viewResult)
-			&& !is_null($this->viewResult)
-			&& $this->viewResult !== false) ?
-			$this->viewResult :
-			(!empty($this->controllerResult)
-				&& !is_null($this->controllerResult)
-				&& $this->controllerResult !== false) ?
-				$this->controllerResult : null);
-	}
+    /**
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return ((!empty($this->viewResult)
+            && !is_null($this->viewResult)
+            && $this->viewResult !== false) ?
+            $this->viewResult :
+            (!empty($this->controllerResult)
+                && !is_null($this->controllerResult)
+                && $this->controllerResult !== false) ?
+                $this->controllerResult : null);
+    }
 
-	/**
-	 * @param mixed $result
-	 */
-	public function setResult($result)
-	{
-		$this->result = $result;
-	}
+    /**
+     * @param mixed $result
+     */
+    public function setResult($result)
+    {
+        $this->result = $result;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getModelResult()
-	{
-		return $this->modelResult;
-	}
+    /**
+     * @return mixed
+     */
+    public function getModelResult()
+    {
+        return $this->modelResult;
+    }
 
-	/**
-	 * @param mixed $modelResult
-	 */
-	public function setModelResult($modelResult)
-	{
-		$this->modelResult = $modelResult;
-	}
+    /**
+     * @param mixed $modelResult
+     */
+    public function setModelResult($modelResult)
+    {
+        $this->modelResult = $modelResult;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getControllerResult()
-	{
-		return $this->controllerResult;
-	}
+    /**
+     * @return mixed
+     */
+    public function getControllerResult()
+    {
+        return $this->controllerResult;
+    }
 
-	/**
-	 * @param mixed $controllerResult
-	 */
-	public function setControllerResult($controllerResult)
-	{
-		$this->controllerResult = $controllerResult;
-	}
+    /**
+     * @param mixed $controllerResult
+     */
+    public function setControllerResult($controllerResult)
+    {
+        $this->controllerResult = $controllerResult;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getViewResult()
-	{
-		return $this->viewResult;
-	}
+    /**
+     * @return mixed
+     */
+    public function getViewResult()
+    {
+        return $this->viewResult;
+    }
 
-	/**
-	 * @param mixed $viewResult
-	 */
-	public function setViewResult($viewResult)
-	{
-		$this->viewResult = $viewResult;
-	}
+    /**
+     * @param mixed $viewResult
+     */
+    public function setViewResult($viewResult)
+    {
+        $this->viewResult = $viewResult;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getParams()
-	{
-		return $this->params;
-	}
+    /**
+     * @return mixed
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
 
-	/**
-	 * @param mixed $params
-	 */
-	public function setParams($params)
-	{
-		$this->params = $params;
-	}
+    /**
+     * @param mixed $params
+     */
+    public function setParams($params)
+    {
+        $this->params = $params;
+    }
 
     /**
      * FrontController constructor.
@@ -322,19 +322,19 @@ class FrontController implements FrontControllerInterface
      * @param ControllerFactoryInterface $controllerFactory
      */
     public function __construct(
-	    RouterInterface $router,
+        RouterInterface $router,
         ResponseInterface $response,
         ModelFactoryInterface $modelFactory,
         ViewFactoryInterface $viewFactory,
         ControllerFactoryInterface $controllerFactory
     ) {
         /** @var \Maduser\Minimal\Base\Core\Router $router */
-		$this->router = $router;
-		$this->response = $response;
+        $this->router = $router;
+        $this->response = $response;
         $this->modelFactory = $modelFactory;
         $this->viewFactory = $viewFactory;
         $this->controllerFactory = $controllerFactory;
-		$this->route = $this->router->getRoute();
+        $this->route = $this->router->getRoute();
     }
 
     public function setLexicalsFromRoute()
@@ -381,8 +381,11 @@ class FrontController implements FrontControllerInterface
 
     }
 
-    public function handleController($controller, $action = null, array $params = null)
-    {
+    public function handleController(
+        $controller,
+        $action = null,
+        array $params = null
+    ) {
         $this->setController(
             $this->controllerFactory->createInstance(
                 $controller,
@@ -410,17 +413,17 @@ class FrontController implements FrontControllerInterface
         return call_user_func_array([$class, $method], $params);
     }
 
-	public function execute(RouteInterface $route = null)
-	{
+    public function execute(RouteInterface $route = null)
+    {
         $route ? $this->setRoute($route) : null;
 
-		if (!empty($this->route->getController())) {
+        if (!empty($this->route->getController())) {
             $this->handleController(
                 $this->route->getController(),
                 $this->route->getAction(),
                 $this->route->getParams()
             );
-		};
+        };
 
         if (!empty($this->route->getModel)) {
             $this->handleModel(
@@ -439,12 +442,16 @@ class FrontController implements FrontControllerInterface
         };
 
         return $this;
-	}
+    }
 
-	public function fetchDependencies($class)
+    public function fetchDependencies($class)
     {
         $reflected = new \ReflectionClass($class);
-        $params = $reflected->getConstructor()->getParameters();
+
+        $params = [];
+        if ($constructor = $reflected->getConstructor()) {
+            $params = $constructor->getParameters();
+        }
 
         $dependencies = [];
 
@@ -485,21 +492,21 @@ class FrontController implements FrontControllerInterface
         return $dependencies;
     }
 
-	/**
-	 * @return mixed
-	 */
-	public function respond()
-	{
-		$this->response->setContent($this->getResult())->send();
+    /**
+     * @return mixed
+     */
+    public function respond()
+    {
+        $this->response->setContent($this->getResult())->send();
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function exit()
-	{
-		$this->response->exit();
-	}
+    /**
+     * @return mixed
+     */
+    public function exit()
+    {
+        $this->response->exit();
+    }
 }
