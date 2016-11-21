@@ -52,7 +52,7 @@ $route->group([
 
         $route->get('users/create', [
             'controller' => 'UsersController',
-            'action' => 'createUser' // Show a empty user form
+            'action' => 'create' // Show a empty user form
         ]);
 
         $route->post('users', [
