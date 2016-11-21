@@ -404,8 +404,8 @@ class FrontController implements FrontControllerInterface
     {
         if (!method_exists($class, $method)) {
             throw new MethodNotExistsException(
-                'Method ' . $method() . ' does not exist in 
-                ' . get_class($class)
+                "Method '" . $method . "' does not exist in "
+                . get_class($class)
             );
         }
 
