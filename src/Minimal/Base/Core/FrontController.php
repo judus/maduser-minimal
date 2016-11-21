@@ -1,5 +1,6 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
+use Maduser\Minimal\Base\Exceptions\MethodNotExistsException;
 use Maduser\Minimal\Base\Exceptions\UnresolvedDependenciesException;
 use Maduser\Minimal\Base\Interfaces\FrontControllerInterface;
 use Maduser\Minimal\Base\Interfaces\MinimalFactoryInterface;
