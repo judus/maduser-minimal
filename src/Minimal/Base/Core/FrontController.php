@@ -456,6 +456,9 @@ class FrontController implements FrontControllerInterface
 
         $dependencies = [];
 
+        // Naaaaah...really, that's not what I mean!!
+        // ...and it's never going to stay minimal
+        // TODO: Service providers
         foreach ($params as $param) {
 
             $requiredInterface = $param->getClass()->name;
