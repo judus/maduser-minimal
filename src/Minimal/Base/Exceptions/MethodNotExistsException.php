@@ -1,7 +1,7 @@
 <?php namespace Maduser\Minimal\Base\Exceptions;
 
 /**
- * Class RouteNotFoundException
+ * Class MethodNotExistsException
  *
  * @package Maduser\Minimal\Base\Exceptions
  */

@@ -475,7 +475,6 @@ class FrontController implements FrontControllerInterface
                 }
 
                 foreach ($testObject->getInterfaceNames() as $item) {
-
                     if ($item == $requiredInterface) {
                         $dependencies[$key] = IOC::resolve($key);
                     }

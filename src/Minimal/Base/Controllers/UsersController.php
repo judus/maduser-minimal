@@ -20,9 +20,19 @@ class UsersController
      *
      * @return string
      */
+    public function show($id)
+    {
+        return 'Show user with id ' . $id;
+    }
+
+    /**
+     * @param $id
+     *
+     * @return string
+     */
     public function edit($id)
     {
-        return 'Edit id ' . $id;
+        return 'Edit user with id ' . $id;
     }
 
     /**

@@ -194,18 +194,25 @@ class Minimal
      */
     protected function registerDependencies()
     {
-        require __DIR__.'/../boot/dependencies.php';
+        $dependencies = require_once __DIR__.'/../boot/dependencies.php';
+        foreach ($dependencies as $alias => $class) {
+            IOC::register($alias,  function() use ($class) {
+                return new $class();
+            });
+
+            if (property_exists($this, strtolower($alias))) {
+                $this->{strtolower($alias)} = IOC::resolve($alias);
+            }
+        }
     }
 
     /**
-     * @param ConfigInterface   $config
-     * @param RequestInterface  $request
      */
-    public function registerConfig(
-        ConfigInterface $config,
-        RequestInterface $request
-    ) {
-        require __DIR__.'/../boot/config.php';
+    public function registerConfig() {
+        $configItems = require_once __DIR__.'/../boot/config.php';
+        foreach ($configItems as $key => $value) {
+            $this->config->item($key, $value);
+        }
     }
 
     /**
@@ -245,15 +252,11 @@ class Minimal
      */
     public function load()
     {
-        $this->registerDependencies(
-            IOC::resolve('Config'),
-            IOC::resolve('Request')
-        );
+        $this->registerDependencies();
 
-        $this->registerConfig(
-            IOC::resolve('Config'),
-            IOC::resolve('Request')
-        );
+
+
+        $this->registerConfig(IOC::resolve('Config'));
 
         $this->registerRoutes(
             IOC::resolve('Config'),

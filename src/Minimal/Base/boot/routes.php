@@ -62,7 +62,7 @@ $route->group([
 
         $route->get('users/edit/(:num)', [
             'controller' => 'UsersController',
-            'action' => 'editUser' // Show a form with user id = (:num)
+            'action' => 'edit' // Show a form with user id = (:num)
         ]);
 
         $route->put('users/(:num)', [

@@ -7,60 +7,75 @@ use Maduser\Minimal\Base\Exceptions\IocNotResolvableException;
  *
  * @package Maduser\Maduser\Minimal\Base\Core
  */
-class IOC {
+class IOC
+{
 
     /**
      * @var array
      */
-    public static $registry = array();
+    public static $registry = [];
 
     /**
      * @var array
      */
-    public static $singleton = array();
+    public static $singletons = [];
 
     /**
-     * @param                  $name
-     * @param \Closure|Closure $resolve
-     * @param bool             $singleton
+     * @var array
      */
-	public static function register($name, \Closure $resolve, $singleton = false)
-	{
-        if ($singleton) {
-            static::$registry[$name] = $resolve();
-        } else {
-            static::$registry[$name] = $resolve;
-        }
-	}
+    public static $bindings = [];
 
-	/**
-	 * @param $name
-	 *
-	 * @return mixed
-	 * @throws \Exception
-	 */
-	public static function resolve($name)
-	{
+    /**
+     * @var array
+     */
+    public static $providers = [];
+
+
+    public static function register($name, \Closure $class)
+    {
+        static::$registry[$name] = $class;
+    }
+
+    public static function singleton($name, \Closure $singleton)
+    {
+        static::$registry[$name] = $singleton();
+    }
+
+    public static function bind($name, \Closure $binding)
+    {
+        static::$bindings[$name] = $binding;
+    }
+
+    public static function provide($name, \Closure $provider)
+    {
+        static::$registry[$name] = $provider;
+    }
+
+    /**
+     * @param $name
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public static function resolve($name)
+    {
         try {
             if (static::registered($name)) {
                 $name = static::$registry[$name];
-
-                return is_callable($name) ? $name() : $name;
+                return $name()->resolve();
             }
         } catch (\Exception $e) {
             throw new IocNotResolvableException($e);
         }
+    }
 
-
-	}
-
-	/**
-	 * @param $name
-	 *
-	 * @return bool
-	 */
-	public static function registered($name)
-	{
-		return array_key_exists($name, static::$registry);
-	}
+    /**
+     * @param $name
+     *
+     * @return bool
+     */
+    public static function registered($name)
+    {
+        return array_key_exists($name, static::$registry);
+    }
 }
