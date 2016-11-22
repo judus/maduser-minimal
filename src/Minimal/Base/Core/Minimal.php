@@ -256,7 +256,7 @@ class Minimal
 
 
 
-        $this->registerConfig(IOC::resolve('Config'));
+        $this->registerConfig();
 
         $this->registerRoutes(
             IOC::resolve('Config'),
