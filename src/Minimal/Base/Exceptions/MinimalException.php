@@ -7,7 +7,7 @@ use Maduser\Minimal\Base\Interfaces\ExceptionInterface;
  *
  * @package Maduser\Minimal\Base\Exceptions
  */
-abstract class MinimalException extends \Exception implements ExceptionInterface
+class MinimalException extends \Exception implements ExceptionInterface
 {
 	/**
 	 * @var string

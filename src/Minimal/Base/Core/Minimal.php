@@ -192,15 +192,14 @@ class Minimal
     /**
      *
      */
-    protected function registerDependencies()
+    protected function registerProviders()
     {
-        $dependencies = require_once __DIR__.'/../boot/dependencies.php';
-        foreach ($dependencies as $alias => $class) {
-            IOC::register($alias,  function() use ($class) {
-                return new $class();
+        $providers = require_once __DIR__ . '/../boot/providers.php';
+        foreach ($providers as $alias => $provider) {
+            IOC::register($alias, function () use ($provider) {
+                return new $provider();
             });
-
-            if (property_exists($this, strtolower($alias))) {
+             if (property_exists($this, strtolower($alias))) {
                 $this->{strtolower($alias)} = IOC::resolve($alias);
             }
         }
@@ -208,10 +207,19 @@ class Minimal
 
     /**
      */
-    public function registerConfig() {
-        $configItems = require_once __DIR__.'/../boot/config.php';
+    public function registerConfig()
+    {
+        $configItems = require_once __DIR__ . '/../boot/config.php';
         foreach ($configItems as $key => $value) {
             $this->config->item($key, $value);
+        }
+    }
+
+    public function registerBindings()
+    {
+        $bindings = require_once __DIR__ . '/../boot/bindings.php';
+        foreach ($bindings as $alias => $binding) {
+            IOC::bind($alias, $binding);
         }
     }
 
@@ -227,7 +235,7 @@ class Minimal
         ResponseInterface $response,
         RouterInterface $route
     ) {
-        require __DIR__.'/../boot/routes.php';
+        require __DIR__ . '/../boot/routes.php';
     }
 
     /**
@@ -252,11 +260,11 @@ class Minimal
      */
     public function load()
     {
-        $this->registerDependencies();
-
-
+        $this->registerProviders();
 
         $this->registerConfig();
+
+        $this->registerBindings();
 
         $this->registerRoutes(
             IOC::resolve('Config'),
@@ -264,7 +272,7 @@ class Minimal
             IOC::resolve('Response'),
             IOC::resolve('Router')
         );
-
+/*
         $this->registerModules(
             IOC::resolve('Config'),
             IOC::resolve('Request'),
@@ -272,7 +280,7 @@ class Minimal
             IOC::resolve('Router'),
             IOC::resolve('Modules')
         );
-
+*/
         return $this;
     }
 
@@ -297,6 +305,7 @@ class Minimal
     {
         $response = $this->getResponse();
         $response->setContent($this->getResult())->send();
+
         return $this;
     }
 

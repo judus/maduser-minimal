@@ -1,6 +1,7 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
 use Maduser\Minimal\Base\Exceptions\IocNotResolvableException;
+use Maduser\Minimal\Base\Exceptions\MinimalException;
 
 /**
  * Class IOC
@@ -41,7 +42,7 @@ class IOC
         static::$registry[$name] = $singleton();
     }
 
-    public static function bind($name, \Closure $binding)
+    public static function bind($name, $binding)
     {
         static::$bindings[$name] = $binding;
     }
@@ -77,5 +78,15 @@ class IOC
     public static function registered($name)
     {
         return array_key_exists($name, static::$registry);
+    }
+
+    /**
+     * @param $name
+     *
+     * @return bool
+     */
+    public static function binded($name)
+    {
+        return array_key_exists($name, static::$bindings);
     }
 }

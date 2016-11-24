@@ -1,5 +1,6 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
+use Maduser\Minimal\Base\Interfaces\BaseModelInterface;
 use Maduser\Minimal\Base\Interfaces\ControllerInterface;
 
 /**
@@ -7,6 +8,7 @@ use Maduser\Minimal\Base\Interfaces\ControllerInterface;
  *
  * @package Maduser\Minimal\Base\Core
  */
-class Controller implements ControllerInterface
+abstract class Controller implements ControllerInterface
 {
+    public function __construct() {}
 }

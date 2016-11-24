@@ -11,7 +11,21 @@ $route->get('/', function () {
 $route->get('contact', 'Maduser\Minimal\\Base\\Controllers\\PagesController@contact');
 $route->get('welcome/(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@welcome');
 $route->get('welcome', 'Maduser\Minimal\\Base\\Controllers\\PagesController@welcome');
-$route->get('page/(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@getStaticPage');
+$route->get('page/welcome/(:any)/(:any)',
+    'Maduser\Minimal\\Base\\Controllers\\PagesController@welcome');
+$route->get('page/welcome/(:any)',
+    'Maduser\Minimal\\Base\\Controllers\\PagesController@welcome');
+$route->get('page/(:any)',
+    'Maduser\Minimal\\Base\\Controllers\\PagesController@getStaticPage');
+$route->get('page/info',
+    'Maduser\Minimal\\Base\\Controllers\\PagesController@info');
+
+
+/*
+$route->get('page/(:any)', function () {
+    return 'Page!';
+});
+*/
 
 // Display dev info
 $route->get('info', 'Maduser\Minimal\\Base\\Controllers\\PagesController@info');

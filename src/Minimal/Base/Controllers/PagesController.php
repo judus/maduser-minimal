@@ -60,7 +60,6 @@ class PagesController extends Controller
         ConfigInterface $config,
         RequestInterface $request,
         RouterInterface $router,
-        RouteInterface $route,
         ResponseInterface $response,
         ViewInterface $view,
         AssetInterface $asset
@@ -68,7 +67,6 @@ class PagesController extends Controller
         $this->config = $config;
         $this->request = $request;
         $this->router = $router;
-        $this->route = $route;
         $this->response = $response;
         $this->view = $view;
         $this->asset = $asset;
@@ -76,7 +74,6 @@ class PagesController extends Controller
         $this->view->setBaseDir('../resources/views/');
         $this->view->setTheme('my-theme');
         $this->view->setViewDir('main/');
-
     }
 
 
@@ -117,7 +114,7 @@ class PagesController extends Controller
         show($this->config, 'Config');
         show($this->request, 'Request');
         show($this->router, 'Router');
-        show($this->route, 'Route');
+        show($this->router->getRoute(), 'Route');
         show($this->response, 'Response');
         show($this->view, 'View');
         show($this->asset, 'Asset');

@@ -2,6 +2,7 @@
 
 use Maduser\Minimal\Base\Exceptions\MethodNotExistsException;
 use Maduser\Minimal\Base\Exceptions\UnresolvedDependenciesException;
+use Maduser\Minimal\Base\Factories\ControllerFactory;
 use Maduser\Minimal\Base\Interfaces\FrontControllerInterface;
 use Maduser\Minimal\Base\Interfaces\MinimalFactoryInterface;
 use Maduser\Minimal\Base\Interfaces\ModelFactoryInterface;
@@ -39,7 +40,7 @@ class FrontController implements FrontControllerInterface
     protected $viewFactory;
 
     /**
-     * @var ResponseInterface
+     * @var ControllerFactory
      */
     protected $controllerFactory;
 
@@ -388,9 +389,7 @@ class FrontController implements FrontControllerInterface
         array $params = null
     ) {
         $this->setController(
-            $this->controllerFactory->createInstance(
-                $controller,
-                $this->fetchDependencies($controller))
+            $this->controllerFactory->createInstance($controller, $params)
         );
 
         if (!is_null($action)) {
