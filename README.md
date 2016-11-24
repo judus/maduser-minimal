@@ -1,4 +1,4 @@
-## Minimal PHP Packacge
+## Minimal PHP Package
 
 This is the core package of the Minimal Framework
 
