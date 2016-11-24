@@ -11,29 +11,13 @@ $route->get('/', function () {
 $route->get('contact', 'Maduser\Minimal\\Base\\Controllers\\PagesController@contact');
 $route->get('welcome/(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@welcome');
 $route->get('welcome', 'Maduser\Minimal\\Base\\Controllers\\PagesController@welcome');
-$route->get('page/welcome/(:any)/(:any)',
-    'Maduser\Minimal\\Base\\Controllers\\PagesController@welcome');
-$route->get('page/welcome/(:any)',
-    'Maduser\Minimal\\Base\\Controllers\\PagesController@welcome');
-$route->get('page/(:any)',
-    'Maduser\Minimal\\Base\\Controllers\\PagesController@getStaticPage');
-$route->get('page/info',
-    'Maduser\Minimal\\Base\\Controllers\\PagesController@info');
-
-
-/*
-$route->get('page/(:any)', function () {
-    return 'Page!';
-});
-*/
+$route->get('page/welcome/(:any)/(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@welcome');
+$route->get('page/welcome/(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@welcome');
+$route->get('page/(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@getStaticPage');
+$route->get('page/info', 'Maduser\Minimal\\Base\\Controllers\\PagesController@info');
 
 // Display dev info
 $route->get('info', 'Maduser\Minimal\\Base\\Controllers\\PagesController@info');
-
-// Display page for url (:any)
-// if you declare this here other routes won't be accessible
-// $route->get('(:any)', 'Maduser\Minimal\\Base\\Controllers\\PagesController@getPage');
-// See bottom of this file
 
 /**
  * Grouped routes example

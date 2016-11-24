@@ -51,7 +51,6 @@ class PagesController extends Controller
      * @param ConfigInterface   $config
      * @param RequestInterface  $request
      * @param RouterInterface   $router
-     * @param RouteInterface    $route
      * @param ResponseInterface $response
      * @param ViewInterface     $view
      * @param AssetInterface    $asset

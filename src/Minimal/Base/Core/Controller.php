@@ -10,5 +10,4 @@ use Maduser\Minimal\Base\Interfaces\ControllerInterface;
  */
 abstract class Controller implements ControllerInterface
 {
-    public function __construct() {}
 }

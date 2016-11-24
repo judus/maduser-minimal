@@ -64,7 +64,6 @@ class MinimalFactory implements MinimalFactoryInterface
                 }
             }
 
-/*
             if (count($dependencies) != count($found)) {
                 throw new UnresolvedDependenciesException(
                     'Could not resolve all required dependencies', [
@@ -72,7 +71,6 @@ class MinimalFactory implements MinimalFactoryInterface
                     'Found implementations' => $found
                 ]);
             }
-*/
         }
 
         return $reflected->newInstanceArgs($found);
