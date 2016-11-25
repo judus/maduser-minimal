@@ -11,6 +11,9 @@ use Maduser\Minimal\Base\Interfaces\MinimalFactoryInterface;
  */
 class MinimalFactory implements MinimalFactoryInterface
 {
+    /**
+     * @var string
+     */
     protected $namespace = "Maduser\\Minimal\\Base\\Core\\";
 
     /**
@@ -22,16 +25,27 @@ class MinimalFactory implements MinimalFactoryInterface
     }
 
     /**
-     * @param       $class
-     * @param array $params
+     * @param            $class
+     * @param array|null $params
      *
-     * @return mixed
+     * @return mixed|object
+     * @throws UnresolvedDependenciesException
      */
     public function createInstance($class, array $params = null)
     {
         // Do we have a provider? We're finished if true
-        if (is_string($class) && IOC::registered($class)) {
-            return IOC::resolve($class);
+        if (is_string($class)) {
+
+            // Test full qualified name
+            if (IOC::registered($class)) {
+                return IOC::resolve($class);
+            }
+
+            // Test alias
+            $classAlias = str_replace($this->namespace, '', $class);
+            if (IOC::registered($classAlias)) {
+                return IOC::resolve($classAlias);
+            }
         }
 
         // Do we have a binding? for the class $params
@@ -43,7 +57,6 @@ class MinimalFactory implements MinimalFactoryInterface
             foreach ($dependencies as $dependency) {
                 $dependencyClass = $dependency->getClass()->name;
                 $reflectedDependency = new \ReflectionClass($dependencyClass);
-
                 if (IOC::binded($reflectedDependency->name)) {
                     $found[] = IOC::$bindings[$reflectedDependency->name];
                 } else {
@@ -77,6 +90,9 @@ class MinimalFactory implements MinimalFactoryInterface
     }
 
 
+    /**
+     *
+     */
     public function fetchDependencies() {
 
     }

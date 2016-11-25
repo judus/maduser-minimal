@@ -115,7 +115,7 @@ class Module implements ModuleInterface
     }
 
     public function __construct(
-        MinimalFactoryInterface $collectionFactory,
+        CollectionFactoryInterface $collectionFactory,
         CollectionInterface $collection
     ) {
         $this->routeFiles = $collectionFactory->create(get_class($collection));

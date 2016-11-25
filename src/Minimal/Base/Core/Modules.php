@@ -1,4 +1,4 @@
-<?php namespace  Maduser\Minimal\Base\Core;
+<?php namespace Maduser\Minimal\Base\Core;
 
 use Maduser\Minimal\Base\Exceptions\TypeErrorException;
 use Maduser\Minimal\Base\Interfaces\CollectionInterface;
@@ -207,14 +207,14 @@ class Modules implements ModulesInterface
     /**
      * Modules constructor.
      *
-     * @param ConfigInterface         $config
+     * @param ConfigInterface $config
      * @param MinimalFactoryInterface $collectionFactory
-     * @param CollectionInterface     $collection
+     * @param CollectionInterface $collection
      * @param MinimalFactoryInterface $moduleFactory
-     * @param ModuleInterface         $module
-     * @param RequestInterface        $request
-     * @param ResponseInterface       $response
-     * @param RouterInterface         $router
+     * @param ModuleInterface $module
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param RouterInterface $router
      */
     public function __construct(
         ConfigInterface $config,
@@ -245,13 +245,16 @@ class Modules implements ModulesInterface
      * @return ModuleInterface
      * @throws TypeErrorException
      */
-    public function createAndRegister($name, array $params = null) : ModuleInterface
+    public function createAndRegister(
+        $name,
+        array $params = null
+    ) : ModuleInterface
     {
+
         try {
             /** @var ModuleInterface $module */
             $module = $this->moduleFactory->create(
-                get_class($this->module),
-                [$this->collectionFactory, $this->collection]
+                get_class($this->module)
             );
         } catch (\TypeError $e) {
             throw new TypeErrorException($e);
@@ -278,7 +281,7 @@ class Modules implements ModulesInterface
         $bootFile = $module->getBootFile();
         $namespaceSegment = $module->getName();
 
-        $class = '\\Maduser\\Minimal\\'. $namespaceSegment.'\\'.$bootFile;
+        $class = '\\Maduser\\Minimal\\' . $namespaceSegment . '\\' . $bootFile;
 
         if (!class_exists($class)) {
             return;
@@ -288,7 +291,7 @@ class Modules implements ModulesInterface
             $this->config,
             $this->request,
             $this->response,
-           $this->router
+            $this->router
         );
 
     }

@@ -203,6 +203,7 @@ class Minimal
                 $this->{strtolower($alias)} = IOC::resolve($alias);
             }
         }
+
     }
 
     /**
@@ -272,7 +273,7 @@ class Minimal
             IOC::resolve('Response'),
             IOC::resolve('Router')
         );
-/*
+
         $this->registerModules(
             IOC::resolve('Config'),
             IOC::resolve('Request'),
@@ -280,7 +281,7 @@ class Minimal
             IOC::resolve('Router'),
             IOC::resolve('Modules')
         );
-*/
+
         return $this;
     }
 

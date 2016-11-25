@@ -7,7 +7,7 @@ class ModulesProvider extends Provider
 {
     public function resolve()
     {
-        return new Modules(
+        return $this->singleton('Modules', new Modules(
             IOC::resolve('Config'),
             IOC::resolve('CollectionFactory'),
             IOC::resolve('Collection'),
@@ -16,6 +16,6 @@ class ModulesProvider extends Provider
             IOC::resolve('Request'),
             IOC::resolve('Response'),
             IOC::resolve('Router')
-        );
+       ));
     }
 }

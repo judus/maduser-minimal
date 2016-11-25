@@ -8,6 +8,7 @@ use Maduser\Minimal\Base\Interfaces\RouteInterface;
 use Maduser\Minimal\Base\Interfaces\ViewInterface;
 use Maduser\Minimal\Base\Interfaces\AssetInterface;
 use Maduser\Minimal\Base\Interfaces\ResponseInterface;
+use Maduser\Minimal\Base\Interfaces\ModulesInterface;
 
 /**
  * Class PagesController
@@ -46,6 +47,12 @@ class PagesController extends Controller
     protected $asset;
 
     /**
+     * @var AssetInterface
+     */
+    protected $modules;
+    protected $module;
+
+    /**
      * PageController constructor.
      *
      * @param ConfigInterface   $config
@@ -61,7 +68,8 @@ class PagesController extends Controller
         RouterInterface $router,
         ResponseInterface $response,
         ViewInterface $view,
-        AssetInterface $asset
+        AssetInterface $asset,
+        ModulesInterface $modules
     ) {
         $this->config = $config;
         $this->request = $request;
@@ -69,6 +77,7 @@ class PagesController extends Controller
         $this->response = $response;
         $this->view = $view;
         $this->asset = $asset;
+        $this->modules = $modules;
 
         $this->view->setBaseDir('../resources/views/');
         $this->view->setTheme('my-theme');
@@ -114,6 +123,7 @@ class PagesController extends Controller
         show($this->request, 'Request');
         show($this->router, 'Router');
         show($this->router->getRoute(), 'Route');
+        show($this->modules, 'Modules');
         show($this->response, 'Response');
         show($this->view, 'View');
         show($this->asset, 'Asset');
