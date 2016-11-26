@@ -18,6 +18,11 @@ use Maduser\Minimal\Base\Interfaces\RouterInterface;
 class Modules implements ModulesInterface
 {
     /**
+     * @var \Maduser\Minimal\Base\Core\Minimal $app
+     */
+    protected $app;
+
+    /**
      * @var MinimalFactoryInterface
      */
     protected $moduleFactory;
@@ -58,6 +63,22 @@ class Modules implements ModulesInterface
      * @var ResponseInterface
      */
     protected $response;
+
+    /**
+     * @return mixed
+     */
+    public function getApp()
+    {
+        return $this->app;
+    }
+
+    /**
+     * @param mixed $app
+     */
+    public function setApp($app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * @return CollectionInterface
@@ -245,29 +266,44 @@ class Modules implements ModulesInterface
      * @return ModuleInterface
      * @throws TypeErrorException
      */
-    public function createAndRegister(
+    public function register(
         $name,
         array $params = null
     ) : ModuleInterface
     {
 
+        extract($params);
+
         try {
             /** @var ModuleInterface $module */
-            $module = $this->moduleFactory->create(
-                get_class($this->module)
-            );
+            $module = $this->moduleFactory->create(get_class($this->module));
         } catch (\TypeError $e) {
             throw new TypeErrorException($e);
         }
 
         $module->setName($name);
-        $module->setBootFile($this->config->item('module.default.bootFile'));
-        $module->addConfigFile($this->config->item('module.default.configFile'));
-        $module->addRouteFile($this->config->item('module.default.routeFile'));
-        $this->register($module);
+        $module->setPath($this->app->getModulesPath() . $name);
 
+        $bindingsFile = isset($bindings) ? $bindings : $this->config->item('modules.bindingsFile');
+        $module->setBindingsFile($module->getPath() . $bindingsFile);
 
-        $this->setupModule($module);
+        $providersFile = isset($providers) ? $providers : $this->config->item('modules.providersFile');
+        $module->setProvidersFile($module->getPath() . $providersFile);
+
+        $configFile = isset($config) ? $config : $this->config->item('modules.configFile');
+        $module->setConfigFile($module->getPath() . $configFile);
+
+        $routesFile = isset($routes) ? $routes : $this->config->item('modules.routesFile');
+        $module->setRoutesFile($module->getPath() . $routesFile);
+
+        /** @var \Maduser\Minimal\Base\Core\Minimal $this->app */
+        $this->app->registerConfig($module->getConfigFile());
+        $this->app->registerBindings($module->getBindingsFile());
+        $this->app->registerProviders($module->getProvidersFile());
+        $this->app->registerRoutes($module->getRoutesFile());
+
+        /** @var \Maduser\Minimal\Base\Core\Collection $this->modules */
+        $this->registerModule($module);
 
         return $module;
     }
@@ -276,30 +312,7 @@ class Modules implements ModulesInterface
     /**
      * @param ModuleInterface $module
      */
-    public function setupModule(ModuleInterface $module)
-    {
-        $bootFile = $module->getBootFile();
-        $namespaceSegment = $module->getName();
-
-        $class = '\\Maduser\\Minimal\\' . $namespaceSegment . '\\' . $bootFile;
-
-        if (!class_exists($class)) {
-            return;
-        }
-
-        $moduleMain = new $class(
-            $this->config,
-            $this->request,
-            $this->response,
-            $this->router
-        );
-
-    }
-
-    /**
-     * @param ModuleInterface $module
-     */
-    public function register(ModuleInterface $module)
+    public function registerModule(ModuleInterface $module)
     {
         $this->modules->add($module, $module->getName());
     }

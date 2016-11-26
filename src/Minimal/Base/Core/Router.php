@@ -161,6 +161,7 @@ class Router implements RouterInterface
 
         $this->routes = new Collection();
         $this->routes
+            ->add(new Collection(), 'ALL')
             ->add(new Collection(), 'POST')
             ->add(new Collection(), 'GET')
             ->add(new Collection(), 'PUT')
@@ -281,11 +282,11 @@ class Router implements RouterInterface
 
         $route = new Route($vars);
 
-        $this->routes->get(strtoupper($requestMethod))->add(
-            $route,
-            !empty($this->getGroupUriPrefix()) ?
-                $this->getGroupUriPrefix() . $uriPattern : $uriPattern
-        );
+        $uriPattern = !empty($this->getGroupUriPrefix()) ?
+            $this->getGroupUriPrefix() . $uriPattern : $uriPattern;
+
+        $this->routes->get('ALL')->add($route, strtoupper($requestMethod).'::'.$uriPattern);
+        $this->routes->get(strtoupper($requestMethod))->add($route, $uriPattern);
     }
 
     /**

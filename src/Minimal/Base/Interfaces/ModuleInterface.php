@@ -36,28 +36,27 @@
 
 namespace Maduser\Minimal\Base\Interfaces;
 
-
 /**
- * Class Module
+ * Interface ModuleInterface
  *
- * @package Maduser\Minimal\Base\Core
+ * @package Maduser\Minimal\Base\Interfaces
  */
 interface ModuleInterface
 {
     /**
-     * @return mixed
+     * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
-     * @param mixed $name
+     * @param $name
      */
     public function setName($name);
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getBootFile();
+    public function getBootFile(): string;
 
     /**
      * @param mixed $bootFile
@@ -65,34 +64,42 @@ interface ModuleInterface
     public function setBootFile($bootFile);
 
     /**
-     * @return array
+     * @return string
      */
-    public function getConfigFiles() : array;
+    public function getConfigFile(): string;
+
+     /**
+     * @param      $path
+     */
+    public function setConfigFile($path);
 
     /**
-     * @param array $configFiles
+     * @return string
      */
-    public function setConfigFiles(array $configFiles);
-
-    /**
-     * @return array
-     */
-    public function getRouteFiles() : array;
-
-    /**
-     * @param array $routeFiles
-     */
-    public function setRouteFiles(array $routeFiles);
+    public function getBindingsFile(): string;
 
     /**
      * @param      $path
-     * @param null $name
      */
-    public function addConfigFile($path, $name = null);
+    public function setBindingsFile($path);
+
+    /**
+     * @return string
+     */
+    public function getProvidersFile(): string;
 
     /**
      * @param      $path
-     * @param null $name
      */
-    public function addRouteFile($path, $name = null);
+    public function setProvidersFile($path);
+
+    /**
+     * @return string
+     */
+    public function getRoutesFile(): string;
+
+    /**
+     * @param      $path
+     */
+    public function setRoutesFile($path);
 }

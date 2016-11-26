@@ -16,6 +16,46 @@ use Maduser\Minimal\Base\Interfaces\FrontControllerInterface;
 class Minimal
 {
     /**
+     * @var
+     */
+    private $basepath = '..';
+
+    /**
+     * @var
+     */
+    private $appPath = 'app';
+
+    /**
+     * @var
+     */
+    private $modulesPath = 'app';
+
+    /**
+     * @var
+     */
+    private $configFile = 'config/config.php';
+
+    /**
+     * @var
+     */
+    private $providersFile = 'config/providers.php';
+
+    /**
+     * @var
+     */
+    private $bindingsFile = 'config/bindings.php';
+
+    /**
+     * @var
+     */
+    private $routesFile = 'config/routes.php';
+
+    /**
+     * @var
+     */
+    private $modulesFile = 'config/modules.php';
+
+    /**
      * @var ConfigInterface
      */
     private $config;
@@ -49,6 +89,134 @@ class Minimal
      * @var
      */
     private $result;
+
+    /**
+     * @return mixed
+     */
+    public function getBasepath()
+    {
+        return rtrim($this->basepath, '/') . '/';
+    }
+
+    /**
+     * @param mixed $basepath
+     */
+    public function setBasepath($basepath)
+    {
+        $this->basepath = $basepath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAppPath()
+    {
+        return rtrim($this->appPath, '/') . '/';
+    }
+
+    /**
+     * @param mixed $appPath
+     */
+    public function setAppPath($appPath)
+    {
+        $this->appPath = $appPath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModulesPath()
+    {
+        return rtrim($this->modulesPath, '/') . '/';
+    }
+
+    /**
+     * @param mixed $modulesPath
+     */
+    public function setModulesPath($modulesPath)
+    {
+        $this->modulesPath = $modulesPath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfigFile()
+    {
+        return $this->configFile;
+    }
+
+    /**
+     * @param mixed $configFile
+     */
+    public function setConfigFile($configFile)
+    {
+        $this->configFile = $configFile;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProvidersFile()
+    {
+        return $this->providersFile;
+    }
+
+    /**
+     * @param mixed $providersFile
+     */
+    public function setProvidersFile($providersFile)
+    {
+        $this->providersFile = $providersFile;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBindingsFile()
+    {
+        return $this->bindingsFile;
+    }
+
+    /**
+     * @param mixed $bindingsFile
+     */
+    public function setBindingsFile($bindingsFile)
+    {
+        $this->bindingsFile = $bindingsFile;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoutesFile()
+    {
+        return $this->routesFile;
+    }
+
+    /**
+     * @param mixed $routesFile
+     */
+    public function setRoutesFile($routesFile)
+    {
+        $this->routesFile = $routesFile;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModulesFile()
+    {
+        return $this->modulesFile;
+    }
+
+    /**
+     * @param mixed $modulesFile
+     */
+    public function setModulesFile($modulesFile)
+    {
+        $this->modulesFile = $modulesFile;
+    }
 
     /**
      * @return ConfigInterface
@@ -150,6 +318,9 @@ class Minimal
         $this->modules = $modules;
     }
 
+    /**
+     * @param FrontControllerInterface $frontController
+     */
     protected function setFrontController(
         FrontControllerInterface $frontController
     ) {
@@ -184,17 +355,36 @@ class Minimal
         $this->result = $result;
     }
 
-    public function __construct($doNotLaunch = false)
+    /**
+     * Minimal constructor.
+     *
+     * @param array $params
+     * @param bool  $doNotLaunch
+     */
+    public function __construct(array $params, $doNotLaunch = false)
     {
+        extract($params);
+
+        !isset($basepath) || $this->setBasePath($basepath);
+        !isset($app) || $this->setAppPath($app);
+        !isset($config) || $this->setConfigFile($config);
+        !isset($providers) || $this->setProvidersFile($providers);
+        !isset($bindings) || $this->setBindingsFile($bindings);
+        !isset($routes) || $this->setRoutesFile($routes);
+        !isset($modules) || $this->setRoutesFile($modules);
+
         $doNotLaunch || $this->launch();
     }
 
     /**
-     *
+     * @param null $providersFile
      */
-    protected function registerProviders()
+    public function registerProviders($providersFile = null)
     {
-        $providers = require_once __DIR__ . '/../boot/providers.php';
+        $providersFile = $providersFile ? $providersFile : $this->getProvidersFile();
+
+        $providers = require_once $this->getBasePath().$providersFile;
+
         foreach ($providers as $alias => $provider) {
             IOC::register($alias, function () use ($provider) {
                 return new $provider();
@@ -207,53 +397,54 @@ class Minimal
     }
 
     /**
+     * @param null $configFile
      */
-    public function registerConfig()
+    public function registerConfig($configFile = null)
     {
-        $configItems = require_once __DIR__ . '/../boot/config.php';
+        $configFile = $configFile ? $configFile : $this->getConfigFile();
+
+        $configItems = require_once $this->getBasePath() . $configFile;
+
         foreach ($configItems as $key => $value) {
             $this->config->item($key, $value);
         }
     }
 
-    public function registerBindings()
+    /**
+     * @param null $bindingsFile
+     */
+    public function registerBindings($bindingsFile = null)
     {
-        $bindings = require_once __DIR__ . '/../boot/bindings.php';
+        $bindingsFile = $bindingsFile ? $bindingsFile :  $this->getBindingsFile();
+
+        $bindings = require_once $this->getBasePath() . $bindingsFile;
+
         foreach ($bindings as $alias => $binding) {
             IOC::bind($alias, $binding);
         }
     }
 
     /**
-     * @param ConfigInterface   $config
-     * @param RequestInterface  $request
-     * @param ResponseInterface $response
-     * @param RouterInterface   $route
+     * @param $routesFile
      */
-    public function registerRoutes(
-        ConfigInterface $config,
-        RequestInterface $request,
-        ResponseInterface $response,
-        RouterInterface $route
-    ) {
-        require __DIR__ . '/../boot/routes.php';
+    public function registerRoutes($routesFile = null)
+    {
+        $routesFile = $routesFile ? $routesFile : $this->getRoutesFile();
+
+        $route = $this->getRouter();
+        $response = $this->getResponse();
+
+        require $this->getBasePath() . $routesFile;
     }
 
-    /**
-     * @param ConfigInterface   $config
-     * @param RequestInterface  $request
-     * @param ResponseInterface $response
-     * @param RouterInterface   $route
-     * @param ModulesInterface  $modules
-     */
-    public function registerModules(
-        ConfigInterface $config,
-        RequestInterface $request,
-        ResponseInterface $response,
-        RouterInterface $route,
-        ModulesInterface $modules
-    ) {
-        require __DIR__ . '/../boot/modules.php';
+    public function registerModules($modulesFile = null)
+    {
+        $modulesFile = $modulesFile ? $modulesFile : $this->getModulesFile();
+
+        $modules = $this->getModules();
+        $modules->setApp($this);
+
+        require $this->getBasePath() . $modulesFile;
     }
 
     /**
@@ -261,30 +452,20 @@ class Minimal
      */
     public function load()
     {
-        $this->registerProviders();
-
-        $this->registerConfig();
-
         $this->registerBindings();
-
-        $this->registerRoutes(
-            IOC::resolve('Config'),
-            IOC::resolve('Request'),
-            IOC::resolve('Response'),
-            IOC::resolve('Router')
-        );
-
-        $this->registerModules(
-            IOC::resolve('Config'),
-            IOC::resolve('Request'),
-            IOC::resolve('Response'),
-            IOC::resolve('Router'),
-            IOC::resolve('Modules')
-        );
+        $this->registerProviders();
+        $this->registerConfig();
+        $this->registerRoutes();
+        $this->registerModules();
 
         return $this;
     }
 
+    /**
+     * @param null $uriString
+     *
+     * @return $this
+     */
     public function execute($uriString = null)
     {
         $request = $this->getRequest();
@@ -302,6 +483,9 @@ class Minimal
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function respond()
     {
         $response = $this->getResponse();
@@ -310,11 +494,17 @@ class Minimal
         return $this;
     }
 
+    /**
+     *
+     */
     public function exit()
     {
         exit();
     }
 
+    /**
+     *
+     */
     public function launch()
     {
         $this->load();

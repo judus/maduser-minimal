@@ -29,7 +29,7 @@ class Collection implements CollectionInterface
 			$this->items[] = $obj;
 		} else {
 			if (isset($this->items[$key])) {
-				throw new KeyInUseException("Key $key already in use.");
+				throw new KeyInUseException("Collection key '".$key."' is already in use.", $this);
 			} else {
 				$this->items[$key] = $obj;
 			}
@@ -48,7 +48,7 @@ class Collection implements CollectionInterface
 		if (isset($this->items[$key])) {
 			unset($this->items[$key]);
 		} else {
-			throw new InvalidKeyException("Invalid key $key.");
+			throw new InvalidKeyException("Collection key '".$key."' does not exist.", $this);
 		}
 	}
 
@@ -63,7 +63,8 @@ class Collection implements CollectionInterface
 		if (isset($this->items[$key])) {
 			return $this->items[$key];
 		} else {
-			throw new InvalidKeyException("Invalid key $key.");
+			throw new InvalidKeyException("Collection key '" . $key . "' does not exist.",
+                $this);
 		}
 	}
 

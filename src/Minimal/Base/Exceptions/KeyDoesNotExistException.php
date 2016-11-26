@@ -1,11 +1,11 @@
 <?php namespace Maduser\Minimal\Base\Exceptions;
 
 /**
- * Class RouteNotFoundException
+ * Class KeyDoesNotExistException
  *
  * @package Maduser\Minimal\Base\Exceptions
  */
-class RouteNotFoundException extends MinimalException
+class KeyDoesNotExistException extends MinimalException
 {
     /**
      * @return mixed
@@ -16,7 +16,7 @@ class RouteNotFoundException extends MinimalException
             return $this->myMessage->getFile();
         }
 
-        return debug_backtrace()[2]['file'];
+        return debug_backtrace()[3]['file'];
     }
 
     /**
@@ -28,6 +28,6 @@ class RouteNotFoundException extends MinimalException
             return $this->myMessage->getLine();
         }
 
-        return debug_backtrace()[2]['line'];
+        return debug_backtrace()[3]['line'];
     }
 }

@@ -42,6 +42,11 @@ namespace Maduser\Minimal\Base\Interfaces;
  *
  * @package Maduser\Minimal\Base\Core
  */
+/**
+ * Interface ModulesInterface
+ *
+ * @package Maduser\Minimal\Base\Interfaces
+ */
 interface ModulesInterface
 {
     /**
@@ -55,9 +60,17 @@ interface ModulesInterface
     public function setModules(CollectionInterface $modules);
 
     /**
+     * @param       $name
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function register($name, array $params);
+
+    /**
      * @param ModuleInterface $module
      */
-    public function register(ModuleInterface $module);
+    public function registerModule(ModuleInterface $module);
 
     /**
      * @param $name

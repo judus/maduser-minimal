@@ -383,11 +383,21 @@ class FrontController implements FrontControllerInterface
 
     }
 
+    public function isModuleController($controller)
+    {
+        return true;
+    }
+
     public function handleController(
         $controller,
         $action = null,
         array $params = null
     ) {
+
+        if ($this->isModuleController($controller)) {
+
+        }
+
         $this->setController(
             $this->controllerFactory->createInstance($controller, $params)
         );

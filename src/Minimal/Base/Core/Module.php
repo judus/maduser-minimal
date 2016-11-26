@@ -20,28 +20,43 @@ class Module implements ModuleInterface
     /**
      * @var
      */
+    private $path;
+
+    /**
+     * @var
+     */
     private $bootFile;
 
     /**
-     * @var array
+     * @var
      */
-    private $configFiles = CollectionInterface::class;
+    private $configFile;
 
     /**
-     * @var array
+     * @var
      */
-    private $routeFiles = CollectionInterface::class;
+    private $bindingsFile;
 
     /**
-     * @return mixed
+     * @var
      */
-    public function getName()
+    private $providersFile;
+
+    /**
+     * @var
+     */
+    private $routesFile;
+
+    /**
+     * @return string
+     */
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @param mixed $name
+     * @param $name
      */
     public function setName($name)
     {
@@ -51,7 +66,23 @@ class Module implements ModuleInterface
     /**
      * @return mixed
      */
-    public function getBootFile()
+    public function getPath()
+    {
+        return rtrim($this->path, '/') . '/';
+    }
+
+    /**
+     * @param mixed $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBootFile(): string
     {
         return $this->bootFile;
     }
@@ -65,61 +96,117 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getConfigFiles(): array
+    public function getConfigFile(): string
     {
-        return $this->configFiles;
+        return $this->configFile;
     }
 
     /**
-     * @param array $configFiles
+     * @param $path
      */
-    public function setConfigFiles(array $configFiles)
+    public function setConfigFile($path)
     {
-        $this->configFiles = $configFiles;
+        $this->configFile = $path;
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getRouteFiles(): array
+    public function getBindingsFile(): string
     {
-        return $this->routeFiles;
+        return $this->bindingsFile;
     }
 
     /**
-     * @param array $routeFiles
+     * @param $path
      */
-    public function setRouteFiles(array $routeFiles)
+    public function setBindingsFile($path)
     {
-        $this->routeFiles = $routeFiles;
+        $this->bindingsFile = $path;
     }
 
     /**
-     * @param      $path
-     * @param null $name
+     * @return string
      */
-    public function addConfigFile($path, $name = null)
+    public function getProvidersFile(): string
     {
-        $this->configFiles->add($path);
+        return $this->providersFile;
     }
 
     /**
-     * @param      $path
-     * @param null $name
+     * @param $path
      */
-    public function addRouteFile($path, $name = null)
+    public function setProvidersFile($path)
     {
-        $this->routeFiles->add($path);
+        $this->providersFile = $path;
     }
 
-    public function __construct(
-        CollectionFactoryInterface $collectionFactory,
-        CollectionInterface $collection
-    ) {
-        $this->routeFiles = $collectionFactory->create(get_class($collection));
-        $this->configFiles = $collectionFactory->create(get_class($collection));
+    /**
+     * @return string
+     */
+    public function getRoutesFile(): string
+    {
+        return $this->routesFile;
     }
 
+    /**
+     * @param $path
+     */
+    public function setRoutesFile($path)
+    {
+        $this->routesFile = $path;
+    }
+
+    /**
+     * Module constructor.
+     */
+    public function __construct()
+    {
+
+    }
+
+    /**
+     *
+     */
+    public function load()
+    {
+        $this->registerConfig();
+        $this->registerBindings();
+        $this->registerProviders();
+        $this->registerRoutes();
+    }
+
+    /**
+     *
+     */
+    public function registerConfig()
+    {
+
+    }
+
+    /**
+     *
+     */
+    public function registerBindings()
+    {
+
+    }
+
+    /**
+     *
+     */
+    public function registerProviders()
+    {
+
+    }
+
+    /**
+     *
+     */
+    public function registerRoutes()
+    {
+
+    }
 }

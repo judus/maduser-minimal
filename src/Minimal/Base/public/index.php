@@ -10,14 +10,18 @@ require "../helpers/common.php";
  * Example 1
  */
 
-new \Maduser\Minimal\Base\Core\Minimal();
+new \Maduser\Minimal\Base\Core\Minimal(
+    realpath(__DIR__.'/../')
+);
 // exits PHP
 
 /**
  * Example 2
  */
 
-$minimal = new \Maduser\Minimal\Base\Core\Minimal(true);
+$minimal = new \Maduser\Minimal\Base\Core\Minimal(
+    realpath(__DIR__ . '/../'), true
+);
 $minimal->load()->execute()->respond()->exit();
 // exits PHP
 

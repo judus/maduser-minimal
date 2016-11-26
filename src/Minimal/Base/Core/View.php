@@ -139,8 +139,10 @@ class View implements ViewInterface
 		ob_start();
 
         $this->setView($viewPath);
-		include rtrim($this->getFullViewPath(),
-                $this->getFileExt()) . $this->getFileExt();
+        /** @noinspection PhpIncludeInspection */
+        include rtrim(
+            $this->getFullViewPath(), $this->getFileExt()
+        ) . $this->getFileExt();
 		$rendered = ob_get_contents();
 		ob_end_clean();
 		return $rendered;
