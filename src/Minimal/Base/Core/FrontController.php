@@ -454,6 +454,9 @@ class FrontController implements FrontControllerInterface
         return $this;
     }
 
+    /**
+     * Deprecated and no longer in use
+     */
     public function fetchDependencies($class)
     {
         $reflected = new \ReflectionClass($class);
