@@ -60,13 +60,9 @@ class IOC
      */
     public static function resolve($name)
     {
-        try {
-            if (static::registered($name)) {
-                $name = static::$registry[$name];
-                return $name()->resolve();
-            }
-        } catch (\Exception $e) {
-            throw new IocNotResolvableException($e);
+        if (static::registered($name)) {
+            $name = static::$registry[$name];
+            return $name()->resolve();
         }
     }
 
