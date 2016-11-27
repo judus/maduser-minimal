@@ -361,7 +361,7 @@ class Minimal
      * @param array $params
      * @param bool  $doNotLaunch
      */
-    public function __construct(array $params, $doNotLaunch = false)
+    public function __construct(array $params, $returnInstance = false)
     {
         extract($params);
 
@@ -373,7 +373,7 @@ class Minimal
         !isset($routes) || $this->setRoutesFile($routes);
         !isset($modules) || $this->setRoutesFile($modules);
 
-        $doNotLaunch || $this->launch();
+        $returnInstance || $this->launch();
     }
 
     /**
