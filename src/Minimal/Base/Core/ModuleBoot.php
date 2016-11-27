@@ -1,5 +1,8 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
+/**
+ * Deprecated and no longer in use
+ */
 
 use Maduser\Minimal\Base\Interfaces\ConfigInterface;
 use Maduser\Minimal\Base\Interfaces\ModuleBootInterface;
