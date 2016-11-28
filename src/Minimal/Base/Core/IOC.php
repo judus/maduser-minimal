@@ -19,6 +19,11 @@ class IOC
     /**
      * @var array
      */
+    public static $singletons = [];
+
+    /**
+     * @var array
+     */
     public static $bindings = [];
 
     /**
