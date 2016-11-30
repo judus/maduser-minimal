@@ -6,6 +6,6 @@ class AssetProvider extends Provider
 {
     public function resolve()
     {
-        return new Asset();
+        return $this->singleton('Asset', new Asset());
     }
 }

@@ -9,66 +9,310 @@ use Maduser\Minimal\Base\Interfaces\AssetInterface;
  */
 class Asset implements AssetInterface
 {
-	/**
-	 * @var string
-	 */
-	private $baseDir = '';
+    /**
+     * @var string
+     */
+    private $base = '';
 
-	/**
-	 * @var array
-	 */
-	private $cssFiles = [];
+    /**
+     * @var string
+     */
+    private $theme = '';
 
-	/**
-	 * @var array
-	 */
-	private $jsFiles = [];
+    /**
+     * @var string
+     */
+    private $cssDir = 'css';
 
-	/**
-	 * @param $path
-	 */
-	public function setBaseDir($path)
-	{
-		$this->baseDir = $path;
-	}
+    /**
+     * @var string
+     */
+    private $jsDir = 'js';
 
-	/**
-	 * @return string
-	 */
-	public function getBaseDir()
-	{
-		return $this->baseDir;
-	}
+    /**
+     * @var string
+     */
+    private $defaultKey = 'default';
 
-	/**
-	 * @param $url
-	 */
-	public function addCssFile($url)
-	{
-		$this->cssFiles[] = $url;
-	}
+    /**
+     * @var array
+     */
+    private $cssFiles = [];
 
-	/**
-	 * @param $url
-	 */
-	public function addJsFile($url)
-	{
-		$this->jsFiles[] = $url;
-	}
+    /**
+     * @var array
+     */
+    private $jsFiles = [];
 
-	/**
-	 * @return array
-	 */
-	public function getCssFiles()
-	{
-		return $this->cssFiles;
-	}
+    /**
+     * @var array
+     */
+    private $inlineScripts = [];
 
-	/**
-	 * @return array
-	 */
-	public function getJsFiles()
-	{
-		return $this->jsFiles;
-	}
+    /**
+     * @var array
+     */
+    private $externalCSS = [];
+
+    /**
+     * @var array
+     */
+    private $externalJs = [];
+
+    /**
+     * @param $path
+     */
+    public function setBase($path)
+    {
+        $this->base = $path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBase()
+    {
+        return rtrim($this->base, '/') . '/';
+    }
+
+    /**
+     * @param $path
+     */
+    public function setTheme($path)
+    {
+        $this->theme = $path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTheme()
+    {
+        return rtrim($this->theme, '/') . '/';
+    }
+
+    /**
+     * @param $path
+     */
+    public function setCssDir($path)
+    {
+        $this->cssDir = $path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCssDir()
+    {
+        return rtrim($this->cssDir, '/') . '/';
+    }
+
+    /**
+     * @param $path
+     */
+    public function setJsDir($path)
+    {
+        $this->jsDir = $path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJsDir()
+    {
+        return rtrim($this->jsDir, '/') . '/';
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultKey()
+    {
+        return $this->defaultKey;
+    }
+
+    /**
+     * @param $defaultKey
+     */
+    public function setDefaultKey($defaultKey)
+    {
+        $this->defaultKey = $defaultKey;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCssFiles()
+    {
+        return $this->cssFiles;
+    }
+
+    /**
+     * @return array
+     */
+    public function getJsFiles()
+    {
+        return $this->jsFiles;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJsPath()
+    {
+        return $this->getBase() . $this->getTheme() . $this->getJsDir();
+    }
+
+    /**
+     * @param null $key
+     *
+     * @return null|string
+     */
+    public function key($key = null)
+    {
+        return $key ? $key : $this->getDefaultKey();
+    }
+
+    /**
+     * Asset constructor.
+     */
+    public function __construct()
+    {
+        $this->cssFiles[$this->key()] = [];
+        $this->jsFiles[$this->key()] = [];
+        $this->externalJs[$this->key()] = [];
+        $this->inlineScripts[$this->key()] = [];
+    }
+
+    /**
+     * @param      $urls
+     * @param null $key
+     */
+    public function addCss($urls, $key = null)
+    {
+        if (is_array($urls)) {
+            foreach ($urls as $url) {
+                $this->addCss($url, $key);
+            }
+        }
+
+        if (is_string($urls)) {
+            $this->cssFiles[$this->key($key)][] = $this->getCssDir() . $urls;
+        }
+    }
+
+    /**
+     * @param      $urls
+     * @param null $key
+     */
+    public function addJs($urls, $key = null)
+    {
+        if (is_array($urls)) {
+            foreach ($urls as $url) {
+                $this->addJs($url, $key);
+            }
+        }
+
+        if (is_string($urls)) {
+            $this->jsFiles[$this->key($key)][] = $this->getJsDir() . $urls;
+        }
+    }
+
+    /**
+     * @param null $key
+     *
+     * @return string
+     */
+    public function getCSS($key = null)
+    {
+        $cssFiles = $this->cssFiles[$this->key($key)];
+        $html = '';
+        foreach ($cssFiles as $cssFile) {
+            $html = empty($html) ? $html : $html . "\t";
+            $html .= '<link rel="stylesheet" href="' . $cssFile . '">' . "\n";
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param null $key
+     *
+     * @return string
+     */
+    public function getJs($key = null)
+    {
+        $jsFiles = $this->jsFiles[$this->key($key)];
+        $html = '';
+        foreach ($jsFiles as $jsFile) {
+            $html = empty($html) ? $html : $html . "\t";
+            $html .= '<script src="' . $jsFile . '" ></script>' . "\n";
+
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param      $urls
+     * @param null $key
+     */
+    public function addExternalJs($urls, $key = null)
+    {
+        if (is_array($urls)) {
+            foreach ($urls as $url) {
+                $this->addExternalJs($url, $key);
+            }
+        }
+
+        if (is_string($urls)) {
+            $this->externalJs[$this->key($key)][] = $urls;
+        }
+    }
+
+    /**
+     * @param null $key
+     *
+     * @return string
+     */
+    public function getExternalJs($key = null)
+    {
+        $externalJs = $this->externalJs[$this->key($key)];
+        $html = '';
+        foreach ($externalJs as $jsFile) {
+            $html = empty($html) ? $html : $html . "\t";
+            $html .= '<script src="' . $jsFile . '" ></script>' . "\n";
+
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param          $key
+     * @param \Closure $inlineScript
+     */
+    public function addInlineScripts($key, \Closure $inlineScript)
+    {
+        $this->inlineScripts[$this->key($key)][] = $inlineScript();
+    }
+
+    /**
+     * @param null $key
+     *
+     * @return string
+     */
+    public function getInlineScripts($key = null)
+    {
+        $inlineScripts = $this->inlineScripts[$this->key($key)];
+        $html = '';
+        foreach ($inlineScripts as $inlineScript) {
+            $html = empty($html) ? $html : $html . "\t";
+            $html .= $inlineScript . "\n";
+
+        }
+
+        return $html;
+    }
+
 }

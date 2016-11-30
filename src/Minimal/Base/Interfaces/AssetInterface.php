@@ -10,22 +10,28 @@ interface AssetInterface
 	/**
 	 * @param $path
 	 */
-	public function setBaseDir($path);
+	public function setBase($path);
 
 	/**
 	 * @return string
 	 */
-	public function getBaseDir();
+	public function getBase();
 
-	/**
-	 * @param $url
-	 */
-	public function addCssFile($url);
+    /**
+     * @param      $url
+     * @param null $key
+     *
+     * @return
+     */
+	public function addCss($urls, $key = null);
 
-	/**
-	 * @param $url
-	 */
-	public function addJsFile($url);
+    /**
+     * @param      $url
+     * @param null $key
+     *
+     * @return
+     */
+	public function addJs($urls, $key = null);
 
 	/**
 	 * @return array

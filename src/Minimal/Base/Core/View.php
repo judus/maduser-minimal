@@ -3,6 +3,7 @@
 use Maduser\Minimal\Base\Exceptions\MethodNotExistsException;
 use Maduser\Minimal\Base\Interfaces\PresenterInterface;
 use Maduser\Minimal\Base\Interfaces\ViewInterface;
+use Maduser\Minimal\Base\Interfaces\AssetInterface;
 
 /**
  * Class View
@@ -19,12 +20,22 @@ class View implements ViewInterface, PresenterInterface
     /**
      * @var
      */
+    private $asset;
+
+    /**
+     * @var
+     */
     private $base;
 
     /**
-	 * @var
-	 */
-	private $theme;
+     * @var
+     */
+    private $theme;
+
+    /**
+     * @var
+     */
+    private $dir;
 
     /**
      * @var
@@ -65,6 +76,38 @@ class View implements ViewInterface, PresenterInterface
     public function setPresenter($presenter)
     {
         $this->presenter = $presenter;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsset()
+    {
+        return $this->asset;
+    }
+
+    /**
+     * @param mixed $asset
+     */
+    public function setAsset($asset)
+    {
+        $this->asset = $asset;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDir()
+    {
+        return rtrim($this->dir, '/') . '/';
+    }
+
+    /**
+     * @param mixed $dir
+     */
+    public function setDir($dir)
+    {
+        $this->dir = $dir;
     }
 
     /**
@@ -213,10 +256,12 @@ class View implements ViewInterface, PresenterInterface
      * View constructor.
      *
      * @param Presenter|null $presenter
+     * @param Asset          $asset
      */
-    public function __construct(Presenter $presenter = null)
+    public function __construct(Presenter $presenter = null, Asset $asset = null)
     {
         $this->setPresenter($presenter);
+        $this->setAsset($asset);
     }
 
     /**
@@ -224,7 +269,7 @@ class View implements ViewInterface, PresenterInterface
 	 */
 	public function getPath()
 	{
-		return $this->getBase() . $this->getTheme();
+		return $this->getBase() . $this->getTheme() . $this->getDir();
 	}
 
     /**
@@ -263,12 +308,12 @@ class View implements ViewInterface, PresenterInterface
 	 *
 	 * @return string
 	 */
-	public function render($viewPath, array $data = null)
+	public function render($viewPath, array $data = null, $bypass = false)
 	{
 	    $this->setView($viewPath);
 	    $this->setData($data);
 
-        if (!$this->isAjax() && $this->getLayout() !== null) {
+        if (!$this->isAjax() && $this->getLayout() !== null && !$bypass) {
             return $this->renderLayout($this->getSharedData());
         }
 
