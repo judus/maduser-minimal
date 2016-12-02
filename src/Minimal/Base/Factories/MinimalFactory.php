@@ -12,11 +12,6 @@ use Maduser\Minimal\Base\Interfaces\MinimalFactoryInterface;
 class MinimalFactory implements MinimalFactoryInterface
 {
     /**
-     * @var string
-     */
-    protected $namespace = "Maduser\\Minimal\\Base\\Core\\";
-
-    /**
      * @return string
      */
     public function getNamespace(): string

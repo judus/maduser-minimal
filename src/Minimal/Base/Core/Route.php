@@ -32,7 +32,7 @@ class Route implements RouteInterface
 	/**
 	 * @var null
 	 */
-	private $middleware = null;
+	private $middlewares = [];
 
 	/**
 	 * @var null
@@ -98,9 +98,11 @@ class Route implements RouteInterface
 		return $this->cache;
 	}
 
-	/**
-	 * @param null $cache
-	 */
+    /**
+     * @param null $cache
+     *
+     * @return mixed|void
+     */
 	public function setCache($cache)
 	{
 		$this->cache = $cache;
@@ -114,9 +116,11 @@ class Route implements RouteInterface
 		return $this->uriPrefix;
 	}
 
-	/**
-	 * @param $uriPrefix
-	 */
+    /**
+     * @param $uriPrefix
+     *
+     * @return mixed|void
+     */
 	public function setUriPrefix($uriPrefix)
 	{
 		$this->uriPrefix = $uriPrefix;
@@ -141,20 +145,28 @@ class Route implements RouteInterface
 	/**
 	 * @return null
 	 */
-	public function getMiddleware()
+	public function getMiddlewares()
 	{
-		return $this->middleware;
+		return $this->middlewares;
 	}
 
-	/**
-	 * @param null $middleware
-	 */
-	public function setMiddleware($middleware)
-	{
-		$this->middleware = $middleware;
-	}
+    /**
+     * @param null $middleware
+     */
+    public function setMiddlewares($middleware)
+    {
+        $this->middlewares = $middleware;
+    }
 
-	/**
+    /**
+     * @param null $middleware
+     */
+    public function addMiddleware($middleware)
+    {
+        $this->middlewares[] = $middleware;
+    }
+
+    /**
 	 * @return null
 	 */
 	public function getNamespace()
@@ -162,9 +174,11 @@ class Route implements RouteInterface
 		return $this->namespace;
 	}
 
-	/**
-	 * @param null $namespace
-	 */
+    /**
+     * @param null $namespace
+     *
+     * @return mixed|void
+     */
 	public function setNamespace($namespace)
 	{
 		$namespace = !empty($namespace) ? rtrim($namespace, '\\') . '\\' : $namespace;

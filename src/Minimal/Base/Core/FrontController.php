@@ -227,6 +227,8 @@ class FrontController implements FrontControllerInterface
         $this->view = $view;
     }
 
+
+
     /**
      * @return mixed
      */
@@ -383,20 +385,11 @@ class FrontController implements FrontControllerInterface
 
     }
 
-    public function isModuleController($controller)
-    {
-        return true;
-    }
-
     public function handleController(
         $controller,
         $action = null,
         array $params = null
     ) {
-
-        if ($this->isModuleController($controller)) {
-
-        }
 
         $this->setController(
             $this->controllerFactory->createInstance($controller, $params)
@@ -423,9 +416,15 @@ class FrontController implements FrontControllerInterface
         return call_user_func_array([$class, $method], $params);
     }
 
-    public function execute(RouteInterface $route = null)
+    public function dispatch(RouteInterface $route = null)
     {
         $route ? $this->setRoute($route) : null;
+
+        $middlewares = $this->route->getMiddlewares();
+
+        if (false === $this->before($middlewares)) {
+            return $this;
+        }
 
         if (!empty($this->route->getController())) {
             $this->handleController(
@@ -451,60 +450,27 @@ class FrontController implements FrontControllerInterface
             );
         };
 
+        $this->after($middlewares);
+
         return $this;
     }
 
-    /**
-     * Deprecated and no longer in use
-     */
-    public function fetchDependencies($class)
+    public function before($middlewares)
     {
-        $reflected = new \ReflectionClass($class);
-
-        $params = [];
-        if ($constructor = $reflected->getConstructor()) {
-            $params = $constructor->getParameters();
-        }
-
-        $dependencies = [];
-
-        // Naaaaah...really, that's not what I mean!!
-        // ...and it's never going to stay minimal
-        // TODO: Service providers
-        foreach ($params as $param) {
-
-            $requiredInterface = $param->getClass()->name;
-
-            foreach (IOC::$registry as $key => $registeredClass) {
-
-                $reflectedIocItem = new \ReflectionClass($registeredClass);
-
-                if ($reflectedIocItem->name == 'Closure') {
-                    $testObject = IOC::resolve($key);
-                    $testObject = new \ReflectionClass($testObject);
-                } else {
-                    $testObject = $reflectedIocItem;
-                }
-
-                foreach ($testObject->getInterfaceNames() as $item) {
-                    if ($item == $requiredInterface) {
-                        $dependencies[$key] = IOC::resolve($key);
-                    }
-
-                }
+        foreach ($middlewares as $middleware) {
+            $middleware = IOC::make($middleware);
+            if (false === $middleware->before($this)) {
+                return false;
             }
         }
+    }
 
-        if (count($params) != count($dependencies)) {
-            throw new UnresolvedDependenciesException([
-                'Required' => count($params),
-                'Fetched' => count($dependencies),
-                'Required classes' => $params,
-                'Fetched classes' => $dependencies
-            ]);
+    public function after($middlewares)
+    {
+        foreach ($middlewares as $middleware) {
+            $middleware = IOC::make($middleware);
+            $middleware->after($this);
         }
-
-        return $dependencies;
     }
 
     /**

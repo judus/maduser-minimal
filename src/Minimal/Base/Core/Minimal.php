@@ -476,7 +476,7 @@ class Minimal
         $route = $router->getRoute($uriString);
 
         $frontController = $this->getFrontController();
-        $frontController->execute($route);
+        $frontController->dispatch($route);
 
         $this->setResult($frontController->getControllerResult());
 

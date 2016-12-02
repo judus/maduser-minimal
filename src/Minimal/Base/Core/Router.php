@@ -51,6 +51,11 @@ class Router implements RouterInterface
     private $groupNamespace;
 
     /**
+     * @var
+     */
+    private $groupMiddlewares;
+
+    /**
      * @var array
      */
     private $groupValues = [];
@@ -141,6 +146,22 @@ class Router implements RouterInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getGroupMiddlewares()
+    {
+        return $this->groupMiddlewares;
+    }
+
+    /**
+     * @param mixed $groupMiddlewares
+     */
+    public function setGroupMiddlewares($groupMiddlewares)
+    {
+        $this->groupMiddlewares = $groupMiddlewares;
+    }
+
+    /**
      * Routes constructor.
      *
      * @param ConfigInterface   $config
@@ -195,6 +216,7 @@ class Router implements RouterInterface
 
         $this->setGroupUriPrefix(null);
         $this->setGroupNamespace(null);
+        $this->setGroupMiddlewares([]);
     }
 
     /**
@@ -279,6 +301,7 @@ class Router implements RouterInterface
 
         $vars = compact(array_keys(get_defined_vars()));
         $vars['namespace'] = isset($vars['namespace']) ? $vars['namespace'] : $this->getGroupNamespace();
+        $vars['middlewares'] = isset($vars['middlewares']) ? $vars['middlewares'] : $this->getGroupMiddlewares();
 
         $route = new Route($vars);
 

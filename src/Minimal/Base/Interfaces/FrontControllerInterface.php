@@ -140,7 +140,7 @@ interface FrontControllerInterface
 	/**
 	 *
 	 */
-	public function execute();
+	public function dispatch();
 
 	/**
 	 * @return mixed
