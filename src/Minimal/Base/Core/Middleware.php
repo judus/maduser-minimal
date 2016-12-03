@@ -53,7 +53,7 @@ class Middleware
 
         $response = $task();
 
-        $afterResponse = $this->after($this->getMiddlewares());
+        $afterResponse = $this->after($this->getMiddlewares(), $response);
 
         if ($afterResponse === false || $afterResponse !== true) {
             return $afterResponse;
@@ -77,12 +77,12 @@ class Middleware
      *
      * @return bool
      */
-    public function after(array $middlewares)
+    public function after(array $middlewares, $response)
     {
-        return $this->execute('after', $middlewares);
+        return $this->execute('after', $middlewares, $response);
     }
 
-    protected function execute($when, $middlewares)
+    protected function execute($when, $middlewares, $response = null)
     {
         foreach ($middlewares as $key => $middleware) {
 
@@ -95,6 +95,10 @@ class Middleware
 
             if (class_exists($middleware)) {
 
+                if ($response) {
+                    array_push($parameters, $response);
+                }
+
                 $middleware = IOC::make($middleware, $parameters);
                 $response = $middleware->{$when}($this);
 
@@ -104,13 +108,9 @@ class Middleware
                     return $response;
                 }
             }
-
-
-
         }
 
         return true;
-
     }
 
 

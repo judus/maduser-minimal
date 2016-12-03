@@ -55,8 +55,6 @@ class Router implements RouterInterface
      */
     private $groupMiddlewares;
 
-    private $groupCache;
-
     /**
      * @var array
      */
@@ -110,22 +108,6 @@ class Router implements RouterInterface
     public function getGroupNamespace()
     {
         return $this->groupNamespace;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGroupCache()
-    {
-        return $this->groupCache;
-    }
-
-    /**
-     * @param mixed $groupCache
-     */
-    public function setGroupCache($groupCache)
-    {
-        $this->groupCache = $groupCache;
     }
 
     /**
@@ -237,7 +219,6 @@ class Router implements RouterInterface
         $this->setGroupUriPrefix(null);
         $this->setGroupNamespace(null);
         $this->setGroupMiddlewares([]);
-        $this->setGroupCache(null);
     }
 
     /**
@@ -297,9 +278,6 @@ class Router implements RouterInterface
     ) {
         extract($this->getGroupValues());
 
-        //$this->handleCache($callback);
-
-
         // Direct output
         if (is_callable($callback)) {
 
@@ -325,8 +303,6 @@ class Router implements RouterInterface
 
         if (is_array($callback)) {
             extract($callback);
-            //show($this->getGroupCache());
-            //show(compact(array_keys(get_defined_vars())));
         }
 
         unset($callback);
@@ -335,7 +311,6 @@ class Router implements RouterInterface
 
         $vars['namespace'] = isset($vars['namespace']) ? $vars['namespace'] : $this->getGroupNamespace();
         $vars['middlewares'] = isset($vars['middlewares']) ? $vars['middlewares'] : $this->getGroupMiddlewares();
-        $vars['cache'] = isset($vars['cache']) ? $vars['cache'] : $this->getGroupCache();
 
         $route = new Route($vars);
 
@@ -344,31 +319,6 @@ class Router implements RouterInterface
 
         $this->routes->get('ALL')->add($route, strtoupper($requestMethod).'::'.$uriPattern);
         $this->routes->get(strtoupper($requestMethod))->add($route, $uriPattern);
-    }
-
-    public function handleCache(Route $route)
-    {
-        $cached = $this->getCachedResults($this->request->getUriString(), $route->getCache());
-        if (!is_null($cached)) {
-             $this->response->send($cached)->exit();
-        }
-    }
-
-    public function getCachedResults($uri, $timeout)
-    {
-        $filename = PATH . rtrim($this->config->item('cache.path'), '/') .
-            '/' . md5($uri) . '.cache';
-
-        if (!file_exists($filename)) {
-            return null;
-        }
-
-        if ((filemtime($filename) + $timeout) > time()) {
-            return file_get_contents($filename);
-        } else {
-            //unlink($filename);
-        }
-        return null;
     }
 
     /**
@@ -417,7 +367,6 @@ class Router implements RouterInterface
 
         // Look for a literal match
         if (isset($routes[$uri])) {
-            //$this->handleCache($routes[$uri]);
             return $routes[$uri];
         }
 
@@ -425,7 +374,6 @@ class Router implements RouterInterface
         foreach ($routes as $key => $options) {
             if ($matches = $this->matchWildcard($key)) {
                 $routes[$key]->setParams($matches);
-                $this->handleCache($routes[$key]);
                 return $routes[$key];
             }
         }

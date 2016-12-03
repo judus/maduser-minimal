@@ -529,9 +529,28 @@ class Minimal
      */
     public function dispatch()
     {
+        $start = microtime(true);
+
         $this->load();
         $this->execute();
+
+        $end = microtime(true);
+
+        $response = $this->getResult();
+
+        $response = str_replace(
+            '</body>',
+            '<p><small>Executed in '. $this->formatPeriod($end, $start).' secs</small></p></body>', $response);
+
+        $this->setResult($response);
+
         $this->respond();
         $this->exit();
+
+    }
+
+    public function formatPeriod($endtime, $starttime)
+    {
+        return ($endtime - $starttime) * 1;
     }
 }
