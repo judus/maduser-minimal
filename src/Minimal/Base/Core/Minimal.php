@@ -539,8 +539,8 @@ class Minimal
         $response = $this->getResult();
 
         $response = str_replace(
-            '</body>',
-            '<p><small>Executed in '. $this->formatPeriod($end, $start).' secs</small></p></body>', $response);
+            '{execution-time}',
+            'Executed in '. $this->formatPeriod($end, $start).' secs', $response);
 
         $this->setResult($response);
 

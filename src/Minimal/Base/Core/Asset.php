@@ -72,7 +72,9 @@ class Asset implements AssetInterface
      */
     public function getBase()
     {
-        return rtrim($this->base, '/') . '/';
+        $base = rtrim($this->base, '/') . '/';
+        $base = '/' . ltrim($base, '/');
+        return $base;
     }
 
     /**
@@ -197,7 +199,8 @@ class Asset implements AssetInterface
         }
 
         if (is_string($urls)) {
-            $this->cssFiles[$this->key($key)][] = $this->getCssDir() . $urls;
+            $this->cssFiles[$this->key($key)][] =
+                $this->getBase() . $this->getTheme() . $this->getCssDir() . $urls;
         }
     }
 
@@ -214,7 +217,8 @@ class Asset implements AssetInterface
         }
 
         if (is_string($urls)) {
-            $this->jsFiles[$this->key($key)][] = $this->getJsDir() . $urls;
+            $this->jsFiles[$this->key($key)][] =
+                $this->getBase() . $this->getTheme() . $this->getJsDir() . $urls;
         }
     }
 
@@ -223,7 +227,7 @@ class Asset implements AssetInterface
      *
      * @return string
      */
-    public function getCSS($key = null)
+    public function getCss($key = null)
     {
         $cssFiles = $this->cssFiles[$this->key($key)];
         $html = '';
