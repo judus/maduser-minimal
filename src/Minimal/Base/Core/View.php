@@ -1,7 +1,6 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
 use Maduser\Minimal\Base\Exceptions\MethodNotExistsException;
-use Maduser\Minimal\Base\Interfaces\PresenterInterface;
 use Maduser\Minimal\Base\Interfaces\ViewInterface;
 use Maduser\Minimal\Base\Interfaces\AssetInterface;
 
@@ -10,7 +9,7 @@ use Maduser\Minimal\Base\Interfaces\AssetInterface;
  *
  * @package Maduser\Minimal\Base\Core
  */
-class View implements ViewInterface, PresenterInterface
+class View implements ViewInterface
 {
     /**
      * @var
@@ -61,22 +60,6 @@ class View implements ViewInterface, PresenterInterface
      * @var array
      */
     private $data = [];
-
-    /**
-     * @return mixed
-     */
-    public function getPresenter()
-    {
-        return $this->presenter;
-    }
-
-    /**
-     * @param mixed $presenter
-     */
-    public function setPresenter($presenter)
-    {
-        $this->presenter = $presenter;
-    }
 
     /**
      * @return mixed
@@ -255,12 +238,10 @@ class View implements ViewInterface, PresenterInterface
     /**
      * View constructor.
      *
-     * @param Presenter|null $presenter
      * @param Asset          $asset
      */
-    public function __construct(Presenter $presenter = null, Asset $asset = null)
+    public function __construct(Asset $asset = null)
     {
-        $this->setPresenter($presenter);
         $this->setAsset($asset);
     }
 
@@ -311,7 +292,11 @@ class View implements ViewInterface, PresenterInterface
 	public function render($viewPath, array $data = null, $bypass = false)
 	{
 	    $this->setView($viewPath);
-	    $this->setData($data);
+
+        if (!is_null($data)) {
+            $this->setData($data);
+        }
+
 
         if (!$this->isAjax() && $this->getLayout() !== null && !$bypass) {
             return $this->renderLayout($this->getSharedData());
@@ -371,30 +356,5 @@ class View implements ViewInterface, PresenterInterface
         return $rendered;
     }
 
-    public function __call($method, $args)
-    {
-        if (method_exists($this->getPresenter(), $method) && !method_exists($this, $method)) {
-            return call_user_func_array([$this->getPresenter(), $method], $args);
-        }
-        throw new MethodNotExistsException(
-            'Undefined method - ' . get_class($this->getPresenter()) . '::' . $method
-        );
-    }
-
-    public function __get($property)
-    {
-        if (property_exists($this->presenter, $property)) {
-            return $this->presenter->$property;
-        }
-
-        return null;
-    }
-
-    public function __set($property, $value)
-    {
-        $this->presenter->$property = $value;
-
-        return $this;
-    }
 
 }

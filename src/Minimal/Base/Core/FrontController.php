@@ -420,12 +420,6 @@ class FrontController implements FrontControllerInterface
     {
         $route ? $this->setRoute($route) : null;
 
-        $middlewares = $this->route->getMiddlewares();
-
-        if (false === $this->before($middlewares)) {
-            return $this;
-        }
-
         if (!empty($this->route->getController())) {
             $this->handleController(
                 $this->route->getController(),
@@ -450,27 +444,7 @@ class FrontController implements FrontControllerInterface
             );
         };
 
-        $this->after($middlewares);
-
         return $this;
-    }
-
-    public function before($middlewares)
-    {
-        foreach ($middlewares as $middleware) {
-            $middleware = IOC::make($middleware);
-            if (false === $middleware->before($this)) {
-                return false;
-            }
-        }
-    }
-
-    public function after($middlewares)
-    {
-        foreach ($middlewares as $middleware) {
-            $middleware = IOC::make($middleware);
-            $middleware->after($this);
-        }
     }
 
     /**

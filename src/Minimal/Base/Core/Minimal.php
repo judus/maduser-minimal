@@ -2,11 +2,13 @@
 
 use Maduser\Minimal\Base\Core\IOC;
 use Maduser\Minimal\Base\Interfaces\ConfigInterface;
+use Maduser\Minimal\Base\Interfaces\MiddlewareInterface;
 use Maduser\Minimal\Base\Interfaces\RequestInterface;
 use Maduser\Minimal\Base\Interfaces\ResponseInterface;
 use Maduser\Minimal\Base\Interfaces\RouterInterface;
 use Maduser\Minimal\Base\Interfaces\ModulesInterface;
 use Maduser\Minimal\Base\Interfaces\FrontControllerInterface;
+use Maduser\Minimal\Base\Middlewares\Middleware;
 
 /**
  * Class Minimal
@@ -299,6 +301,24 @@ class Minimal
     }
 
     /**
+     * @param          $middlewares
+     *
+     * @return MiddlewareInterface
+     */
+    public function getMiddleware($middlewares)
+    {
+        return IOC::resolve('Middleware', [$middlewares]);
+    }
+
+    /**
+     * @param MiddlewareInterface $middleware
+     */
+    public function setMiddleware(MiddlewareInterface $middleware)
+    {
+        $this->middleware = $middleware;
+    }
+
+    /**
      * @return mixed
      */
     public function getModules(): ModulesInterface
@@ -359,7 +379,7 @@ class Minimal
      * Minimal constructor.
      *
      * @param array $params
-     * @param bool  $doNotLaunch
+     * @param bool $returnInstance
      */
     public function __construct(array $params, $returnInstance = false)
     {
@@ -373,7 +393,9 @@ class Minimal
         !isset($routes) || $this->setRoutesFile($routes);
         !isset($modules) || $this->setRoutesFile($modules);
 
-        $returnInstance || $this->launch();
+        define('PATH', $this->getBasepath());
+
+        $returnInstance || $this->dispatch();
     }
 
     /**
@@ -462,23 +484,23 @@ class Minimal
     }
 
     /**
-     * @param null $uriString
+     * @param null $uri
      *
      * @return $this
      */
-    public function execute($uriString = null)
+    public function execute($uri = null)
     {
-        $request = $this->getRequest();
+        $uri = $uri ? $uri : $this->getRequest()->getUriString();
 
-        $router = $this->getRouter();
+        $route = $this->getRouter()->getRoute($uri);
 
-        $uriString = $uriString ? $uriString : $request->getUriString();
-        $route = $router->getRoute($uriString);
+        $middleware = $this->getMiddleware($route->getMiddlewares());
 
-        $frontController = $this->getFrontController();
-        $frontController->dispatch($route);
+        $response = $middleware->dispatch(function () use ($route) {
+            return $this->getFrontController()->dispatch($route)->getResult();
+        });
 
-        $this->setResult($frontController->getControllerResult());
+        $this->setResult($response);
 
         return $this;
     }
@@ -505,7 +527,7 @@ class Minimal
     /**
      *
      */
-    public function launch()
+    public function dispatch()
     {
         $this->load();
         $this->execute();

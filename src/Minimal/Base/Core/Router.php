@@ -55,6 +55,8 @@ class Router implements RouterInterface
      */
     private $groupMiddlewares;
 
+    private $groupCache;
+
     /**
      * @var array
      */
@@ -111,6 +113,22 @@ class Router implements RouterInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getGroupCache()
+    {
+        return $this->groupCache;
+    }
+
+    /**
+     * @param mixed $groupCache
+     */
+    public function setGroupCache($groupCache)
+    {
+        $this->groupCache = $groupCache;
+    }
+
+    /**
      * @param array $values
      */
     public function setGroupValues(array $values)
@@ -150,7 +168,9 @@ class Router implements RouterInterface
      */
     public function getGroupMiddlewares()
     {
-        return $this->groupMiddlewares;
+
+        return is_array($this->groupMiddlewares) ?
+            $this->groupMiddlewares : [$this->groupMiddlewares];
     }
 
     /**
@@ -217,6 +237,7 @@ class Router implements RouterInterface
         $this->setGroupUriPrefix(null);
         $this->setGroupNamespace(null);
         $this->setGroupMiddlewares([]);
+        $this->setGroupCache(null);
     }
 
     /**
@@ -276,12 +297,20 @@ class Router implements RouterInterface
     ) {
         extract($this->getGroupValues());
 
+        //$this->handleCache($callback);
+
+
+        // Direct output
         if (is_callable($callback)) {
 
+            // If we have a literal match, we execute the closure, send the
+            // response and exit PHP
             if ($this->matchLiteral($this->getGroupUriPrefix() . $uriPattern)) {
                 $this->response->send($callback())->exit();
             }
 
+            // If we have a wildcard  match, we pass the wildcard value to
+            // the closure, execute it, send the response and exit PHP
             if ($matches = $this->matchWildcard($this->getGroupUriPrefix() . $uriPattern)) {
                 $this->response->send(
                     call_user_func_array($callback, $matches)
@@ -289,19 +318,24 @@ class Router implements RouterInterface
             }
         }
 
+
         if (is_string($callback)) {
             $callback = $this->fetchControllerAndAction($callback);
         }
 
         if (is_array($callback)) {
             extract($callback);
+            //show($this->getGroupCache());
+            //show(compact(array_keys(get_defined_vars())));
         }
 
         unset($callback);
 
         $vars = compact(array_keys(get_defined_vars()));
+
         $vars['namespace'] = isset($vars['namespace']) ? $vars['namespace'] : $this->getGroupNamespace();
         $vars['middlewares'] = isset($vars['middlewares']) ? $vars['middlewares'] : $this->getGroupMiddlewares();
+        $vars['cache'] = isset($vars['cache']) ? $vars['cache'] : $this->getGroupCache();
 
         $route = new Route($vars);
 
@@ -310,6 +344,31 @@ class Router implements RouterInterface
 
         $this->routes->get('ALL')->add($route, strtoupper($requestMethod).'::'.$uriPattern);
         $this->routes->get(strtoupper($requestMethod))->add($route, $uriPattern);
+    }
+
+    public function handleCache(Route $route)
+    {
+        $cached = $this->getCachedResults($this->request->getUriString(), $route->getCache());
+        if (!is_null($cached)) {
+             $this->response->send($cached)->exit();
+        }
+    }
+
+    public function getCachedResults($uri, $timeout)
+    {
+        $filename = PATH . rtrim($this->config->item('cache.path'), '/') .
+            '/' . md5($uri) . '.cache';
+
+        if (!file_exists($filename)) {
+            return null;
+        }
+
+        if ((filemtime($filename) + $timeout) > time()) {
+            return file_get_contents($filename);
+        } else {
+            //unlink($filename);
+        }
+        return null;
     }
 
     /**
@@ -358,6 +417,7 @@ class Router implements RouterInterface
 
         // Look for a literal match
         if (isset($routes[$uri])) {
+            //$this->handleCache($routes[$uri]);
             return $routes[$uri];
         }
 
@@ -365,7 +425,7 @@ class Router implements RouterInterface
         foreach ($routes as $key => $options) {
             if ($matches = $this->matchWildcard($key)) {
                 $routes[$key]->setParams($matches);
-
+                $this->handleCache($routes[$key]);
                 return $routes[$key];
             }
         }

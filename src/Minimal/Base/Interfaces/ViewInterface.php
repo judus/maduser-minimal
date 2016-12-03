@@ -49,16 +49,6 @@ interface ViewInterface
     /**
      * @return mixed
      */
-    public function getPresenter();
-
-    /**
-     * @param mixed $presenter
-     */
-    public function setPresenter($presenter);
-
-    /**
-     * @return mixed
-     */
     public function getView();
 
     /**

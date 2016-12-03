@@ -79,9 +79,9 @@ class PagesController extends Controller
         $this->asset = $asset;
         $this->modules = $modules;
 
-        $this->view->setBaseDir('../resources/views/');
+        $this->view->setBase('../resources/views/');
         $this->view->setTheme('my-theme');
-        $this->view->setViewDir('main/');
+        $this->view->setDir('main/');
     }
 
 

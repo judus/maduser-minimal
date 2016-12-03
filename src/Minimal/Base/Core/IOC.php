@@ -64,11 +64,12 @@ class IOC
      * @return mixed
      * @throws \Exception
      */
-    public static function resolve($name)
+    public static function resolve($name, $params = null)
     {
+        $alias = $name;
         if ($name = static::registered($name)) {
             $name = static::$registry[$name];
-            return $name()->resolve();
+            return $name()->resolve($params);
         }
     }
 
@@ -124,27 +125,40 @@ class IOC
         return $dependencies;
     }
 
-    public static function getDependency($parameter)
+    public static function getDependency(\ReflectionParameter $parameter)
     {
+        if ($parameter->isArray() || !$parameter->getClass()) {
+            return null;
+        }
+
         $class = $parameter->getClass()->name;
+
+        if ($class == 'Closure') {
+            return null;
+        }
 
         $reflected = new \ReflectionClass($class);
 
         if (self::binded($reflected->name)) {
             return self::$bindings[$reflected->name];
         } else {
-            return$reflected->name;
+            return $reflected->name;
         }
     }
 
     public static function resolveDependencies(array $dependencies)
     {
+
         foreach ($dependencies as &$dependency) {
-            if (IOC::registered($dependency)) {
-                $dependency = IOC::resolve($dependency);
+            if (is_null($dependency)) {
+                $dependency =  null;
             } else {
-                // just try unregistered
-                $dependency = new $dependency();
+                if (IOC::registered($dependency)) {
+                    $dependency = IOC::resolve($dependency);
+                } else {
+                    // just try unregistered
+                    $dependency = new $dependency();
+                }
             }
         }
         return $dependencies;
@@ -158,6 +172,17 @@ class IOC
 
         $instanceArgs = self::resolveDependencies($dependencies);
 
+        if (is_array($params)) {
+            foreach($params as $param) {
+                foreach ($instanceArgs as &$instanceArg) {
+                    if (is_null($instanceArg)) {
+                        $instanceArg = $param;
+                        break;
+                    }
+                }
+            }
+        }
+
         if (count($dependencies) != count($instanceArgs)) {
             throw new UnresolvedDependenciesException(
                 'Could not resolve all dependencies', [
@@ -169,7 +194,6 @@ class IOC
         if (is_array($params)) {
             $instanceArgs = array_merge($instanceArgs, $params);
         }
-
         return $reflected->newInstanceArgs($instanceArgs);
     }
 
