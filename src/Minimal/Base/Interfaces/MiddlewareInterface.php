@@ -36,9 +36,20 @@
 
 namespace Maduser\Minimal\Base\Interfaces;
 
+/**
+ * Interface MiddlewareInterface
+ *
+ * @package Maduser\Minimal\Base\Interfaces
+ */
 interface MiddlewareInterface
 {
+    /**
+     * @return mixed
+     */
     public function before();
 
+    /**
+     * @return mixed
+     */
     public function after();
 }

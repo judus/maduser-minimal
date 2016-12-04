@@ -99,11 +99,9 @@ class Route implements RouteInterface
 	}
 
     /**
-     * @param null $cache
-     *
-     * @return mixed|void
+     * @param $cache
      */
-	public function setCache($cache)
+    public function setCache($cache)
 	{
 		$this->cache = $cache;
 	}
@@ -118,8 +116,6 @@ class Route implements RouteInterface
 
     /**
      * @param $uriPrefix
-     *
-     * @return mixed|void
      */
 	public function setUriPrefix($uriPrefix)
 	{
@@ -176,8 +172,6 @@ class Route implements RouteInterface
 
     /**
      * @param null $namespace
-     *
-     * @return mixed|void
      */
 	public function setNamespace($namespace)
 	{

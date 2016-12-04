@@ -1,9 +1,6 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
-use Maduser\Minimal\Base\Interfaces\MinimalFactoryInterface;
 use Maduser\Minimal\Base\Interfaces\ModuleInterface;
-use Maduser\Minimal\Base\Interfaces\CollectionFactoryInterface;
-use Maduser\Minimal\Base\Interfaces\CollectionInterface;
 
 /**
  * Class Module
@@ -66,7 +63,7 @@ class Module implements ModuleInterface
     /**
      * @return mixed
      */
-    public function getPath()
+    public function getPath(): string
     {
         return rtrim($this->path, '/') . '/';
     }

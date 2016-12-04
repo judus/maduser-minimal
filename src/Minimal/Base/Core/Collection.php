@@ -20,10 +20,10 @@ class Collection implements CollectionInterface
 	 * @param      $obj
 	 * @param null $key
 	 *
-	 * @return $this
+	 * @return CollectionInterface
 	 * @throws KeyInUseException
 	 */
-	public function add($obj, $key = null)
+	public function add($obj, $key = null): CollectionInterface
 	{
 		if ($key == null) {
 			$this->items[] = $obj;

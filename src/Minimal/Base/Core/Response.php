@@ -104,18 +104,16 @@ class Response implements ResponseInterface
         return $this;
     }
 
-	/**
-     * Send the response to the client
+    /**
+     * @param null $content
      *
-	 * @param null $content
-	 *
-	 * @return $this
-	 */
-	public function send($content = null)
-	{
-		is_null($content) || $this->setContent($content);
+     * @return $this
+     */
+    public function prepare($content = null)
+    {
+        is_null($content) || $this->setContent($content);
 
-		$content = $this->getContent();
+        $content = $this->getContent();
 
         $content = $this->arrayToJson($content);
 
@@ -123,10 +121,35 @@ class Response implements ResponseInterface
 
         $content = $this->printRecursiveNonAlphaNum($content);
 
-        echo $content;
+        $this->setContent($content);
 
-		return $this;
-	}
+        return $this;
+    }
+
+    /**
+     * Prepares and send the response to the client
+     *
+     * @param null $content
+     *
+     * @return $this
+     */
+    public function send($content = null)
+    {
+        $this->prepare($content);
+        $this->sendPrepared();
+        return $this;
+    }
+
+    /**
+     * Send the response to the client
+     *
+     * @return $this
+     */
+    public function sendPrepared()
+    {
+        echo $this->getContent();
+        return $this;
+    }
 
     /**
      * Encode array to json if configured

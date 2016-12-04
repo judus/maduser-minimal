@@ -1,7 +1,7 @@
 <?php
 /**
- * CollectionFactoryInterface.php
- * 11/19/16 - 1:48 AM
+ * DispatcherInterface.php
+ * 12/4/16 - 2:56 AM
  *
  * PHP version 7
  *
@@ -36,12 +36,18 @@
 
 namespace Maduser\Minimal\Base\Interfaces;
 
+
 /**
- * Interface CollectionFactoryInterface
+ * Class Middleware
  *
- * @package Maduser\Minimal\Base\Interfaces
+ * @package Maduser\Minimal\Base\Core
  */
-interface CollectionFactoryInterface
+interface DispatcherInterface
 {
-    public function create(array $params = null, $class = null): CollectionInterface;
+  /**
+     * @param \Closure $task
+     *
+     * @return mixed
+     */
+    public function dispatch(\Closure $task);
 }

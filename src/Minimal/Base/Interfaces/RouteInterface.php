@@ -9,8 +9,6 @@ interface RouteInterface
 {
 	/**
 	 * @param $uriPrefix
-	 *
-	 * @return mixed
 	 */
 	public function setUriPrefix($uriPrefix);
 
@@ -21,15 +19,11 @@ interface RouteInterface
 
 	/**
 	 * @param $cache
-	 *
-	 * @return mixed
 	 */
 	public function setCache($cache);
 
 	/**
 	 * @param $name
-	 *
-	 * @return mixed
 	 */
 	public function setModel($name);
 
@@ -40,15 +34,11 @@ interface RouteInterface
 
 	/**
 	 * @param $namespace
-	 *
-	 * @return mixed
 	 */
 	public function setNamespace($namespace);
 
 	/**
 	 * @param $name
-	 *
-	 * @return mixed
 	 */
 	public function setController($name);
 
@@ -59,8 +49,6 @@ interface RouteInterface
 
 	/**
 	 * @param $name
-	 *
-	 * @return mixed
 	 */
 	public function setView($name);
 
@@ -71,8 +59,6 @@ interface RouteInterface
 
 	/**
 	 * @param $name
-	 *
-	 * @return mixed
 	 */
 	public function setMethod($name);
 
@@ -83,8 +69,6 @@ interface RouteInterface
 
 	/**
 	 * @param $name
-	 *
-	 * @return mixed
 	 */
 	public function setAction($name);
 
@@ -95,8 +79,6 @@ interface RouteInterface
 
 	/**
 	 * @param $name
-	 *
-	 * @return mixed
 	 */
 	public function setParams($name);
 
@@ -104,4 +86,9 @@ interface RouteInterface
 	 * @return mixed
 	 */
 	public function getParams();
+
+    /**
+     * @return mixed
+     */
+    public function getMiddlewares();
 }

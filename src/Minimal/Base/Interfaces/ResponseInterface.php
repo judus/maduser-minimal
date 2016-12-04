@@ -20,9 +20,11 @@ interface ResponseInterface
     public function header($string);
 
     /**
+     * @param null $content
+     *
      * @return mixed
      */
-    public function send();
+    public function send($content = null);
 
     /**
 	 * @return mixed

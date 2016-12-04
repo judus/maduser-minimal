@@ -1,11 +1,13 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
+use Maduser\Minimal\Base\Interfaces\DispatcherInterface;
+
 /**
  * Class Middleware
  *
  * @package Maduser\Minimal\Base\Core
  */
-class Middleware
+class Middleware implements DispatcherInterface
 {
     /**
      * @var array
@@ -74,6 +76,7 @@ class Middleware
 
     /**
      * @param array $middlewares
+     * @param       $response
      *
      * @return bool
      */

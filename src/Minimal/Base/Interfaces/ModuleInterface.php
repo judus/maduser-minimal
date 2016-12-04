@@ -54,6 +54,16 @@ interface ModuleInterface
     public function setName($name);
 
     /**
+     * @param $path
+     */
+    public function setPath($path);
+
+    /**
+     * @return string
+     */
+    public function getPath(): string;
+
+    /**
      * @return string
      */
     public function getBootFile(): string;

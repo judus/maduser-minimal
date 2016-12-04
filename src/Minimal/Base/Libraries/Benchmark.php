@@ -34,7 +34,7 @@ class Benchmark
      */
     public function mark($key)
     {
-        $this->addBenchmark($key, microtime(false)*1000);
+        $this->addBenchmark($key, microtime(true)*1000);
     }
 
     public function getExecutionTime()
@@ -64,21 +64,21 @@ class Benchmark
     /**
      * @param $string
      *
+     * @param $placeholder
+     *
      * @return mixed
      */
-    public function addBenchmarkInfo($string)
+    public function addBenchmarkInfo($string, $placeholder)
     {
-
         $marks = $this->getBenchmarks();
-
-
         $i = 0;
         $str = '';
+
         foreach ($marks as $mark) {
             $mark[] = $this->getPeriod($marks, $i++);
             $mark[] = $this->getPercents($mark);
             $str .= '<span style="display: block; text-align: left">'
-                . number_format($mark[2], 3) . ' : '
+                . str_pad(number_format($mark[2], 3), 7, '0', STR_PAD_LEFT) . ' : '
                 . str_pad(number_format($mark[3], 2), 5, '0', STR_PAD_LEFT)
                 . '% : ' . $mark[0] . '</span>';
         }
@@ -87,7 +87,10 @@ class Benchmark
             . 'Total execution time in ms: '
             . round($this->getExecutionTime(), 4) . '</span>';
 
-        return str_replace('{execution-time}', $str, $string);
+        $str = '<div class="text-muted small benchmark">'
+            . $str . $placeholder . '</div>';
+
+        return str_replace($placeholder, $str , $string);
     }
 
     /**

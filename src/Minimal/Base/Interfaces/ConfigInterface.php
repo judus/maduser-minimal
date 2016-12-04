@@ -7,10 +7,11 @@
  */
 interface ConfigInterface
 {
-	/**
-	 * @param $name
-	 *
-	 * @return mixed
-	 */
-	function item($name);
+    /**
+     * @param      $name
+     * @param null $value
+     *
+     * @return mixed
+     */
+	function item($name, $value = null);
 }

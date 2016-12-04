@@ -5,13 +5,20 @@
  *
  * @package Maduser\Minimal\Base\Interfaces
  */
+/**
+ * Interface CollectionInterface
+ *
+ * @package Maduser\Minimal\Base\Interfaces
+ */
 interface CollectionInterface
 {
-	/**
-	 * @param      $obj
-	 * @param null $key
-	 */
-	public function add($obj, $key = null);
+    /**
+     * @param      $obj
+     * @param null $key
+     *
+     * @return CollectionInterface
+     */
+    public function add($obj, $key = null): CollectionInterface;
 
 	/**
 	 * @param $key

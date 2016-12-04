@@ -1,15 +1,13 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
-use Maduser\Minimal\Base\Core\IOC;
 use Maduser\Minimal\Base\Interfaces\ConfigInterface;
+use Maduser\Minimal\Base\Interfaces\DispatcherInterface;
 use Maduser\Minimal\Base\Interfaces\MiddlewareInterface;
 use Maduser\Minimal\Base\Interfaces\RequestInterface;
 use Maduser\Minimal\Base\Interfaces\ResponseInterface;
 use Maduser\Minimal\Base\Interfaces\RouterInterface;
 use Maduser\Minimal\Base\Interfaces\ModulesInterface;
 use Maduser\Minimal\Base\Interfaces\FrontControllerInterface;
-use Maduser\Minimal\Base\Middlewares\Middleware;
-use Maduser\Minimal\Base\Libraries\Benchmark;
 
 
 /**
@@ -93,8 +91,6 @@ class Minimal
      * @var
      */
     private $result;
-
-    private $benchmark;
 
     /**
      * @return mixed
@@ -315,14 +311,6 @@ class Minimal
     }
 
     /**
-     * @param MiddlewareInterface $middleware
-     */
-    public function setMiddleware(MiddlewareInterface $middleware)
-    {
-        $this->middleware = $middleware;
-    }
-
-    /**
      * @return mixed
      */
     public function getModules(): ModulesInterface
@@ -379,11 +367,6 @@ class Minimal
         $this->result = $result;
     }
 
-    public function getBenchmark()
-    {
-        return IOC::make(Benchmark::class);
-    }
-
     /**
      * Minimal constructor.
      *
@@ -394,7 +377,7 @@ class Minimal
     {
         extract($params);
 
-        !isset($basepath) || $this->setBasePath($basepath);
+        !isset($basepath) || $this->setBasepath($basepath);
         !isset($app) || $this->setAppPath($app);
         !isset($config) || $this->setConfigFile($config);
         !isset($providers) || $this->setProvidersFile($providers);
@@ -417,7 +400,8 @@ class Minimal
     {
         $providersFile = $providersFile ? $providersFile : $this->getProvidersFile();
 
-        $providers = require_once $this->getBasePath().$providersFile;
+        /** @noinspection PhpIncludeInspection */
+        $providers = require_once $this->getBasepath().$providersFile;
 
         foreach ($providers as $alias => $provider) {
             IOC::register($alias, function () use ($provider) {
@@ -437,7 +421,8 @@ class Minimal
     {
         $configFile = $configFile ? $configFile : $this->getConfigFile();
 
-        $configItems = require_once $this->getBasePath() . $configFile;
+        /** @noinspection PhpIncludeInspection */
+        $configItems = require_once $this->getBasepath() . $configFile;
 
         foreach ($configItems as $key => $value) {
             $this->config->item($key, $value);
@@ -451,7 +436,8 @@ class Minimal
     {
         $bindingsFile = $bindingsFile ? $bindingsFile :  $this->getBindingsFile();
 
-        $bindings = require_once $this->getBasePath() . $bindingsFile;
+        /** @noinspection PhpIncludeInspection */
+        $bindings = require_once $this->getBasepath() . $bindingsFile;
 
         foreach ($bindings as $alias => $binding) {
             IOC::bind($alias, $binding);
@@ -465,10 +451,14 @@ class Minimal
     {
         $routesFile = $routesFile ? $routesFile : $this->getRoutesFile();
 
+        /** @noinspection PhpUnusedLocalVariableInspection */
         $route = $this->getRouter();
+
+        /** @noinspection PhpUnusedLocalVariableInspection */
         $response = $this->getResponse();
 
-        require $this->getBasePath() . $routesFile;
+        /** @noinspection PhpIncludeInspection */
+        require $this->getBasepath() . $routesFile;
     }
 
     public function registerModules($modulesFile = null)
@@ -478,7 +468,8 @@ class Minimal
         $modules = $this->getModules();
         $modules->setApp($this);
 
-        require $this->getBasePath() . $modulesFile;
+        /** @noinspection PhpIncludeInspection */
+        require $this->getBasepath() . $modulesFile;
     }
 
     /**
@@ -506,6 +497,7 @@ class Minimal
 
         $route = $this->getRouter()->getRoute($uri);
 
+        /** @var DispatcherInterface $middleware */
         $middleware = $this->getMiddleware($route->getMiddlewares());
 
         $response = $middleware->dispatch(function () use ($route) {

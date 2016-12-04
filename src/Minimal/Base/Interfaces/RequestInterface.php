@@ -7,12 +7,22 @@
  */
 interface RequestInterface
 {
-	/**
-	 * @return mixed
-	 */
-	public function fetchUriString();
+    /**
+     * @return mixed
+     */
+    public function getRequestMethod();
 
-	/**
+    /**
+     * @return mixed
+     */
+    public function getUriString();
+
+    /**
+     * @return mixed
+     */
+    public function fetchUriString();
+
+    /**
 	 * @return mixed
 	 */
 	public function explodeSegments();

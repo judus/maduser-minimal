@@ -2,14 +2,12 @@
 
 use Maduser\Minimal\Base\Exceptions\RouteNotFoundException;
 use Maduser\Minimal\Base\Interfaces\CollectionFactoryInterface;
-use Maduser\Minimal\Base\Interfaces\ControllerFactoryInterface;
+use Maduser\Minimal\Base\Interfaces\CollectionInterface;
 use Maduser\Minimal\Base\Interfaces\RouterInterface;
 use Maduser\Minimal\Base\Interfaces\ConfigInterface;
 use Maduser\Minimal\Base\Interfaces\RequestInterface;
 use Maduser\Minimal\Base\Interfaces\RouteInterface;
 use Maduser\Minimal\Base\Interfaces\ResponseInterface;
-use Maduser\Minimal\Base\Core\Collection;
-use Maduser\Minimal\Base\Interfaces\ViewInterface;
 
 /**
  * Class Router
@@ -34,7 +32,7 @@ class Router implements RouterInterface
     private $route;
 
     /**
-     * @var Routes
+     * @var CollectionInterface
      */
     private $routes;
 
@@ -64,9 +62,9 @@ class Router implements RouterInterface
     private $groupValues = [];
 
     /**
-     * @return Request
+     * @return RequestInterface
      */
-    public function getRequest(): Request
+    public function getRequest(): RequestInterface
     {
         return $this->request;
     }

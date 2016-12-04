@@ -1,5 +1,4 @@
 <?php namespace Maduser\Minimal\Base\Interfaces;
-
 /**
  * Interface RouterInterface
  *

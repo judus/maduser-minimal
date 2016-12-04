@@ -2,7 +2,6 @@
 
 use Maduser\Minimal\Base\Core\Collection;
 use Maduser\Minimal\Base\Core\IOC;
-use Maduser\Minimal\Base\Factories\MinimalFactory;
 use Maduser\Minimal\Base\Interfaces\CollectionFactoryInterface;
 use Maduser\Minimal\Base\Interfaces\CollectionInterface;
 
@@ -19,7 +18,7 @@ class CollectionFactory implements CollectionFactoryInterface
      *
      * @return CollectionInterface
      */
-    public function create(array $params = null, $class = null) : CollectionInterface
+    public function create(array $params = null, $class = null): CollectionInterface
     {
         return IOC::make(Collection::class, $params);
     }
