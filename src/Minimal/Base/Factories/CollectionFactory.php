@@ -1,13 +1,26 @@
 <?php namespace Maduser\Minimal\Base\Factories;
 
+use Maduser\Minimal\Base\Core\Collection;
+use Maduser\Minimal\Base\Core\IOC;
 use Maduser\Minimal\Base\Factories\MinimalFactory;
 use Maduser\Minimal\Base\Interfaces\CollectionFactoryInterface;
 use Maduser\Minimal\Base\Interfaces\CollectionInterface;
 
-class CollectionFactory extends MinimalFactory implements CollectionFactoryInterface
+/**
+ * Class CollectionFactory
+ *
+ * @package Maduser\Minimal\Base\Factories
+ */
+class CollectionFactory implements CollectionFactoryInterface
 {
-    public function create($class, array $params = null) : CollectionInterface
+    /**
+     * @param array|null $params
+     * @param null       $class
+     *
+     * @return CollectionInterface
+     */
+    public function create(array $params = null, $class = null) : CollectionInterface
     {
-        return parent::createInstance($class, $params);
+        return IOC::make(Collection::class, $params);
     }
 }

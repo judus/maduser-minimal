@@ -12,20 +12,4 @@ use Maduser\Minimal\Base\Interfaces\ControllerInterface;
  */
 class ControllerFactory extends MinimalFactory implements ControllerFactoryInterface
 {
-    /**
-     * @param            $class
-     * @param array|null $params
-     *
-     * @return mixed|object
-     */
-    public function createInstance($class, array $params = null)
-    {
-        // Do we have a provider? We're finished if true
-        // TODO: find out why $class is not always a string
-        if (is_string($class) && IOC::registered($class)) {
-            return IOC::resolve($class);
-        }
-
-        return IOC::make($class, $params);
-    }
 }

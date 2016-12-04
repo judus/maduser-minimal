@@ -1,6 +1,6 @@
 <?php
 /**
- * ModelFactoryInterface.php
+ * ModuleFactoryInterface.php
  * 11/19/16 - 1:48 AM
  *
  * PHP version 7
@@ -36,12 +36,12 @@
 
 namespace Maduser\Minimal\Base\Interfaces;
 
-
 /**
- * Class ModelFactoryInterface
+ * Interface ModuleFactoryInterface
  *
- * @package Maduser\Minimal\Base\Factories
+ * @package Maduser\Minimal\Base\Interfaces
  */
-interface ModelFactoryInterface extends MinimalFactoryInterface
+interface ModuleFactoryInterface
 {
+    public function create(array $params = null) : ModuleInterface;
 }

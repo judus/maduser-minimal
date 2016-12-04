@@ -1,8 +1,6 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
 use Maduser\Minimal\Base\Exceptions\KeyDoesNotExistException;
-use Maduser\Minimal\Base\Exceptions\KeyInUseException;
-use Maduser\Minimal\Base\Exceptions\MinimalException;
 use Maduser\Minimal\Base\Interfaces\ConfigInterface;
 
 /**
@@ -17,13 +15,15 @@ class Config implements ConfigInterface
 	 */
 	protected $config = [];
 
-	/**
-	 * @param      $name
-	 * @param null $value
-	 *
-	 * @return mixed
-	 */
-	public function item($name, $value = NULL) {
+    /**
+     * @param      $name
+     * @param null $value
+     *
+     * @return mixed
+     * @throws KeyDoesNotExistException
+     */
+    public function item($name, $value = NULL)
+    {
 	    if (func_num_args() > 1) {
             $this->config[$name] = $value;
         }

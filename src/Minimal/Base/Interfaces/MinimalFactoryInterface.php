@@ -45,10 +45,11 @@ namespace Maduser\Minimal\Base\Interfaces;
 interface MinimalFactoryInterface
 {
     /**
-     * @param       $class
      * @param array $params
+     *
+     * @param null  $class
      *
      * @return mixed
      */
-    public function createInstance($class, array $params = null);
+    public function create(array $params = null, $class = null);
 }

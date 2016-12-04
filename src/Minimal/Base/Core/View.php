@@ -1,8 +1,6 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
-use Maduser\Minimal\Base\Exceptions\MethodNotExistsException;
 use Maduser\Minimal\Base\Interfaces\ViewInterface;
-use Maduser\Minimal\Base\Interfaces\AssetInterface;
 
 /**
  * Class View
@@ -14,12 +12,7 @@ class View implements ViewInterface
     /**
      * @var
      */
-    private $presenter;
-
-    /**
-     * @var
-     */
-    private $asset;
+    private $assets;
 
     /**
      * @var
@@ -64,17 +57,17 @@ class View implements ViewInterface
     /**
      * @return mixed
      */
-    public function getAsset()
+    public function getAssets()
     {
-        return $this->asset;
+        return $this->assets;
     }
 
     /**
-     * @param mixed $asset
+     * @param mixed $assets
      */
-    public function setAsset($asset)
+    public function setAssets($assets)
     {
-        $this->asset = $asset;
+        $this->assets = $assets;
     }
 
     /**
@@ -238,11 +231,11 @@ class View implements ViewInterface
     /**
      * View constructor.
      *
-     * @param Asset          $asset
+     * @param Assets|null $assets
      */
-    public function __construct(Asset $asset = null)
+    public function __construct(Assets $assets = null)
     {
-        $this->setAsset($asset);
+        $this->setAssets($assets);
     }
 
     /**
@@ -284,11 +277,12 @@ class View implements ViewInterface
     }
 
     /**
-	 * @param       $viewPath
-	 * @param array $data
-	 *
-	 * @return string
-	 */
+     * @param       $viewPath
+     * @param array $data
+     * @param bool  $bypass
+     *
+     * @return string
+     */
 	public function render($viewPath, array $data = null, $bypass = false)
 	{
 	    $this->setView($viewPath);

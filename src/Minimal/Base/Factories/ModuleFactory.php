@@ -1,12 +1,15 @@
 <?php namespace Maduser\Minimal\Base\Factories;
 
+use Maduser\Minimal\Base\Core\IOC;
+use Maduser\Minimal\Base\Core\Module;
 use Maduser\Minimal\Base\Factories\MinimalFactory;
+use Maduser\Minimal\Base\Interfaces\ModuleFactoryInterface;
 use Maduser\Minimal\Base\Interfaces\ModuleInterface;
 
-class ModuleFactory extends MinimalFactory
+class ModuleFactory extends MinimalFactory implements ModuleFactoryInterface
 {
-    public function create($class, array $params = null) : ModuleInterface
+    public function create(array $params = null, $class = null) : ModuleInterface
     {
-        return parent::createInstance($class, $params);
+        return IOC::make(Module::class, $params);
     }
 }

@@ -8,7 +8,7 @@ class ViewProvider extends Provider
     public function resolve()
     {
         return new View(
-            IOC::resolve('Asset')
+            IOC::resolve('Assets')
         );
     }
 }

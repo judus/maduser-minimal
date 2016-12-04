@@ -10,21 +10,29 @@ use Maduser\Minimal\Base\Interfaces\RequestInterface;
 class Request implements RequestInterface
 {
 	/**
+     * The current uri string
+     *
 	 * @var
 	 */
 	private $uriString;
 
 	/**
+     * The current http method
+     *
 	 * @var
 	 */
 	private $requestMethod;
 
 	/**
+     * Holds all the uri segments until ? or #
+     *
 	 * @var array
 	 */
 	private $segments = [];
 
 	/**
+     * Setter $uriString
+     *
 	 * @param $str
 	 */
 	private function setUriString($str)
@@ -33,6 +41,8 @@ class Request implements RequestInterface
 	}
 
 	/**
+     * Getter $uriString
+     *
 	 * @return mixed
 	 */
 	public function getUriString()
@@ -41,6 +51,8 @@ class Request implements RequestInterface
 	}
 
 	/**
+     * Setter $requestMethod
+     *
 	 * @param $str
 	 */
 	public function setRequestMethod($str)
@@ -49,6 +61,8 @@ class Request implements RequestInterface
 	}
 
 	/**
+     * Getter $requestMethod
+     *
 	 * @return mixed
 	 */
 	public function getRequestMethod()
@@ -57,6 +71,8 @@ class Request implements RequestInterface
 	}
 
 	/**
+     * Setter $segments
+     *
 	 * @param array $segments
 	 */
 	public function setSegments(array $segments)
@@ -65,6 +81,8 @@ class Request implements RequestInterface
 	}
 
 	/**
+     * Getter $segments
+     *
 	 * @return array
 	 */
 	public function getSegments(): array
@@ -73,7 +91,10 @@ class Request implements RequestInterface
 	}
 
 	/**
-	 * Request constructor.
+     * Request constructor
+     * sets $requestMethod
+     * sets $uriString
+     * sets $segments
 	 */
 	public function __construct()
 	{
@@ -83,7 +104,7 @@ class Request implements RequestInterface
 	}
 
 	/**
-	 *
+	 * Determined the http method
 	 */
 	public function fetchRequestMethod()
 	{
@@ -103,7 +124,7 @@ class Request implements RequestInterface
 	}
 
 	/**
-	 *
+	 * Fetches the REQUEST_URI and sets $uriString
 	 */
 	public function fetchUriString()
 	{
@@ -134,6 +155,8 @@ class Request implements RequestInterface
 	}
 
 	/**
+     * Formats cli args like a uri
+     *
 	 * @return string
 	 */
 	private function parseCliArgs()
@@ -144,20 +167,22 @@ class Request implements RequestInterface
 	}
 
 	/**
-	 * @param $str
+     * Filter or replace bad chars from uri
+     *
+	 * @param $uri
 	 *
 	 * @return mixed
 	 */
-	public function filterUri($str)
+	public function filterUri($uri)
 	{
 		$bad = array('$', '(', ')', '%28', '%29');
 		$good = array('&#36;', '&#40;', '&#41;', '&#40;', '&#41;');
 
-		return str_replace($bad, $good, $str);
+		return str_replace($bad, $good, $uri);
 	}
 
 	/**
-	 *
+	 * Explodes the uri string
 	 */
 	public function explodeSegments()
 	{

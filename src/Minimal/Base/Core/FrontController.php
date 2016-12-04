@@ -1,10 +1,7 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
 use Maduser\Minimal\Base\Exceptions\MethodNotExistsException;
-use Maduser\Minimal\Base\Exceptions\UnresolvedDependenciesException;
-use Maduser\Minimal\Base\Factories\ControllerFactory;
 use Maduser\Minimal\Base\Interfaces\FrontControllerInterface;
-use Maduser\Minimal\Base\Interfaces\MinimalFactoryInterface;
 use Maduser\Minimal\Base\Interfaces\ModelFactoryInterface;
 use Maduser\Minimal\Base\Interfaces\RouteInterface;
 use Maduser\Minimal\Base\Interfaces\ViewFactoryInterface;
@@ -40,7 +37,7 @@ class FrontController implements FrontControllerInterface
     protected $viewFactory;
 
     /**
-     * @var ControllerFactory
+     * @var ControllerFactoryInterface
      */
     protected $controllerFactory;
 
@@ -227,13 +224,17 @@ class FrontController implements FrontControllerInterface
         $this->view = $view;
     }
 
-
-
     /**
+     * @param \Closure $function
+     *
      * @return mixed
      */
-    public function getResult()
+    public function getResult(\Closure $function = null)
     {
+        if (is_callable($function)) {
+            return $function();
+        }
+
         return ((!empty($this->viewResult)
             && !is_null($this->viewResult)
             && $this->viewResult !== false) ?
@@ -341,23 +342,15 @@ class FrontController implements FrontControllerInterface
         $this->route = $this->router->getRoute();
     }
 
-    public function setLexicalsFromRoute()
-    {
-        //$this->setController($this->route->getController());
-        $this->setAction($this->route->getAction());
-        $this->setModel($this->route->getModel());
-        $this->setMethod($this->route->getMethod());
-        $this->setView($this->route->getView());
-        $this->setParams($this->route->getParams());
-    }
-
+    /**
+     * @param            $model
+     * @param null       $method
+     * @param array|null $params
+     */
     public function handleModel($model, $method = null, array $params = null)
     {
         $this->setModel(
-            $this->modelFactory->createInstance(
-                $model,
-                $this->fetchDependencies($model)
-            )
+            $this->modelFactory->create($params, $model)
         );
 
         if (!is_null($method)) {
@@ -368,13 +361,15 @@ class FrontController implements FrontControllerInterface
 
     }
 
+    /**
+     * @param            $view
+     * @param null       $method
+     * @param array|null $params
+     */
     public function handleView($view, $method = null, array $params = null)
     {
         $this->setView(
-            $this->viewFactory->createInstance(
-                $view,
-                $this->fetchDependencies($view)
-            )
+            $this->viewFactory->create($params, $view)
         );
 
         if (!is_null($method)) {
@@ -385,6 +380,11 @@ class FrontController implements FrontControllerInterface
 
     }
 
+    /**
+     * @param            $controller
+     * @param null       $action
+     * @param array|null $params
+     */
     public function handleController(
         $controller,
         $action = null,
@@ -392,7 +392,7 @@ class FrontController implements FrontControllerInterface
     ) {
 
         $this->setController(
-            $this->controllerFactory->createInstance($controller, $params)
+            $this->controllerFactory->create($params, $controller)
         );
 
         if (!is_null($action)) {
@@ -402,6 +402,14 @@ class FrontController implements FrontControllerInterface
         }
     }
 
+    /**
+     * @param            $class
+     * @param            $method
+     * @param array|null $params
+     *
+     * @return mixed
+     * @throws MethodNotExistsException
+     */
     public function executeMethod($class, $method, array $params = null)
     {
         if (!method_exists($class, $method)) {
@@ -416,10 +424,8 @@ class FrontController implements FrontControllerInterface
         return call_user_func_array([$class, $method], $params);
     }
 
-    public function dispatch(RouteInterface $route = null)
+    public function dispatchController()
     {
-        $route ? $this->setRoute($route) : null;
-
         if (!empty($this->route->getController())) {
             $this->handleController(
                 $this->route->getController(),
@@ -427,22 +433,47 @@ class FrontController implements FrontControllerInterface
                 $this->route->getParams()
             );
         };
+    }
 
-        if (!empty($this->route->getModel)) {
+    public function dispatchModel()
+    {
+        if (!empty($this->route->getModel())) {
             $this->handleModel(
                 $this->route->getModel(),
                 $this->route->getMethod(),
-                null // TODO: implement model params
+                $this->route->getParams()
             );
         };
+    }
 
+    public function dispatchView()
+    {
         if (!empty($this->route->getView())) {
             $this->handleView(
                 $this->route->getView(),
-                null, // TODO: implement view method
-                null // TODO: implement view params
+                $this->route->getMethod(),
+                $this->route->getParams()
             );
         };
+    }
+
+    /**
+     * @param RouteInterface|null $route
+     * @param \Closure            $function
+     *
+     * @return $this
+     */
+    public function dispatch(RouteInterface $route = null, \Closure $function = null)
+    {
+        $route ? $this->setRoute($route) : null;
+
+        if (is_callable($function)) {
+            $function($this);
+        } else {
+            $this->dispatchController();
+            $this->dispatchModel();
+            $this->dispatchView();
+        }
 
         return $this;
     }
@@ -458,7 +489,7 @@ class FrontController implements FrontControllerInterface
     }
 
     /**
-     * @return mixed
+     *
      */
     public function exit()
     {

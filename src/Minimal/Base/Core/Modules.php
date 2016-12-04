@@ -1,9 +1,11 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
 use Maduser\Minimal\Base\Exceptions\TypeErrorException;
+use Maduser\Minimal\Base\Interfaces\CollectionFactoryInterface;
 use Maduser\Minimal\Base\Interfaces\CollectionInterface;
 use Maduser\Minimal\Base\Interfaces\ConfigInterface;
 use Maduser\Minimal\Base\Interfaces\MinimalFactoryInterface;
+use Maduser\Minimal\Base\Interfaces\ModuleFactoryInterface;
 use Maduser\Minimal\Base\Interfaces\ModuleInterface;
 use Maduser\Minimal\Base\Interfaces\ModulesInterface;
 use Maduser\Minimal\Base\Interfaces\RequestInterface;
@@ -229,34 +231,28 @@ class Modules implements ModulesInterface
      * Modules constructor.
      *
      * @param ConfigInterface $config
-     * @param MinimalFactoryInterface $collectionFactory
-     * @param CollectionInterface $collection
-     * @param MinimalFactoryInterface $moduleFactory
-     * @param ModuleInterface $module
+     * @param CollectionFactoryInterface $collectionFactory
+     * @param ModuleFactoryInterface $moduleFactory
      * @param RequestInterface $request
      * @param ResponseInterface $response
      * @param RouterInterface $router
      */
     public function __construct(
         ConfigInterface $config,
-        MinimalFactoryInterface $collectionFactory,
-        CollectionInterface $collection,
-        MinimalFactoryInterface $moduleFactory,
-        ModuleInterface $module,
+        CollectionFactoryInterface $collectionFactory,
+        ModuleFactoryInterface $moduleFactory,
         RequestInterface $request,
         ResponseInterface $response,
         RouterInterface $router
     ) {
         $this->config = $config;
         $this->collectionFactory = $collectionFactory;
-        $this->collection = $collection;
-        $this->module = $module;
         $this->moduleFactory = $moduleFactory;
         $this->request = $request;
         $this->response = $response;
         $this->router = $router;
 
-        $this->modules = $collectionFactory->create($collection);
+        $this->modules = $collectionFactory->create();
     }
 
     /**
@@ -276,7 +272,7 @@ class Modules implements ModulesInterface
 
         try {
             /** @var ModuleInterface $module */
-            $module = $this->moduleFactory->create(get_class($this->module));
+            $module = $this->moduleFactory->create();
         } catch (\TypeError $e) {
             throw new TypeErrorException($e);
         }

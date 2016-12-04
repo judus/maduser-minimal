@@ -9,6 +9,8 @@ use Maduser\Minimal\Base\Interfaces\RouterInterface;
 use Maduser\Minimal\Base\Interfaces\ModulesInterface;
 use Maduser\Minimal\Base\Interfaces\FrontControllerInterface;
 use Maduser\Minimal\Base\Middlewares\Middleware;
+use Maduser\Minimal\Base\Libraries\Benchmark;
+
 
 /**
  * Class Minimal
@@ -91,6 +93,8 @@ class Minimal
      * @var
      */
     private $result;
+
+    private $benchmark;
 
     /**
      * @return mixed
@@ -375,6 +379,11 @@ class Minimal
         $this->result = $result;
     }
 
+    public function getBenchmark()
+    {
+        return IOC::make(Benchmark::class);
+    }
+
     /**
      * Minimal constructor.
      *
@@ -394,6 +403,9 @@ class Minimal
         !isset($modules) || $this->setRoutesFile($modules);
 
         define('PATH', $this->getBasepath());
+
+        // Set namespace for aliases
+        IOC::setNamespace("Maduser\\Minimal\\Base\\Core\\");
 
         $returnInstance || $this->dispatch();
     }
@@ -529,28 +541,10 @@ class Minimal
      */
     public function dispatch()
     {
-        $start = microtime(true);
-
         $this->load();
         $this->execute();
-
-        $end = microtime(true);
-
-        $response = $this->getResult();
-
-        $response = str_replace(
-            '{execution-time}',
-            'Executed in '. $this->formatPeriod($end, $start).' secs', $response);
-
-        $this->setResult($response);
-
         $this->respond();
         $this->exit();
-
     }
 
-    public function formatPeriod($endtime, $starttime)
-    {
-        return ($endtime - $starttime) * 1;
-    }
 }

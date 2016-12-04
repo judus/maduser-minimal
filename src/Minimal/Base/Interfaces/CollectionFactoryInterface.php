@@ -36,11 +36,10 @@
 
 namespace Maduser\Minimal\Base\Interfaces;
 
-
 /**
- * Class CollectionFactoryInterface
+ * Interface CollectionFactoryInterface
  *
- * @package Maduser\Minimal\Base\Factories
+ * @package Maduser\Minimal\Base\Interfaces
  */
 interface CollectionFactoryInterface extends MinimalFactoryInterface
 {

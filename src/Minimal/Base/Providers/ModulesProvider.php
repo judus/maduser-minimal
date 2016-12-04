@@ -10,9 +10,7 @@ class ModulesProvider extends Provider
         return $this->singleton('Modules', new Modules(
             IOC::resolve('Config'),
             IOC::resolve('CollectionFactory'),
-            IOC::resolve('Collection'),
             IOC::resolve('ModuleFactory'),
-            IOC::resolve('Module'),
             IOC::resolve('Request'),
             IOC::resolve('Response'),
             IOC::resolve('Router')

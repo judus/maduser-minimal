@@ -87,10 +87,12 @@ interface FrontControllerInterface
 	 */
 	public function setView($view);
 
-	/**
-	 * @return mixed
-	 */
-	public function getResult();
+    /**
+     * @param \Closure $function
+     *
+     * @return mixed
+     */
+	public function getResult(\Closure $function = null);
 
 	/**
 	 * @param mixed $result
@@ -137,10 +139,13 @@ interface FrontControllerInterface
 	 */
 	public function setParams($params);
 
-	/**
-	 *
-	 */
-	public function dispatch();
+    /**
+     * @param RouteInterface $route
+     * @param \Closure       $function
+     *
+     * @return
+     */
+	public function dispatch(RouteInterface $route, \Closure $function = null);
 
 	/**
 	 * @return mixed

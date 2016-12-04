@@ -10,19 +10,21 @@ interface ResponseInterface
 	/**
 	 * @return mixed
 	 */
-	public function getHeaders();
-
-	/**
-	 * @return mixed
-	 */
 	public function getContent();
 
-	/**
-	 * @return mixed
-	 */
-	public function send();
+    /**
+     * @param $string
+     *
+     * @return mixed
+     */
+    public function header($string);
 
-	/**
+    /**
+     * @return mixed
+     */
+    public function send();
+
+    /**
 	 * @return mixed
 	 */
 	public function exit();

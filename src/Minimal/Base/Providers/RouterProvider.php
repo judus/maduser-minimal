@@ -12,7 +12,7 @@ class RouterProvider extends Provider
             IOC::resolve('Request'),
             IOC::resolve('Route'),
             IOC::resolve('Response'),
-            IOC::resolve('View')
+            IOC::resolve('CollectionFactory')
         ));
     }
 }

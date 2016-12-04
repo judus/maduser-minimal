@@ -2,7 +2,6 @@
 
 use Maduser\Minimal\Base\Exceptions\ClassDoesNotExistException;
 use Maduser\Minimal\Base\Exceptions\IocNotResolvableException;
-use Maduser\Minimal\Base\Exceptions\MinimalException;
 use Maduser\Minimal\Base\Exceptions\UnresolvedDependenciesException;
 
 /**
@@ -37,40 +36,77 @@ class IOC
      */
     public static $providers = [];
 
+    /**
+     * @return string
+     */
+    public static function getNamespace(): string
+    {
+        return self::$namespace;
+    }
 
+    /**
+     * @param string $namespace
+     */
+    public static function setNamespace(string $namespace)
+    {
+        self::$namespace = $namespace;
+    }
+
+
+    /**
+     * @param          $name
+     * @param \Closure $class
+     */
     public static function register($name, \Closure $class)
     {
         static::$registry[$name] = $class;
     }
 
+    /**
+     * @param          $name
+     * @param \Closure $singleton
+     */
     public static function singleton($name, \Closure $singleton)
     {
         static::$registry[$name] = $singleton();
     }
 
+    /**
+     * @param $name
+     * @param $binding
+     */
     public static function bind($name, $binding)
     {
         static::$bindings[$name] = $binding;
     }
 
+    /**
+     * @param          $name
+     * @param \Closure $provider
+     */
     public static function provide($name, \Closure $provider)
     {
         static::$registry[$name] = $provider;
     }
 
     /**
-     * @param $name
+     * @param      $name
+     * @param null $params
      *
      * @return mixed
-     * @throws \Exception
+     * @throws IocNotResolvableException
      */
     public static function resolve($name, $params = null)
     {
-        $alias = $name;
         if ($name = static::registered($name)) {
             $name = static::$registry[$name];
             return $name()->resolve($params);
         }
+
+        throw new IocNotResolvableException(null, [
+            'name' => $name,
+            'params' => $params
+        ]);
     }
 
     /**
@@ -103,6 +139,12 @@ class IOC
         return array_key_exists($name, static::$bindings);
     }
 
+    /**
+     * @param $class
+     *
+     * @return \ReflectionClass
+     * @throws ClassDoesNotExistException
+     */
     public static function reflect($class)
     {
         try {
@@ -112,7 +154,12 @@ class IOC
         }
     }
 
-    public static function getDependencies($reflected)
+    /**
+     * @param \ReflectionClass $reflected
+     *
+     * @return array
+     */
+    public static function getDependencies(\ReflectionClass $reflected)
     {
         $dependencies = [];
 
@@ -125,6 +172,11 @@ class IOC
         return $dependencies;
     }
 
+    /**
+     * @param \ReflectionParameter $parameter
+     *
+     * @return mixed|null
+     */
     public static function getDependency(\ReflectionParameter $parameter)
     {
         if ($parameter->isArray() || !$parameter->getClass()) {
@@ -146,6 +198,11 @@ class IOC
         }
     }
 
+    /**
+     * @param array $dependencies
+     *
+     * @return array
+     */
     public static function resolveDependencies(array $dependencies)
     {
 
@@ -164,6 +221,13 @@ class IOC
         return $dependencies;
     }
 
+    /**
+     * @param            $class
+     * @param array|null $params
+     *
+     * @return object
+     * @throws UnresolvedDependenciesException
+     */
     public static function make($class, array $params = null)
     {
         $reflected = self::reflect($class);
@@ -183,6 +247,7 @@ class IOC
             }
         }
 
+        // TODO: Improve this
         if (count($dependencies) != count($instanceArgs)) {
             throw new UnresolvedDependenciesException(
                 'Could not resolve all dependencies', [

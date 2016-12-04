@@ -1,6 +1,5 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
-use Maduser\Minimal\Base\Interfaces\BaseModelInterface;
 use Maduser\Minimal\Base\Interfaces\ControllerInterface;
 
 /**

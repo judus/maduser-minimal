@@ -1,12 +1,15 @@
 <?php namespace Maduser\Minimal\Base\Core;
 
 use Maduser\Minimal\Base\Exceptions\RouteNotFoundException;
+use Maduser\Minimal\Base\Interfaces\CollectionFactoryInterface;
+use Maduser\Minimal\Base\Interfaces\ControllerFactoryInterface;
 use Maduser\Minimal\Base\Interfaces\RouterInterface;
 use Maduser\Minimal\Base\Interfaces\ConfigInterface;
 use Maduser\Minimal\Base\Interfaces\RequestInterface;
 use Maduser\Minimal\Base\Interfaces\RouteInterface;
 use Maduser\Minimal\Base\Interfaces\ResponseInterface;
 use Maduser\Minimal\Base\Core\Collection;
+use Maduser\Minimal\Base\Interfaces\ViewInterface;
 
 /**
  * Class Router
@@ -166,30 +169,32 @@ class Router implements RouterInterface
     /**
      * Routes constructor.
      *
-     * @param ConfigInterface   $config
-     * @param RequestInterface  $request
-     * @param RouteInterface    $route
-     * @param ResponseInterface $response
+     * @param ConfigInterface            $config
+     * @param RequestInterface           $request
+     * @param RouteInterface             $route
+     * @param ResponseInterface          $response
+     * @param CollectionFactoryInterface $collection
      */
     public function __construct(
         ConfigInterface $config,
         RequestInterface $request,
         RouteInterface $route,
-        ResponseInterface $response
+        ResponseInterface $response,
+        CollectionFactoryInterface $collection
     ) {
         $this->config = $config;
         $this->request = $request;
         $this->route = $route;
         $this->response = $response;
 
-        $this->routes = new Collection();
-        $this->routes
-            ->add(new Collection(), 'ALL')
-            ->add(new Collection(), 'POST')
-            ->add(new Collection(), 'GET')
-            ->add(new Collection(), 'PUT')
-            ->add(new Collection(), 'PATCH')
-            ->add(new Collection(), 'DELETE');
+        $this->routes = $collection->create();
+
+        $this->routes->add($collection->create(), 'ALL')
+                     ->add($collection->create(), 'POST')
+                     ->add($collection->create(), 'GET')
+                     ->add($collection->create(), 'PUT')
+                     ->add($collection->create(), 'PATCH')
+                     ->add($collection->create(), 'DELETE');
     }
 
     /**
