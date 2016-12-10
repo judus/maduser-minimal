@@ -108,12 +108,12 @@ class PagesController extends Controller
     /**
      * @return string
      */
-    public function welcome($name = null)
+    public function welcome($name = null, $lastname = null)
     {
         $name = $name ? ' '.ucfirst($name) : '';
 
         return $this->view->render('pages/my-view', [
-            'title' => 'Welcome' . $name . '!'
+            'title' => 'Welcome' . $name . ' '.$lastname.'!'
         ]);
     }
 

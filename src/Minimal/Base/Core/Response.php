@@ -213,6 +213,14 @@ class Response implements ResponseInterface
         header('Location: ' . $url);
     }
 
+    public function status404()
+    {
+        header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+        echo "<h1>404 Not Found</h1>";
+        echo "The page that you have requested could not be found.";
+        $this->exit();
+    }
+
     /**
 	 * Exit PHP
 	 */

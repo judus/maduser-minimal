@@ -130,28 +130,29 @@ class Request implements RequestInterface
 	{
 		if (php_sapi_name() == 'cli' or defined('STDIN')) {
 			$this->setUriString($this->parseCliArgs());
-
 			return;
 		}
 
-		// Fetch request string (apache)
+        // Fetch request string (apache)
 		$uri = $_SERVER['REQUEST_URI'];
 
-		// Remove script name (index.php) from uri
+        // Remove script name (index.php) from uri
+/*
 		if (strpos($uri, $_SERVER['SCRIPT_NAME']) === 0) {
-			$uri = substr($uri, strlen($_SERVER['SCRIPT_NAME']));
-		} elseif (strpos($uri, dirname($_SERVER['SCRIPT_NAME'])) === 0) {
+            $uri = substr($uri, strlen($_SERVER['SCRIPT_NAME']));
+        } elseif (strpos($uri, dirname($_SERVER['SCRIPT_NAME'])) === 0) {
 			$uri = substr($uri, strlen(dirname($_SERVER['SCRIPT_NAME'])));
 		}
-
-		// Further cleaning of the uri
+*/
+        // Further cleaning of the uri
 		$uri = str_replace(array('//', '../'), '/', trim($uri, '/'));
 
 		if (empty($uri)) {
 			$uri = '/';
 		}
 
-		$this->setUriString($uri);
+
+        $this->setUriString($uri);
 	}
 
 	/**
@@ -197,4 +198,11 @@ class Request implements RequestInterface
 			}
 		}
 	}
+
+	public function segment($n)
+    {
+        if (isset($this->getSegments()[$n])) {
+            return $this->getSegments()[$n];
+        }
+    }
 }
