@@ -12,6 +12,11 @@ class Assets implements AssetsInterface
     /**
      * @var string
      */
+    private $source = '';
+
+    /**
+     * @var string
+     */
     private $base = '';
 
     /**
@@ -23,6 +28,11 @@ class Assets implements AssetsInterface
      * @var string
      */
     private $cssDir = 'css';
+
+    /**
+     * @var string
+     */
+    private $vendorDir = 'vendor';
 
     /**
      * @var string
@@ -42,7 +52,37 @@ class Assets implements AssetsInterface
     /**
      * @var array
      */
+    private $cssSourceFiles = [];
+
+    /**
+     * @var array
+     */
     private $jsFiles = [];
+
+    /**
+     * @var array
+     */
+    private $jsSourceFiles = [];
+
+    /**
+     * @var array
+     */
+    private $vendorCssFiles = [];
+
+    /**
+     * @var array
+     */
+    private $vendorCssSourceFiles = [];
+
+    /**
+     * @var array
+     */
+    private $vendorJsFiles = [];
+
+    /**
+     * @var array
+     */
+    private $vendorJsSourceFiles = [];
 
     /**
      * @var array
@@ -58,6 +98,23 @@ class Assets implements AssetsInterface
      * @var array
      */
     private $externalJs = [];
+
+    /**
+     * @param $path
+     */
+    public function setSource($path)
+    {
+        $this->source = $path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSource()
+    {
+        $source = rtrim($this->source, '/') . '/';
+        return $source;
+    }
 
     /**
      * @param $path
@@ -126,6 +183,22 @@ class Assets implements AssetsInterface
     }
 
     /**
+     * @param $path
+     */
+    public function setVendorDir($path)
+    {
+        $this->vendorDir = $path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVendorDir()
+    {
+        return rtrim($this->vendorDir, '/') . '/';
+    }
+
+    /**
      * @return string
      */
     public function getDefaultKey()
@@ -158,6 +231,14 @@ class Assets implements AssetsInterface
     }
 
     /**
+     * @return array
+     */
+    public function getVendorFiles()
+    {
+        return $this->vendorFiles;
+    }
+
+    /**
      * @return string
      */
     public function getJsPath()
@@ -182,25 +263,34 @@ class Assets implements AssetsInterface
     {
         $this->cssFiles[$this->key()] = [];
         $this->jsFiles[$this->key()] = [];
+        $this->vendorFiles[$this->key()] = [];
         $this->externalJs[$this->key()] = [];
         $this->inlineScripts[$this->key()] = [];
     }
 
     /**
-     * @param      $urls
-     * @param null $key
+     * @param       $urls
+     * @param null  $key
+     * @param array $attr
      */
-    public function addCss($urls, $key = null)
+    public function addCss($urls, $key = null, array $attr = null)
     {
         if (is_array($urls)) {
             foreach ($urls as $url) {
-                $this->addCss($url, $key);
+                $this->addCss($url, $key, $attr);
             }
         }
 
         if (is_string($urls)) {
-            $this->cssFiles[$this->key($key)][] =
-                $this->getBase() . $this->getTheme() . $this->getCssDir() . $urls;
+            $this->cssFiles[$this->key($key)][] = [
+                $this->getBase() . $this->getTheme() . $this->getCssDir() . $urls,
+                $attr
+            ];
+
+            $this->cssSourceFiles[$this->key($key)][] = [
+                $this->getSource() . $this->getTheme() . $this->getCssDir() . $urls,
+                $attr
+            ];
         }
     }
 
@@ -208,17 +298,74 @@ class Assets implements AssetsInterface
      * @param      $urls
      * @param null $key
      */
-    public function addJs($urls, $key = null)
+    public function addJs($urls, $key = null, array $attr = null)
     {
         if (is_array($urls)) {
             foreach ($urls as $url) {
-                $this->addJs($url, $key);
+                $this->addJs($url, $key, $attr);
             }
         }
 
         if (is_string($urls)) {
-            $this->jsFiles[$this->key($key)][] =
-                $this->getBase() . $this->getTheme() . $this->getJsDir() . $urls;
+            $this->jsFiles[$this->key($key)][] = [
+                $this->getBase() . $this->getTheme() . $this->getJsDir() . $urls,
+                $attr
+            ];
+
+            $this->jsSourceFiles[$this->key($key)][] = [
+                $this->getSource() . $this->getTheme() . $this->getJsDir() . $urls,
+                $attr
+            ];
+        }
+    }
+
+    /**
+     * @param      $urls
+     * @param null $key
+     */
+    public function addVendorCss($urls, $key = null, array $attr = null)
+    {
+        if (is_array($urls)) {
+            foreach ($urls as $url) {
+                $this->addVendorCSS($url, $key, $attr);
+            }
+        }
+
+        if (is_string($urls)) {
+            $this->vendorCssFiles[$this->key($key)][] = [
+                $this->getBase() . $this->getTheme() . $this->getVendorDir() . $urls,
+                $attr
+            ];
+
+            $this->vendorCssSourceFiles[$this->key($key)][] = [
+                $this->getSource() . $this->getTheme() . $this->getVendorDir() . $urls,
+                $attr
+            ];
+        }
+    }
+
+    /**
+     * @param      $urls
+     * @param null $key
+     */
+    public function addVendorJs($urls, $key = null, array $attr = null)
+    {
+        if (is_array($urls)) {
+            foreach ($urls as $url) {
+                $this->addVendorJs($url, $key, $attr);
+            }
+        }
+
+        if (is_string($urls)) {
+            $this->vendorJsFiles[$this->key($key)][] = [
+                $this->getBase() . $this->getTheme() . $this->getVendorDir() . $urls,
+                $attr
+            ];
+
+            $this->vendorJsSourceFiles[$this->key($key)][] = [
+                $this->getSource() . $this->getTheme() . $this->getVendorDir() . $urls,
+                $attr
+            ];
         }
     }
 
@@ -227,16 +374,86 @@ class Assets implements AssetsInterface
      *
      * @return string
      */
-    public function getCss($key = null)
+    public function getCss($key = null, $concatFilename = null)
     {
-        $cssFiles = $this->cssFiles[$this->key($key)];
-        $html = '';
-        foreach ($cssFiles as $cssFile) {
-            $html = empty($html) ? $html : $html . "\t";
-            $html .= '<link rel="stylesheet" href="' . $cssFile . '">' . "\n";
+        if (!isset($this->cssFiles[$this->key($key)])
+            || count($this->cssFiles[$this->key($key)]) == 0
+        ) {
+            return null;
         }
 
-        return $html;
+        if ($concatFilename) {
+            $publicPath = $this->concat(
+                $this->cssSourceFiles[$this->key($key)],
+                $this->getCssDir(),
+                $concatFilename
+            );
+
+            if ($publicPath) {
+                return '<link rel="stylesheet" href="' . $publicPath . '">' . "\n";
+            }
+        }
+
+        return $this->getCssTags($this->cssFiles[$this->key($key)]);
+    }
+
+
+    /**
+     * @param null $key
+     *
+     * @return string
+     */
+    public function getVendorCss($key = null, $concatFilename = null)
+    {
+        if (!isset($this->vendorCssFiles[$this->key($key)])
+            || count($this->vendorCssFiles[$this->key($key)]) == 0
+        ) {
+            return null;
+        }
+
+        if ($concatFilename) {
+            $publicPath = $this->concat(
+                $this->vendorCssSourceFiles[$this->key($key)],
+                $this->getVendorDir(),
+                $concatFilename
+            );
+
+            if ($publicPath) {
+                return '<link rel="stylesheet" href="' . $publicPath . '">' . "\n";
+            }
+        }
+
+        return $this->getCssTags($this->vendorCssFiles[$this->key($key)]);
+    }
+
+    /**
+     * @param null $key
+     *
+     * @param null $concatFilename
+     *
+     * @return string
+     */
+    public function getJs($key = null, $concatFilename = null)
+    {
+        if (!isset($this->jsFiles[$this->key($key)])
+            || count($this->jsFiles[$this->key($key)]) == 0
+        ) {
+            return null;
+        }
+
+        if ($concatFilename) {
+            $publicPath = $this->concat(
+                $this->jsSourceFiles[$this->key($key)],
+                $this->getJsDir(),
+                $concatFilename
+            );
+
+            if ($publicPath) {
+                return '<script src="' . $publicPath . '" ></script>' . "\n";
+            }
+        }
+
+        return $this->getJsTags($this->jsFiles[$this->key($key)]);
     }
 
     /**
@@ -244,33 +461,43 @@ class Assets implements AssetsInterface
      *
      * @return string
      */
-    public function getJs($key = null)
+    public function getVendorJs($key = null, $concatFilename = null)
     {
-        $jsFiles = $this->jsFiles[$this->key($key)];
-        $html = '';
-        foreach ($jsFiles as $jsFile) {
-            $html = empty($html) ? $html : $html . "\t";
-            $html .= '<script src="' . $jsFile . '" ></script>' . "\n";
-
+        if (!isset($this->vendorJsFiles[$this->key($key)])
+            || count($this->vendorJsFiles[$this->key($key)]) == 0
+        ) {
+            return null;
         }
 
-        return $html;
+        if ($concatFilename) {
+            $publicPath = $this->concat(
+                $this->vendorJsSourceFiles[$this->key($key)],
+                $this->getVendorDir(),
+                $concatFilename
+            );
+
+            if ($publicPath) {
+                return '<script src="' . $publicPath . '" ></script>' . "\n";
+            }
+        }
+
+        return $this->getJsTags($this->vendorJsFiles[$this->key($key)]);
     }
 
     /**
      * @param      $urls
      * @param null $key
      */
-    public function addExternalCss($urls, $key = null)
+    public function addExternalCss($urls, $key = null, array $attr = null)
     {
         if (is_array($urls)) {
             foreach ($urls as $url) {
-                $this->addExternalCss($url, $key);
+                $this->addExternalCss($url, $key, $attr);
             }
         }
 
         if (is_string($urls)) {
-            $this->externalCss[$this->key($key)][] = $urls;
+            $this->externalCss[$this->key($key)][] = [$urls, $attr];
         }
     }
 
@@ -282,30 +509,23 @@ class Assets implements AssetsInterface
     public function getExternalCss($key = null)
     {
         $externalCss = $this->externalCss[$this->key($key)];
-        $html = '';
-        foreach ($externalCss as $cssFile) {
-            $html = empty($html) ? $html : $html . "\t";
-            $html .= '<link rel="stylesheet" href="' . $cssFile . '">' . "\n";
-
-        }
-
-        return $html;
+        return $this->getCssTags($externalCss);
     }
 
     /**
      * @param      $urls
      * @param null $key
      */
-    public function addExternalJs($urls, $key = null)
+    public function addExternalJs($urls, $key = null, array $attr = null)
     {
         if (is_array($urls)) {
             foreach ($urls as $url) {
-                $this->addExternalJs($url, $key);
+                $this->addExternalJs($url, $key, $attr);
             }
         }
 
         if (is_string($urls)) {
-            $this->externalJs[$this->key($key)][] = $urls;
+            $this->externalJs[$this->key($key)][] = [$urls, $attr];
         }
     }
 
@@ -317,14 +537,7 @@ class Assets implements AssetsInterface
     public function getExternalJs($key = null)
     {
         $externalJs = $this->externalJs[$this->key($key)];
-        $html = '';
-        foreach ($externalJs as $jsFile) {
-            $html = empty($html) ? $html : $html . "\t";
-            $html .= '<script src="' . $jsFile . '" ></script>' . "\n";
-
-        }
-
-        return $html;
+        return $this->getJsTags($externalJs);
     }
 
     /**
@@ -348,10 +561,74 @@ class Assets implements AssetsInterface
         foreach ($inlineScripts as $inlineScript) {
             $html = empty($html) ? $html : $html . "\t";
             $html .= $inlineScript . "\n";
-
         }
 
         return $html;
     }
+
+    public function getCssTags(array $cssFiles)
+    {
+        $html = '';
+        foreach ($cssFiles as $cssFile) {
+            $attr = '';
+
+            if (isset($cssFile[1]) && count($cssFile[1]) > 0) {
+                foreach ($cssFile[1] as $key => $value) {
+                    $attr .= ' '.$key . '="'.$value.'"';
+                }
+            }
+
+            $html = empty($html) ? $html : $html . "\t";
+            $html .= '<link rel="stylesheet" href="' . $cssFile[0] . '"'.$attr.'>' . "\n";
+        }
+
+        return $html;
+    }
+
+    public function getJsTags(array $jsFiles)
+    {
+        $html = '';
+        foreach ($jsFiles as $jsFile) {
+            $attr = '';
+            if (isset($jsFile[1]) && count($jsFile[1]) > 0) {
+                foreach ($jsFile[1] as $key => $value) {
+                    $attr .= ' ' . $key . '="' . $value . '"';
+                }
+            }
+
+            $html = empty($html) ? $html : $html . "\t";
+            $html .= '<script src="' . $jsFile[0] . '"'.$attr.'></script>' . "\n";
+        }
+
+        return $html;
+    }
+
+
+    protected function concat($files, $dirname, $filename)
+    {
+        $contents = '';
+
+        foreach ($files as $file) {
+            if (file_exists($file)) {
+                ob_start();
+                readfile($file);
+                $contents .= ob_get_contents();
+                ob_end_clean();
+            }
+        }
+
+        if (!empty($contents)) {
+            $sourcePath = $this->getSource() . $this->getTheme() . $dirname . $filename;
+            $publicPath = $this->getBase() . $this->getTheme() . $dirname . $filename;
+
+            file_put_contents($sourcePath, $contents);
+
+            return $publicPath;
+
+        }
+
+        return null;
+    }
+
 
 }
