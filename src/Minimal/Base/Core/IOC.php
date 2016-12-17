@@ -232,6 +232,10 @@ class IOC
     {
         $reflected = self::reflect($class);
 
+        if (empty($reflected->getConstructor())) {
+            return $reflected->newInstance();
+        }
+
         $dependencies = self::getDependencies($reflected);
 
         $instanceArgs = self::resolveDependencies($dependencies);
@@ -259,6 +263,7 @@ class IOC
         if (is_array($params)) {
             $instanceArgs = array_merge($instanceArgs, $params);
         }
+
         return $reflected->newInstanceArgs($instanceArgs);
     }
 
