@@ -7,12 +7,25 @@
  */
 interface ResponseInterface
 {
-	/**
+    /**
+     * Set response content
+     *
+     * @param mixed $content
+     *
+     * @return mixed
+     */
+    public function setContent($content);
+
+    /**
+     * Return response content
+     *
 	 * @return mixed
 	 */
 	public function getContent();
 
     /**
+     * Set http header
+     *
      * @param $string
      *
      * @return mixed
@@ -20,21 +33,27 @@ interface ResponseInterface
     public function header($string);
 
     /**
-     * @param null $content
+     * Send response content to client
      *
-     * @return mixed
+     * @param mixed|null $content
+     *
+     * @return $this
      */
     public function send($content = null);
 
     /**
-	 * @return mixed
+     * Redirect http header location
+     *
+     * @param string $uri
+     *
+     * @return void
+     */
+    public function redirect($uri);
+
+    /**
+     * PHP exit()
+     *
+	 * @return void
 	 */
 	public function exit();
-
-	/**
-	 * @param $getResult
-	 *
-	 * @return mixed
-	 */
-	public function setContent($getResult);
 }
