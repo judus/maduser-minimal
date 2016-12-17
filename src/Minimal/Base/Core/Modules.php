@@ -267,8 +267,9 @@ class Modules implements ModulesInterface
         array $params = null
     ) : ModuleInterface
     {
-
-        extract($params);
+        if (is_array($params)) {
+            extract($params);
+        }
 
         try {
             /** @var ModuleInterface $module */
