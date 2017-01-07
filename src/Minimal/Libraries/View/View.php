@@ -1,8 +1,8 @@
 <?php namespace Maduser\Minimal\Libraries\View;
 
 use Maduser\Minimal\Interfaces\AssetsInterface;
+use Maduser\Minimal\Interfaces\ContentInterface;
 use Maduser\Minimal\Interfaces\ViewInterface;
-use Maduser\Minimal\Libraries\Assets\Assets;
 
 /**
  * Class View
@@ -15,6 +15,11 @@ class View implements ViewInterface
      * @var
      */
     private $assets;
+
+    /**
+     * @var
+     */
+    private $content;
 
     /**
      * @var
@@ -70,6 +75,22 @@ class View implements ViewInterface
     public function setAssets($assets)
     {
         $this->assets = $assets;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param mixed $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
     }
 
     /**
@@ -233,11 +254,15 @@ class View implements ViewInterface
     /**
      * View constructor.
      *
-     * @param Assets|null $assets
+     * @param AssetsInterface   $assets
+     * @param ContentInterface  $content
      */
-    public function __construct(AssetsInterface $assets)
-    {
+    public function __construct(
+        AssetsInterface $assets = null,
+        ContentInterface $content = null
+    ) {
         $this->setAssets($assets);
+        $this->setContent($content);
     }
 
     /**
@@ -292,7 +317,6 @@ class View implements ViewInterface
         if (!is_null($data)) {
             $this->setData($data);
         }
-
 
         if (!$this->isAjax() && $this->getLayout() !== null && !$bypass) {
             return $this->renderLayout($this->getSharedData());
