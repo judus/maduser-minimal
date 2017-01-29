@@ -110,12 +110,11 @@ class Request implements RequestInterface
 	{
 		if (isset($_POST['_method'])) {
 			if (
-				$_POST['_method'] == 'PUT' ||
-				$_POST['_method'] == 'PATCH' ||
-				$_POST['_method'] == 'DELETE'
+				strtoupper($_POST['_method']) == 'PUT' ||
+                strtoupper($_POST['_method']) == 'PATCH' ||
+                strtoupper($_POST['_method']) == 'DELETE'
 			) {
-				$this->setRequestMethod($_POST['_method']);
-
+				$this->setRequestMethod(strtoupper($_POST['_method']));
 				return;
 			}
 		}
