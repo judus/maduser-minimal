@@ -34,13 +34,14 @@ class Benchmark
      */
     public function mark($key)
     {
-        $this->addBenchmark($key, microtime(true)*1000);
+        $this->addBenchmark($key, microtime(true) * 1000);
     }
 
     public function getExecutionTime()
     {
         $marks = $this->getBenchmarks();
         $count = count($marks);
+
         return $marks[$count - 1][1] - $marks[0][1];
     }
 
@@ -48,7 +49,8 @@ class Benchmark
     {
         if ($i > 0) {
             $marks_ = array_slice($marks, 0, $i);
-            return round($marks[$i][1] - $marks[$i-1][1], 3);
+
+            return round($marks[$i][1] - $marks[$i - 1][1], 3);
         }
 
         return 0;
@@ -78,7 +80,8 @@ class Benchmark
             $mark[] = $this->getPeriod($marks, $i++);
             $mark[] = $this->getPercents($mark);
             $str .= '<span style="display: block; text-align: left">'
-                . str_pad(number_format($mark[2], 3), 7, '0', STR_PAD_LEFT) . ' : '
+                . str_pad(number_format($mark[2], 3), 7, '0',
+                    STR_PAD_LEFT) . ' : '
                 . str_pad(number_format($mark[3], 2), 5, '0', STR_PAD_LEFT)
                 . '% : ' . $mark[0] . '</span>';
         }
@@ -88,9 +91,9 @@ class Benchmark
             . round($this->getExecutionTime(), 4) . '</span>';
 
         $str = '<div class="text-muted small benchmark">'
-            . $str . $placeholder . '</div>';
+            . $str . '</div>' . $placeholder;
 
-        return str_replace($placeholder, $str , $string);
+        return str_replace($placeholder, $str, $string);
     }
 
     /**
