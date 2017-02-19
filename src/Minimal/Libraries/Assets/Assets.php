@@ -307,18 +307,33 @@ class Assets implements AssetsInterface
         }
 
         if (is_string($urls)) {
-            $this->jsFiles[$this->key($key)][] = [
-                $this->getBase() . $this->getTheme() . $this->getJsDir() . $urls,
-                $attr
-            ];
 
-            $this->jsSourceFiles[$this->key($key)][] = [
-                $this->getSource() . $this->getTheme() . $this->getJsDir() . $urls,
-                $attr
-            ];
+            if (!$this->isRegisteredJsFile($urls, $key)) {
+
+                $this->jsFiles[$this->key($key)][] = [
+                    $this->getBase() . $this->getTheme() . $this->getJsDir() . $urls,
+                    $attr
+                ];
+
+                $this->jsSourceFiles[$this->key($key)][] = [
+                    $this->getSource() . $this->getTheme() . $this->getJsDir() . $urls,
+                    $attr
+                ];
+            }
         }
     }
 
+    public function isRegisteredJsFile($url, $key)
+    {
+        if (isset($this->jsFiles[$this->key($key)])) {
+            foreach ($this->jsFiles[$this->key($key)] as $jsFileArray) {
+                if ($jsFileArray[0] == $this->getBase() . $this->getTheme() . $this->getJsDir() . $url) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     /**
      * @param      $urls
      * @param null $key
@@ -449,7 +464,7 @@ class Assets implements AssetsInterface
             );
 
             if ($publicPath) {
-                return '<script src="' . $publicPath . '" ></script>' . "\n";
+                return '<script type="text/javascript" src="' . $publicPath . '" ></script>' . "\n";
             }
         }
 
@@ -477,7 +492,7 @@ class Assets implements AssetsInterface
             );
 
             if ($publicPath) {
-                return '<script src="' . $publicPath . '" ></script>' . "\n";
+                return '<script type="text/javascript" src="' . $publicPath . '" ></script>' . "\n";
             }
         }
 
@@ -508,8 +523,10 @@ class Assets implements AssetsInterface
      */
     public function getExternalCss($key = null)
     {
-        $externalCss = $this->externalCss[$this->key($key)];
-        return $this->getCssTags($externalCss);
+        if (isset($this->externalCss[$this->key($key)])) {
+            $externalCss = $this->externalCss[$this->key($key)];
+            return $this->getCssTags($externalCss);
+        }
     }
 
     /**
@@ -536,8 +553,10 @@ class Assets implements AssetsInterface
      */
     public function getExternalJs($key = null)
     {
-        $externalJs = $this->externalJs[$this->key($key)];
-        return $this->getJsTags($externalJs);
+        if (isset($this->externalJs[$this->key($key)])) {
+            $externalJs = $this->externalJs[$this->key($key)];
+            return $this->getJsTags($externalJs);
+        }
     }
 
     /**
@@ -556,14 +575,16 @@ class Assets implements AssetsInterface
      */
     public function getInlineScripts($key = null)
     {
-        $inlineScripts = $this->inlineScripts[$this->key($key)];
-        $html = '';
-        foreach ($inlineScripts as $inlineScript) {
-            $html = empty($html) ? $html : $html . "\t";
-            $html .= $inlineScript . "\n";
-        }
+        if (isset($this->inlineScripts[$this->key($key)])) {
+            $inlineScripts = $this->inlineScripts[$this->key($key)];
+            $html = '';
+            foreach ($inlineScripts as $inlineScript) {
+                $html = empty($html) ? $html : $html . "\t";
+                $html .= $inlineScript . "\n";
+            }
 
-        return $html;
+            return $html;
+        }
     }
 
     public function getCssTags(array $cssFiles)
@@ -597,7 +618,7 @@ class Assets implements AssetsInterface
             }
 
             $html = empty($html) ? $html : $html . "\t";
-            $html .= '<script src="' . $jsFile[0] . '"'.$attr.'></script>' . "\n";
+            $html .= '<script type="text/javascript" src="' . $jsFile[0] . '"'.$attr.'></script>' . "\n";
         }
 
         return $html;

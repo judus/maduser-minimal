@@ -83,7 +83,7 @@ class Router implements RouterInterface
     public function setGroupUriPrefix($path)
     {
         $this->groupUriPrefix = is_null($path) || empty($path) ?
-            '' : rtrim($path, '/') . '/';
+            '' : rtrim($path, '/') . '';
     }
 
     /**
@@ -281,6 +281,15 @@ class Router implements RouterInterface
     ) {
         extract($this->getGroupValues());
 
+        if (!empty($this->getGroupUriPrefix())) {
+            $uriPattern = !empty($uriPattern) ? '/' . ltrim($uriPattern,
+                    '/') : $uriPattern;
+        }
+
+
+
+        //show($uriPattern); die();
+
         // Direct output
         if (is_callable($callback)) {
 
@@ -382,8 +391,8 @@ class Router implements RouterInterface
         }
 
         throw new RouteNotFoundException(
-            "Route for '".$uriString."' not found", $this
-        );
+            "Route for '" .$this->request->getRequestMethod() . ' '
+            . $uriString."' not found", $this);
     }
 
     /**

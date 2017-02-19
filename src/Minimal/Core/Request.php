@@ -134,6 +134,7 @@ class Request implements RequestInterface
 
         // Fetch request string (apache)
 		$uri = $_SERVER['REQUEST_URI'];
+        $uri = parse_url($uri)['path'];
 
         // Remove script name (index.php) from uri
 /*

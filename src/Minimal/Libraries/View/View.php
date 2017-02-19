@@ -1,8 +1,10 @@
 <?php namespace Maduser\Minimal\Libraries\View;
 
+use Exception;
+use Maduser\Minimal\Exceptions\ViewNotFoundException;
 use Maduser\Minimal\Interfaces\AssetsInterface;
-use Maduser\Minimal\Interfaces\ContentInterface;
 use Maduser\Minimal\Interfaces\ViewInterface;
+use Maduser\Minimal\Libraries\Assets\Assets;
 
 /**
  * Class View
@@ -15,11 +17,6 @@ class View implements ViewInterface
      * @var
      */
     private $assets;
-
-    /**
-     * @var
-     */
-    private $content;
 
     /**
      * @var
@@ -75,22 +72,6 @@ class View implements ViewInterface
     public function setAssets($assets)
     {
         $this->assets = $assets;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
-     * @param mixed $content
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
     }
 
     /**
@@ -254,15 +235,11 @@ class View implements ViewInterface
     /**
      * View constructor.
      *
-     * @param AssetsInterface   $assets
-     * @param ContentInterface  $content
+     * @param AssetsInterface $assets
      */
-    public function __construct(
-        AssetsInterface $assets = null,
-        ContentInterface $content = null
-    ) {
+    public function __construct(AssetsInterface $assets)
+    {
         $this->setAssets($assets);
-        $this->setContent($content);
     }
 
     /**
@@ -318,6 +295,7 @@ class View implements ViewInterface
             $this->setData($data);
         }
 
+
         if (!$this->isAjax() && $this->getLayout() !== null && !$bypass) {
             return $this->renderLayout($this->getSharedData());
         }
@@ -338,6 +316,7 @@ class View implements ViewInterface
      * @param array|null $data
      *
      * @return string
+     * @throws ViewNotFoundException
      */
     public function renderView($viewPath, array $data = null)
     {
@@ -346,10 +325,21 @@ class View implements ViewInterface
         !$data or extract($data);
         ob_start();
 
-        /** @noinspection PhpIncludeInspection */
-        include rtrim(
+        if (file_exists(rtrim(
                 $this->getViewPath(), $this->getFileExt()
-            ) . $this->getFileExt();
+            ) . $this->getFileExt())) {
+
+            /** @noinspection PhpIncludeInspection */
+            include rtrim(
+                    $this->getViewPath(), $this->getFileExt()
+                ) . $this->getFileExt();
+
+        } else {
+            throw new ViewNotFoundException('View '. rtrim(
+                    $this->getViewPath(), $this->getFileExt()
+                ) . $this->getFileExt().' not found', $this);
+        }
+
         $rendered = ob_get_contents();
         ob_end_clean();
 

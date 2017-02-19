@@ -205,7 +205,7 @@ class IOC
      */
     public static function resolveDependencies(array $dependencies)
     {
-
+        //show($dependencies);
         foreach ($dependencies as &$dependency) {
             if (is_null($dependency)) {
                 $dependency =  null;
