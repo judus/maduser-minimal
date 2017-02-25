@@ -230,12 +230,12 @@ class Modules implements ModulesInterface
     /**
      * Modules constructor.
      *
-     * @param ConfigInterface $config
+     * @param ConfigInterface            $config
      * @param CollectionFactoryInterface $collectionFactory
-     * @param ModuleFactoryInterface $moduleFactory
-     * @param RequestInterface $request
-     * @param ResponseInterface $response
-     * @param RouterInterface $router
+     * @param ModuleFactoryInterface     $moduleFactory
+     * @param RequestInterface           $request
+     * @param ResponseInterface          $response
+     * @param RouterInterface            $router
      */
     public function __construct(
         ConfigInterface $config,
@@ -279,7 +279,11 @@ class Modules implements ModulesInterface
         }
 
         $module->setName($name);
-        $module->setPath($this->app->getModulesPath() . $name);
+
+        $modulePath = isset($params['path']) ? rtrim($params['path'],
+                '/') . '/' : $this->app->getModulesPath() . $name;
+
+        $module->setPath($modulePath);
 
         $bindingsFile = isset($bindings) ? $bindings : $this->config->item('modules.bindingsFile');
         $module->setBindingsFile($module->getPath() . $bindingsFile);
@@ -293,13 +297,14 @@ class Modules implements ModulesInterface
         $routesFile = isset($routes) ? $routes : $this->config->item('modules.routesFile');
         $module->setRoutesFile($module->getPath() . $routesFile);
 
-        /** @var \Maduser\Minimal\Core\Minimal $this->app */
+        /** @var \Maduser\Minimal\Core\Minimal $this ->app */
         $this->app->registerConfig($module->getConfigFile());
         $this->app->registerBindings($module->getBindingsFile());
         $this->app->registerProviders($module->getProvidersFile());
         $this->app->registerRoutes($module->getRoutesFile());
 
-        /** @var \Maduser\Minimal\Core\Collection $this->modules */
+        /** @var \Maduser\Minimal\Core\Collection $this ->modules */
+        //die(show(debug_backtrace()));
         $this->registerModule($module);
 
         return $module;
@@ -324,8 +329,3 @@ class Modules implements ModulesInterface
         return $this->modules->get($name);
     }
 }
-
-
-
-
-

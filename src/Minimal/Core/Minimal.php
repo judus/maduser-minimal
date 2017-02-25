@@ -371,7 +371,7 @@ class Minimal
      * Minimal constructor.
      *
      * @param array $params
-     * @param bool $returnInstance
+     * @param bool  $returnInstance
      */
     public function __construct(array $params, $returnInstance = false)
     {
@@ -400,18 +400,19 @@ class Minimal
     {
         $providersFile = $providersFile ? $providersFile : $this->getProvidersFile();
 
-        /** @noinspection PhpIncludeInspection */
-        $providers = require_once $this->getBasepath().$providersFile;
+        if (file_exists($this->getBasepath() . $providersFile)) {
+            /** @noinspection PhpIncludeInspection */
+            $providers = require_once $this->getBasepath() . $providersFile;
 
-        foreach ($providers as $alias => $provider) {
-            IOC::register($alias, function () use ($provider) {
-                return new $provider();
-            });
-             if (property_exists($this, strtolower($alias))) {
-                $this->{strtolower($alias)} = IOC::resolve($alias);
+            foreach ($providers as $alias => $provider) {
+                IOC::register($alias, function () use ($provider) {
+                    return new $provider();
+                });
+                if (property_exists($this, strtolower($alias))) {
+                    $this->{strtolower($alias)} = IOC::resolve($alias);
+                }
             }
         }
-
     }
 
     /**
@@ -421,11 +422,13 @@ class Minimal
     {
         $configFile = $configFile ? $configFile : $this->getConfigFile();
 
-        /** @noinspection PhpIncludeInspection */
-        $configItems = require_once $this->getBasepath() . $configFile;
+        if (file_exists($this->getBasepath() . $configFile)) {
+            /** @noinspection PhpIncludeInspection */
+            $configItems = require_once $this->getBasepath() . $configFile;
 
-        foreach ($configItems as $key => $value) {
-            $this->config->item($key, $value);
+            foreach ($configItems as $key => $value) {
+                $this->config->item($key, $value);
+            }
         }
     }
 
@@ -434,13 +437,15 @@ class Minimal
      */
     public function registerBindings($bindingsFile = null)
     {
-        $bindingsFile = $bindingsFile ? $bindingsFile :  $this->getBindingsFile();
+        $bindingsFile = $bindingsFile ? $bindingsFile : $this->getBindingsFile();
 
-        /** @noinspection PhpIncludeInspection */
-        $bindings = require_once $this->getBasepath() . $bindingsFile;
+        if (file_exists($this->getBasepath() . $bindingsFile)) {
+            /** @noinspection PhpIncludeInspection */
+            $bindings = require_once $this->getBasepath() . $bindingsFile;
 
-        foreach ($bindings as $alias => $binding) {
-            IOC::bind($alias, $binding);
+            foreach ($bindings as $alias => $binding) {
+                IOC::bind($alias, $binding);
+            }
         }
     }
 
@@ -451,20 +456,23 @@ class Minimal
     {
         $routesFile = $routesFile ? $routesFile : $this->getRoutesFile();
 
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $route = $this->getRouter();
+        if (file_exists($this->getBasepath() . $routesFile)) {
+            /** @noinspection PhpUnusedLocalVariableInspection */
+            $route = $this->getRouter();
 
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $response = $this->getResponse();
+            /** @noinspection PhpUnusedLocalVariableInspection */
+            $response = $this->getResponse();
 
-        /** @noinspection PhpIncludeInspection */
-        require $this->getBasepath() . $routesFile;
+            /** @noinspection PhpIncludeInspection */
+            require $this->getBasepath() . $routesFile;
+        }
     }
 
     public function registerModules($modulesFile = null)
     {
         $modulesFile = $modulesFile ? $modulesFile : $this->getModulesFile();
 
+        /** @var Modules $modules */
         $modules = $this->getModules();
         $modules->setApp($this);
 
