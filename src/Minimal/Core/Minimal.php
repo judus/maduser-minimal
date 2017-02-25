@@ -480,9 +480,11 @@ class Minimal
             /** @noinspection PhpIncludeInspection */
             $mods = require_once $this->getBasepath() . $modulesFile;
 
-            foreach ($mods as $alias => $config) {
-                $config = isset($config['path']) ? $config : ['path' => $config];
-                $modules->register($alias, $config);
+            if (is_array($mods)) {
+                foreach ($mods as $alias => $config) {
+                    $config = isset($config['path']) ? $config : ['path' => $config];
+                    $modules->register($alias, $config);
+                }
             }
         }
     }
