@@ -472,12 +472,19 @@ class Minimal
     {
         $modulesFile = $modulesFile ? $modulesFile : $this->getModulesFile();
 
-        /** @var Modules $modules */
-        $modules = $this->getModules();
-        $modules->setApp($this);
+        if (file_exists($this->getBasepath() . $modulesFile)) {
+            /** @var Modules $modules */
+            $modules = $this->getModules();
+            $modules->setApp($this);
 
-        /** @noinspection PhpIncludeInspection */
-        require $this->getBasepath() . $modulesFile;
+            /** @noinspection PhpIncludeInspection */
+            $mods = require_once $this->getBasepath() . $modulesFile;
+
+            foreach ($mods as $alias => $config) {
+                $config = isset($config['path']) ? $config : ['path' => $config];
+                $modules->register($alias, $config);
+            }
+        }
     }
 
     /**
