@@ -147,7 +147,8 @@ class Assets implements AssetsInterface
      */
     public function getTheme()
     {
-        return rtrim($this->theme, '/') . '/';
+        $this->theme = empty($this->theme) ? '' : rtrim($this->theme, '/') . '/';
+        return $this->theme;
     }
 
     /**
