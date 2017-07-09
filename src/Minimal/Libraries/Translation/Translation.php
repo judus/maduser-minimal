@@ -1,6 +1,6 @@
 <?php
 
-namespace Maduser\Minimal\Libraries;
+namespace Maduser\Minimal\Libraries\Translation;
 
 /**
  * Class Translation
