@@ -7,7 +7,7 @@
         "mvc"
     ],
     "license": "MIT",
-    "type": "framework",
+    "type": "library",
     "authors": [
         {
             "name": "Julien Duseyau",
