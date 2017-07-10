@@ -37,6 +37,21 @@ class IOC
     public static $providers = [];
 
     /**
+     * @var array
+     */
+    public static $config = [];
+
+
+    public static function config(string $key, array $array = null)
+    {
+        if (is_array($array) && !isset(static::$config[$key])) {
+            static::$config[$key] = $array;
+        } else {
+            return static::$config[$key];
+        }
+    }
+
+    /**
      * @return string
      */
     public static function getNamespace(): string
