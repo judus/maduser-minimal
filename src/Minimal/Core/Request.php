@@ -108,7 +108,12 @@ class Request implements RequestInterface
 	 */
 	public function fetchRequestMethod()
 	{
-		if (isset($_POST['_method'])) {
+        if (php_sapi_name() == 'cli' or defined('STDIN')) {
+            $this->setRequestMethod('CLI');
+            return;
+        }
+
+        if (isset($_POST['_method'])) {
 			if (
 				strtoupper($_POST['_method']) == 'PUT' ||
                 strtoupper($_POST['_method']) == 'PATCH' ||
