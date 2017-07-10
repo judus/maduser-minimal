@@ -62,6 +62,11 @@ class Router implements RouterInterface
     private $groupValues = [];
 
     /**
+     * @var bool
+     */
+    private $isClosure = false;
+
+    /**
      * @return RequestInterface
      */
     public function getRequest(): RequestInterface
@@ -75,6 +80,14 @@ class Router implements RouterInterface
     public function setRequest(Request $request)
     {
         $this->request = $request;
+    }
+
+    /**
+     * @return CollectionInterface
+     */
+    public function getRoutes(): CollectionInterface
+    {
+        return $this->routes;
     }
 
     /**
@@ -162,6 +175,20 @@ class Router implements RouterInterface
     public function setGroupMiddlewares($groupMiddlewares)
     {
         $this->groupMiddlewares = $groupMiddlewares;
+    }
+
+    /**
+     * @param bool|null $bool
+     *
+     * @return bool
+     */
+    public function isClosure(bool $bool = null): bool
+    {
+        if (!is_null($bool)) {
+            $this->isClosure = $bool;
+        }
+
+        return $this->isClosure;
     }
 
     /**
@@ -281,17 +308,17 @@ class Router implements RouterInterface
     ) {
         extract($this->getGroupValues());
 
+        $this->isClosure(false);
+
         if (!empty($this->getGroupUriPrefix())) {
             $uriPattern = !empty($uriPattern) ? '/' . ltrim($uriPattern,
                     '/') : $uriPattern;
         }
 
-
-
-        //show($uriPattern); die();
-
         // Direct output
         if (is_callable($callback)) {
+
+            $this->isClosure(true);
 
             // If we have a literal match, we execute the closure, send the
             // response and exit PHP
@@ -323,6 +350,8 @@ class Router implements RouterInterface
 
         $vars['namespace'] = isset($vars['namespace']) ? $vars['namespace'] : $this->getGroupNamespace();
         $vars['middlewares'] = isset($vars['middlewares']) ? $vars['middlewares'] : $this->getGroupMiddlewares();
+        $vars['uriPrefix'] = isset($vars['uriPrefix']) ? $vars['uriPrefix'] : $this->getGroupUriPrefix();
+        $vars['isClosure'] = isset($vars['isClosure']) ? $vars['isClosure'] : $this->isClosure();
 
         $route = new Route($vars);
 
