@@ -74,6 +74,11 @@ class Route implements RouteInterface
 	 */
 	private $values = [];
 
+    /**
+     * @var bool
+     */
+    private $isClosure = false;
+
 	/**
 	 * @return mixed
 	 */
@@ -329,6 +334,32 @@ class Route implements RouteInterface
 	{
 		return $this->view;
 	}
+
+    /**
+     * @param bool $isClosure
+     *
+     * @return Route
+     */
+    public function setIsClosure(bool $isClosure): Route
+    {
+        $this->isClosure = $isClosure;
+
+        return $this;
+    }
+
+    /**
+     * @param bool|null $bool
+     *
+     * @return bool
+     */
+    public function isClosure(bool $bool = null): bool
+    {
+        if (!is_null($bool)) {
+            $this->isClosure = $bool;
+        }
+
+        return $this->isClosure;
+    }
 
 	/**
 	 * Route constructor.
