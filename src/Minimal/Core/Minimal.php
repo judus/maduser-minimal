@@ -404,6 +404,8 @@ class Minimal
             /** @noinspection PhpIncludeInspection */
             $providers = require_once $this->getBasepath() . $providersFile;
 
+            IOC::config('providers', $providers);
+
             foreach ($providers as $alias => $provider) {
                 IOC::register($alias, function () use ($provider) {
                     return new $provider();
@@ -442,6 +444,8 @@ class Minimal
         if (file_exists($this->getBasepath() . $bindingsFile)) {
             /** @noinspection PhpIncludeInspection */
             $bindings = require_once $this->getBasepath() . $bindingsFile;
+
+            IOC::config('bindings', $bindings);
 
             foreach ($bindings as $alias => $binding) {
                 IOC::bind($alias, $binding);
