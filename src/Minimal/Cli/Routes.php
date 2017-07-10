@@ -14,7 +14,7 @@ class Routes
     private $minimal;
 
 
-    public function __construct($minimal)
+    public function __construct(Minimal $minimal)
     {
         $this->console = new Console();
 
