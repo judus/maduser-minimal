@@ -229,7 +229,7 @@ class IOC
                     $dependency = IOC::resolve($dependency);
                 } else {
                     // just try unregistered
-                    $dependency = new $dependency();
+                    $dependency = IOC::make($dependency);
                 }
             }
         }
