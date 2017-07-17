@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Exceptions;
 
-use Maduser\Minimal\Interfaces\ExceptionInterface;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class MinimalException
@@ -276,6 +276,7 @@ class MinimalException extends \Exception implements ExceptionInterface
         $this->setMyMessage($message);
         $this->setMyData($data);
 
+
         return $this->template([
             'title' => $this->getMyTitle(),
             'message' => $this->getMyMessage(),
@@ -292,6 +293,8 @@ class MinimalException extends \Exception implements ExceptionInterface
     {
         extract($vars);
 
+
+
         $title = isset($title) ? $title : null;
         $message = isset($message) ? $message : null;
         $file = isset($file) ? $file : null;
@@ -299,6 +302,10 @@ class MinimalException extends \Exception implements ExceptionInterface
         $traces = isset($traces) ? $traces : [];
         $data = isset($data) ? $data : null;
         $footer = isset($footer) ? $footer : null;
+
+        if (class_exists(VarDumper::class)) {
+            $data = d($data, null, true);
+        }
 
         ob_start();
         ?>

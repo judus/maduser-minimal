@@ -1,0 +1,91 @@
+<?php namespace Maduser\Minimal\Facades;
+
+use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Apps\Minimal as Implementation;
+
+/**
+ * Class App
+ *
+ * @package Maduser\Minimal\Facades
+ */
+class App extends Facade
+{
+    protected static $instance;
+
+    /**
+     * @param            $class
+     * @param array|null $options
+     *
+     * @return Implementation
+     */
+    protected static function makeInstance(
+        $class,
+        array $options = null
+    ): Implementation {
+
+        // TODO: get rid of $_SERVER
+        $options || $options = [
+            'path' => realpath($_SERVER['DOCUMENT_ROOT'] . '/../') . '/'
+        ];
+
+        return IOC::make($class, [$options, true]);
+    }
+
+    /**
+     * @param null  $class
+     * @param array $options
+     *
+     * @return Implementation
+     */
+    public static function getInstance(
+        $class = null,
+        array $options = []
+    ): Implementation {
+
+        /** @var Implementation $instance */
+        if (is_null(self::$instance)) {
+            if (is_null($class)) {
+
+                self::$instance = self::makeInstance(
+                    Implementation::class, $options
+                );
+
+                self::$instance->load();
+
+            } else {
+                ! is_object($class) || self::$instance = $class;
+            }
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * @param null  $uri
+     * @param array $options
+     *
+     * @return $this
+     */
+    public static function run($uri = null, $options = null)
+    {
+        return self::getInstance()->execute($uri)->getResult();
+    }
+
+    /**
+     * @param array         $options
+     * @param \Closure|null $closure
+     * @param null          $class
+     */
+    public static function respond(
+        array $options = [],
+        \Closure $closure = null,
+        $class = null
+    ) {
+        /** @var Implementation $app */
+        self::getInstance($class, $options);
+
+        is_null($closure) || $closure();
+
+        self::getInstance()->execute()->respond()->exit();
+    }
+}

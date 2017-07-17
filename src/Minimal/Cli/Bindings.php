@@ -2,8 +2,8 @@
 
 namespace Maduser\Minimal\Cli;
 
-use Maduser\Minimal\Core\IOC;
-use Maduser\Minimal\Core\Minimal;
+use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Apps\Minimal;
 
 class Bindings
 {

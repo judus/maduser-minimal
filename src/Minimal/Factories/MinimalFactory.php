@@ -1,12 +1,12 @@
 <?php namespace Maduser\Minimal\Factories;
 
-use Maduser\Minimal\Core\IOC;
-use Maduser\Minimal\Interfaces\MinimalFactoryInterface;
+use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Loaders\IocNotResolvableException;
 
 /**
  * Class MinimalFactory
  *
- * @package Maduser\Minimal\Factories
+ * @package Maduser\Minimal\Apps
  */
 abstract class MinimalFactory implements MinimalFactoryInterface
 {
@@ -17,7 +17,11 @@ abstract class MinimalFactory implements MinimalFactoryInterface
         if (is_string($class) && IOC::registered($class)) {
             return IOC::resolve($class);
         }
+        try {
+            return IOC::make($class, $params);
 
-        return IOC::make($class, $params);
+        } catch (\Exception $e) {
+            throw new IocNotResolvableException('MinimalFactory could not create class '. $class, $e);
+        }
     }
 }

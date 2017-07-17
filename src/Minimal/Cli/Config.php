@@ -2,7 +2,7 @@
 
 namespace Maduser\Minimal\Cli;
 
-use Maduser\Minimal\Core\Minimal;
+use Maduser\Minimal\Apps\Minimal;
 
 class Config
 {

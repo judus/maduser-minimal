@@ -2,10 +2,10 @@
 
 namespace Maduser\Minimal\Cli;
 
-use Maduser\Minimal\Core\Collection;
-use Maduser\Minimal\Core\Minimal;
-use Maduser\Minimal\Core\Module;
-use Maduser\Minimal\Core\Route;
+use Maduser\Minimal\Collections\Collection;
+use Maduser\Minimal\Apps\Minimal;
+use Maduser\Minimal\Apps\Module;
+use Maduser\Minimal\Routers\Route;
 
 class Modules
 {
