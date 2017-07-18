@@ -475,7 +475,7 @@ class Minimal implements AppInterface
 
         !isset($basepath) || $this->setBasePath($basepath);
 
-        define('PATH', $this->getBasePath());
+        defined('PATH') || define('PATH', $this->getBasePath());
 
         !isset($app) || $this->setAppPath($app);
         !isset($config) || $this->setConfigFile($config);
@@ -483,9 +483,6 @@ class Minimal implements AppInterface
         !isset($bindings) || $this->setBindingsFile($bindings);
         !isset($routes) || $this->setRoutesFile($routes);
         !isset($modules) || $this->setModulesFile($modules);
-
-        // Set namespace for aliases
-        IOC::setNamespace("Maduser\\Minimal\\Core\\");
 
         $returnInstance || $this->dispatch();
     }
