@@ -27,6 +27,7 @@ class Routes
     protected function list()
     {
         $router = $this->minimal->getRouter();
+
         /** @var Collection $routes */
         $routes = $router->getRoutes();
 
@@ -49,7 +50,7 @@ class Routes
             $array[] = [
                 'type' => $route->getRequestMethod(),
                 'pattern' => '/' . ltrim($route->getUriPrefix() . $route->getUriPattern(), '/'),
-                'action' => $route->isClosure() ? '<= Closure()' : $route->getController() . '@' . $route->getAction(),
+                'action' => $route->hasClosure() ? '<= Closure()' : $route->getController() . '@' . $route->getAction(),
                 'middleware' => $str
             ];
 
