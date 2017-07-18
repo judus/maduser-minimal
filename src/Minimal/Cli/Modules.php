@@ -26,13 +26,13 @@ class Modules
 
     protected function list()
     {
-        $modules = $this->minimal->getModules()->getModules()->getArray();
+        $modules = $this->minimal->getFactory()->getModules()->getArray();
 
         foreach ($modules as $module) {
             /** @var Module $module */
             $array[] = [
                 'name' => $module->getName(),
-                'path' => $module->getPath(),
+                'path' => $module->getBasePath(),
                 'config' => $module->getConfigFile(),
                 'routes' => $module->getRoutesFile(),
                 'providers' => $module->getProvidersFile(),
@@ -43,7 +43,7 @@ class Modules
 
         $this->console->table(
             $array,
-            [['Name', 'Path', 'Config', 'Routes', 'Providers', 'Bindings']]
+            [['Name', 'BasePath', 'Config', 'Routes', 'Providers', 'Bindings']]
         );
     }
 
