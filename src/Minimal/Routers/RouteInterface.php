@@ -91,4 +91,14 @@ interface RouteInterface
      * @return mixed
      */
     public function getMiddlewares();
+
+    /**
+     * @return bool
+     */
+    public function hasClosure();
+
+    /**
+     * @return \Closure
+     */
+    public function getClosure();
 }
