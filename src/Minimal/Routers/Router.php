@@ -386,7 +386,7 @@ class Router implements RouterInterface
         $vars = compact(array_keys(get_defined_vars()));
 
         $vars['namespace'] = isset($vars['namespace']) ? $vars['namespace'] : $this->getGroupNamespace();
-        $vars['middlewares'] = isset($vars['middlewares']) ? $vars['middlewares'] : $this->getGroupMiddlewares();
+        $vars['middlewares'] = isset($vars['middlewares']) ? array_merge($this->getGroupMiddlewares(), $vars['middlewares']) : [];
         $vars['uriPrefix'] = isset($vars['uriPrefix']) ? $vars['uriPrefix'] : $this->getGroupUriPrefix();
         $vars['closure'] = isset($vars['closure']) ? $vars['closure'] : $this->getClosure();
 
