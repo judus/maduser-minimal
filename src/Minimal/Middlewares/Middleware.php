@@ -7,7 +7,7 @@ use Maduser\Minimal\Loaders\IOC;
  *
  * @package Maduser\Minimal\Core
  */
-class Middleware implements MiddlewareInterface
+class Middleware extends AbstractMiddleware implements MiddlewareInterface
 {
     /**
      * @var array
@@ -50,21 +50,21 @@ class Middleware implements MiddlewareInterface
     {
         is_array($middlewares) || $middlewares = $this->getMiddlewares();
 
-        $beforeResponse = $this->before($middlewares);
+        $beforeReturnValue = $this->before($middlewares);
 
-        if ($beforeResponse === false || $beforeResponse !== true) {
-            return $beforeResponse;
+        if ($beforeReturnValue === false || $beforeReturnValue !== true) {
+            return $beforeReturnValue;
         }
 
-        $response = $task();
+        $this->setPayload($task());
 
-        $afterResponse = $this->after($middlewares, $response);
+        $afterReturnValue = $this->after(array_reverse($middlewares));
 
-        if ($afterResponse === false || $afterResponse !== true) {
-            return $afterResponse;
+        if ($afterReturnValue === false || $afterReturnValue !== true) {
+            return $afterReturnValue;
         }
 
-        return $response;
+        return $this->getPayload();
     }
 
     /**
@@ -103,13 +103,20 @@ class Middleware implements MiddlewareInterface
                     array_push($parameters, $response);
                 }
 
-                $middleware = IOC::make($middleware, $parameters);
-                $response = $middleware->{$when}($this);
+                /** @var AbstractMiddleware $middleware */
 
-                if (!is_null($response) &&
-                    ($response === false || $response !== true)
+                $middleware = IOC::make($middleware, $parameters);
+
+                $middleware->setPayload($this->getPayload());
+                $returnValue = $middleware->{$when}($this);
+
+                $this->setPayload($middleware->getPayload());
+
+
+                if (!is_null($returnValue) &&
+                    ($returnValue === false || $returnValue !== true)
                 ) {
-                    return $response;
+                    return $this->getPayload();
                 }
             }
         }
