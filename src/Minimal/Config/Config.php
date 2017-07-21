@@ -86,7 +86,7 @@ class Config implements ConfigInterface
     {
         $literal = is_null($literal) ? $this->isLiteral() : $literal;
 
-        func_num_args() < 1 || $this->items[$name] = $value;
+        func_num_args() < 2 || $this->items[$name] = $value;
 
         if (!$literal) {
             return $this->find($name, $this->items);
