@@ -1,4 +1,4 @@
-<?php namespace Maduser\Minimal\Database;
+<?php namespace Maduser\Minimal\Database\Connectors;
 
 /**
  * Class SafePDO

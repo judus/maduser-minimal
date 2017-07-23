@@ -1,4 +1,4 @@
-<?php namespace Maduser\Minimal\Database;
+<?php namespace Maduser\Minimal\Database\Connectors;
 
 use Exception;
 
@@ -285,7 +285,6 @@ class PDO
 
     public static function config($config)
     {
-        show($config);
         !isset($config['driver']) || self::setDriver($config['driver']);
         !isset($config['host']) || self::setHost($config['host']);
         !isset($config['port']) || self::setPort($config['port']);
