@@ -1,28 +1,36 @@
 <?php
 
-namespace Maduser\Minimal\Database;
+namespace Maduser\Minimal\Database\ORM;
 
 use Maduser\Minimal\Collections\Collection;
+use Maduser\Minimal\Collections\CollectionInterface;
 use Maduser\Minimal\Database\Exceptions\DatabaseException;
+use Maduser\Minimal\Database\Connectors\PDO;
+use Maduser\Minimal\Database\QueryBuilder;
 use Maduser\Minimal\Loaders\IOC;
 
 class ORM
 {
+    /**
+     * The class that builds and sends the database statements
+     *
+     * @var QueryBuilder
+     */
     protected $builder;
 
     /**
      * Database table to use
      *
-     * @var
+     * @var string
      */
-    //protected $table;
+    protected $table;
 
     /**
      * Prefix database table name
      *
-     * @var
+     * @var string
      */
-    protected $prefix;
+    protected $prefix = '';
 
     /**
      * Default order of the results
@@ -60,13 +68,40 @@ class ORM
     protected $timestampUpdatedAt = 'updated';
 
     /**
-     * Represents the row
+     * Represents the actual state of the row in database
      *
      * @var array
      */
     protected $state = [];
 
-    protected $with;
+    /**
+     * Holds the changed values, will be same as $state after each query
+     *
+     * @var array
+     */
+    protected $attributes = [];
+
+
+    /**
+     * Names of related objects to eager load
+     *
+     * @var array
+     */
+    protected $with = [];
+
+    /**
+     * Holds information about relationships
+     *
+     * @var array
+     */
+    protected $relations = [];
+
+    /**
+     * Holds the related objects
+     *
+     * @var array
+     */
+    protected $related = [];
 
     /**
      * @return QueryBuilder
@@ -244,10 +279,122 @@ class ORM
     public function setState(array $state): ORM
     {
         $this->state = $state;
+        $this->attributes = $state;
 
         return $this;
     }
 
+    /**
+     * @return array
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @param array $attributes
+     *
+     * @return ORM
+     */
+    public function setAttributes(array $attributes): ORM
+    {
+        $this->attributes = $attributes;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getWith(): array
+    {
+        return $this->with;
+    }
+
+    /**
+     * @param array|string $with
+     *
+     * @return ORM
+     */
+    public function setWith($with): ORM
+    {
+        $this->with = $with;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRelations(): array
+    {
+        return $this->relations;
+    }
+
+    /**
+     * @param array $relations
+     *
+     * @return ORM
+     */
+    public function setRelations(array $relations): ORM
+    {
+        $this->relations = $relations;
+
+        return $this;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     *
+     * @return $this
+     */
+    public function addRelation($key, $value)
+    {
+        $this->relations[$key][$value->getClass()] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRelated(): array
+    {
+        return $this->related;
+    }
+
+    /**
+     * @param array $related
+     *
+     * @return ORM
+     */
+    public function setRelated(array $related): ORM
+    {
+        $this->related = $related;
+
+        return $this;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     *
+     * @return $this
+     */
+    public function addRelated($key, $value)
+    {
+        $this->related[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * ORM constructor.
+     *
+     * @param null $connection
+     */
     public function __construct($connection = null)
     {
         ! is_null($connection) || $connection = PDO::connection();
@@ -267,6 +414,19 @@ class ORM
         $this->builder = $builder;
     }
 
+    /**
+     * @return QueryBuilder
+     */
+    public function newQueryBuilder()
+    {
+        return new QueryBuilder();
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return ORM
+     */
     public static function create(array $data = [])
     {
         /** @var ORM $obj */
@@ -277,18 +437,51 @@ class ORM
         return $obj;
     }
 
-    public static function find($id)
+    public function save()
+    {
+        $attr = $this->attributes;
+        $id = $this->getPrimaryKey();
+
+        $id = isset($attr[$id]) ? $attr[$id] : null;
+
+        if ($id) {
+            $affectedRows = $this->builder->update($id, $attr);
+            $id = $affectedRows > 0 ? $id : null;
+        } else {
+            $id = $this->builder->insert($attr);
+        }
+
+        if ($id) {
+            $new = $this->getById($id);
+            $this->attributes = $new->getAttributes();
+            $this->state = $new->getState();
+        }
+
+        return $this;
+    }
+
+    public function delete()
+    {
+        return $this->builder->delete($this->attributes[$this->getPrimaryKey()]);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return ORM|null
+     */
+    public static function find(int $id)
     {
         $newInstance = self::create();
         return $newInstance->getById($id);
     }
 
-    public function newQueryBuilder()
-    {
-        return new QueryBuilder();
-    }
-
-    public function getById($id)
+    /**
+     * @param int $id
+     *
+     * @return ORM|null
+     */
+    public function getById(int $id)
     {
         $result = $this->builder->getById($id);
 
@@ -299,6 +492,11 @@ class ORM
         return null;
     }
 
+    /**
+     * @param null $sql
+     *
+     * @return ORM|null
+     */
     public function getFirst($sql = null)
     {
         $result = $this->builder->getFirst($sql);
@@ -320,60 +518,17 @@ class ORM
      */
     public function getAll($sql = null)
     {
-        $results = $this->builder->getAll($sql);
+        $results = $this->builder->query($sql)->collect();
 
-        if (count($results) > 0) {
+        if ($results) {
+
             $collection = new Collection();
-            foreach ($results as $value) {
-                $obj = self::create($value);
-                $collection->add($obj);
+
+            foreach ($results as $key => $row) {
+                $collection->add(self::create($row));
             }
 
-            if (!is_null($this->with)) {
-                if (is_string($this->with)) {
-                    $this->with = [$this->with];
-                }
-
-                foreach ($this->with as $with) {
-
-                    $relation = $this->{$with}();
-                    $array = $collection->extract($relation->getLocalKey());
-
-
-                    if ($relation instanceof HasOne) {
-
-                        $relatedCollection = $relation->getWhereIn($array);
-
-                        foreach ($collection->getArray() as &$item) {
-                            foreach ($relatedCollection->getArray() as $related) {
-                                if ($item->{$relation->getLocalKey()} ==
-                                    $related->{$relation->getForeignKey()}) {
-                                    $item->{$with} = $related;
-                                }
-                            }
-
-                        }
-                    }
-
-                    if ($relation instanceof BelongsToMany) {
-
-                        $relatedCollection = $relation->getWhereIn($array);
-
-                        foreach ($collection->getArray() as &$item) {
-                            $newCollection = new Collection();
-                            foreach ($relatedCollection->getArray() as $related) {
-                                if ($item->{$relation->getLocalKey()} ==
-                                    $related->{$relation->getForeignKey()}) {
-                                    $newCollection->add($related);
-                                }
-                            }
-                            $item->{$with} = $newCollection;
-
-                        }
-                    }
-
-                }
-            }
+            $this->resolveRelations($collection);
 
             return $collection;
         }
@@ -381,34 +536,128 @@ class ORM
         return null;
     }
 
-    public function with($string)
+    public function resolveRelations(&$collection)
     {
-        $this->with = $string;
+        foreach ($this->with as $with) {
+
+            /** @var AbstractRelation $relation */
+            $relation = $this->{explode('.', $with)[0]}();
+            $relation->resolve($collection, explode('.', $with)[0], $this);
+        }
+    }
+
+    public function addWith($with)
+    {
+        $this->with[] = $with;
 
         return $this;
     }
 
+    /**
+     * @param $arg
+     *
+     * @return $this
+     * @throws DatabaseException
+     */
+    public function with($arg)
+    {
+        $args = func_get_args();
+
+        if (is_array($args[0])) {
+            $this->setWith($args[0]);
+
+            return $this;
+        }
+
+        foreach ($args as $arg) {
+            if (is_string($arg)) {
+                $this->addWith($arg);
+            }
+
+            return $this;
+        }
+
+        throw new DatabaseException('The arguments for with() don\'t fit');
+    }
+
     public function hasOne($class, $foreignKey, $localKey)
     {
-        return new HasOne($class, $foreignKey, $localKey, $this);
+        $relation = new HasOne($class, $foreignKey, $localKey);
+        $this->addRelation('HasOne', $relation);
+
+        return $relation;
     }
 
-
-    public function belongsToMany($class, $foreignKey, $localKey)
+    public function hasMany($class, $foreignKey, $localKey)
     {
-        return new BelongsToMany($class, $foreignKey, $localKey, $this);
+        $relation = new HasMany($class, $foreignKey, $localKey);
+        $this->addRelation('HasMany', $relation);
+
+        return $relation;
     }
 
+    public function belongsTo($class, $foreignKey, $localKey)
+    {
+        $relation = new BelongsTo($class, $foreignKey, $localKey);
+        $this->addRelation('BelongsTo', $relation);
+
+        return $relation;
+    }
+
+    public function belongsToMany($class, $table, $localKey, $foreignKey)
+    {
+        $relation = new BelongsToMany($class, $table, $localKey, $foreignKey);
+        $this->addRelation('BelongsToMany', $relation);
+
+        return $relation;
+    }
+
+    public function drop($name)
+    {
+        unset($this->attributes[$name]);
+        unset($this->state[$name]);
+    }
 
     public function toArray()
     {
-        return $this->state;
+        $items = [];
+        foreach ($this->related as $key => $related) {
+            if ($related instanceof CollectionInterface) {
+                $items[$key] = $related->getArray();
+            } else {
+                $items[$key] = $related->toArray();
+            }
+        }
+
+        return array_merge($this->attributes, $items);
+    }
+
+    public function __toString()
+    {
+        return json_encode(array_merge($this->attributes, $this->related));
+    }
+
+    public function __set($name, $arg)
+    {
+       $this->attributes[$name] = $arg;
     }
 
     public function __get($name)
     {
         if (method_exists($this, $name)) {
-            return $this->{$name}();
+            $result = $this->{$name}();
+            if ($result instanceof AbstractRelation) {
+
+                $calledRelationMethod = debug_backtrace()[0]['args'][0];
+
+                if (isset($this->related[$calledRelationMethod])) {
+                    return $this->related[$calledRelationMethod];
+                }
+
+                return $result->resolveInline($this);
+            }
+
+            return $result;
         }
 
         return $this->{'get' . ucfirst($name)}();
@@ -416,25 +665,39 @@ class ORM
 
     public function __call($name, $arguments)
     {
+        $_name = $name;
+
         $prefix = 'get';
 
         if (substr($name, 0, strlen($prefix)) == $prefix) {
 
             $name = lcfirst(substr($name, strlen($prefix)));
             if (array_key_exists($name, $this->state)) {
-                return $this->state[$name];
-            } else {
-                throw new DatabaseException('Key ' . $name . ' does not exist.');
+                return $this->attributes[$name];
             }
-        } else {
-            $result = call_user_func_array([$this->builder, $name], $arguments);
-
-            if (in_array($name, ['lastQuery'])) {
-                return $result;
-            }
-            return $this;
+            throw new DatabaseException('Key ' . $_name . ' does not exist.');
         }
 
+        $prefix = 'set';
+
+        if (substr($name, 0, strlen($prefix)) == $prefix) {
+
+            $name = lcfirst(substr($name, strlen($prefix)));
+            if (array_key_exists($name, $this->state)) {
+                $this->attributes[$name] = $arguments;
+                return $this;
+            }
+            throw new DatabaseException('Key ' . $_name . ' does not exist.');
+
+        }
+
+        $result = call_user_func_array([$this->builder, $name], $arguments);
+
+        if (in_array($name, ['lastQuery'])) {
+            return $result;
+        }
+
+        return $this;
     }
 
 

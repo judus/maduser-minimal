@@ -2,8 +2,9 @@
 
 namespace Maduser\Minimal\Database;
 
+use Maduser\Minimal\Collections\Collection;
 use Maduser\Minimal\Database\Exceptions\DatabaseException;
-use Maduser\Minimal\Database\PDO;
+use Maduser\Minimal\Database\Connectors\PDO;
 
 class QueryBuilder
 {
@@ -573,29 +574,30 @@ class QueryBuilder
      * @return $this
      * @throws DatabaseException
      */
-    public function query()
+    public function query($sql = null)
     {
-        $sqlWhere = '';
-        if (!empty($this->getWhere())) {
-            $sqlWhere = $this->getWhere();
+        if (! $sql) {
+            $sqlWhere = '';
+            if (!empty($this->getWhere())) {
+                $sqlWhere = $this->getWhere();
+            }
+
+            $sqlLimit = '';
+            if (!empty($this->getLimit())) {
+                $sqlLimit = $this->getLimit();
+            }
+
+            $sqlOrder = '';
+            $orderBy = $this->getOrderBy();
+            if (!empty($orderBy)) {
+                $sqlOrder = $orderBy;
+            }
+
+            $sqlSelect = "SELECT " . $this->getSelect();
+            $sqlFrom = " FROM " . $this->getTable();
+
+            $sql = $sqlSelect . $sqlFrom . $sqlWhere . $sqlOrder . $sqlLimit;
         }
-
-        $sqlLimit = '';
-        if (!empty($this->getLimit())) {
-            $sqlLimit = $this->getLimit();
-        }
-
-        $sqlOrder = '';
-        $orderBy = $this->getOrderBy();
-        if (!empty($orderBy)) {
-            $sqlOrder = $orderBy;
-        }
-
-        $sqlSelect = "SELECT " . $this->getSelect();
-        $sqlFrom = " FROM " . $this->getTable();
-
-        $sql = $sqlSelect . $sqlFrom . $sqlWhere . $sqlOrder . $sqlLimit;
-
         $this->setLastQuery($sql);
 
         try {
@@ -643,7 +645,7 @@ class QueryBuilder
             throw new DatabaseException($e->getMessage() . '<br>' . $this->getLastQuery()[0]);
         }
 
-        return $results->fetchToCollection();
+        return $results->fetchAssoc();
     }
 
     /**
@@ -662,10 +664,11 @@ class QueryBuilder
             try {
                 $result = $this->db->query($sql);
             } catch (\PDOException $e) {
-                throw new DatabaseException($e->getMessage() . '<br>' . $this->getLastQuery()[0]);
+                throw new DatabaseException($e->getMessage(), $this->getLastQuery());
             }
 
-            $this->fetchAssoc($result);
+            $data = $this->fetchAssoc($result);
+
             if (isset($data[0])) {
                 return $data[0];
             }
@@ -700,12 +703,12 @@ class QueryBuilder
     }
 
     /**
-     * @param $inserts
+     * @param $attributes
      *
      * @return null
      * @throws DatabaseException
      */
-    public function insert($inserts)
+    public function insert($attributes)
     {
         $strCols = "";
         $strValues = "";
@@ -713,26 +716,11 @@ class QueryBuilder
         $params = [];
         $setStr = "";
 
-        foreach ($inserts as $key => $value) {
+        foreach ($attributes as $key => $value) {
             if ($key != $this->getPrimaryKey()) {
-
-                $column = $this->getColumnDefinition($key);
-
-                // The column name must be defined in the model
-                if (is_null($column)) {
-                    throw new UndefinedColumnException("Undefined column '" . $key . "'");
-                }
-
-                if (!isset($column['belongsToMany'])) {
-
-                    $setStr .= "`" . str_replace("`", "``",
-                            $key) . "` = :" . $key . ",";
-
-                    $value = $this->getValue($value, $column);
-                    $value = is_array($value) ? json_encode($value) : $value;
-
-                    $params[':' . $key] = $value;
-                }
+                $setStr .= "`" . str_replace("`", "``", $key) . "` = :" . $key . ",";
+                $value = is_array($value) ? json_encode($value) : $value;
+                $params[':' . $key] = $value;
             }
         }
 
@@ -762,12 +750,6 @@ class QueryBuilder
 
         $insertId = $this->getInsertId($this->getTable());
 
-        if ($this->manualSort) {
-            $this->updateOrder($insertId);
-        }
-
-        $this->handleRelations($insertId, $inserts);
-
         return $insertId;
     }
 
@@ -781,40 +763,25 @@ class QueryBuilder
 
     /**
      * @param $id
-     * @param $inserts
+     * @param $attributes
      *
      * @return null
      * @throws DatabaseException
      */
-    public function update($id, $inserts)
+    public function update($id, $attributes)
     {
         $params = [];
         $setStr = "";
 
-        // This has to be in order to populate $column['value'],
-        // which is required for handling uploads
-        $this->getById($id);
-
-        foreach ($inserts as $key => $value) {
-            if ($key != $this->getPrimaryKey()) {
-
-                $column = $this->getColumnDefinition($key);
-
-                // The column name must be defined in the model
-                if (is_null($column)) {
-                    throw new UndefinedColumnException("Undefined column '" . $key . "'");
-                }
-
-                if (!isset($column['belongsToMany'])) {
-
-                    $setStr .= "`" . str_replace("`", "``",
-                            $key) . "` = :" . $key . ",";
-
-                    $value = $this->getValue($value, $column);
-                    $value = is_array($value) ? json_encode($value) : $value;
-
-                    $params[':' . $key] = $value;
-                }
+        foreach ($attributes as $key => $value) {
+            if ($key != $this->getPrimaryKey() &&
+                $this->timestamps && (
+                    $key != $this->timestampCreatedAt &&
+                    $key != $this->timestampUpdatedAt
+                )
+            ) {
+                $setStr .= "`" . str_replace("`", "``", $key) . "` = :" . $key . ",";
+                $params[':' . $key] = is_array($value) ? json_encode($value) : $value;
             }
         }
 
@@ -835,11 +802,9 @@ class QueryBuilder
 
             $stmt->execute($params);
         } catch (\PDOException $e) {
-            throw new DatabaseException($e->getMessage() . '<br> ' . $this->getLastQuery(),
+            throw new DatabaseException($e->getMessage() , $this->getLastQuery(),
                 $this);
         }
-
-        $this->handleRelations($id, $inserts);
 
         return $stmt->rowCount();
     }
@@ -887,7 +852,7 @@ class QueryBuilder
      *
      * @return array|null
      */
-    protected function fetchAssoc($result = null)
+    public function fetchAssoc($result = null)
     {
         $result = $result ? $result : $this->getResult();
 
@@ -910,12 +875,16 @@ class QueryBuilder
      *
      * @return Collection|null
      */
-    protected function fetchToCollection($result = null)
+    public function collect($result = null)
     {
         $result = $result ? $result : $this->getResult();
 
         if ($result->rowCount() > 0) {
-            return $result->fetchAll(\PDO::FETCH_ASSOC);
+            $collection = new Collection();
+            foreach ($result->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+                $collection->add($row);
+            }
+            return $collection;
         }
 
         return null;
@@ -981,7 +950,52 @@ class QueryBuilder
     }
 
 
+    /**
+     * @param       $relatedModel
+     * @param array $ids
+     * @param       $id
+     * @param null $table
+     * @param null $foreignKey
+     * @param null $localKey
+     */
+    public function attach(
+        $relatedModel,
+        Array $ids,
+        $id,
+        $table = null,
+        $foreignKey = null,
+        $localKey = null
+    ) {
+        $relatedIds = [];
 
+        $table = $table ? $table : $this->makeJoinTableName($relatedModel);
+        $foreignKey = $foreignKey ? $foreignKey : $relatedModel->getTable(false) . '_id';
+        $localKey = $localKey ? $localKey : $this->getTable(false) . '_id';
+
+        foreach ($ids as $relatedId) {
+
+            $sql = "SELECT id FROM " . $table . " 
+				WHERE " . $localKey . " = '" . $id . "' AND " . $foreignKey . " = '" . intval($relatedId) . "'";
+
+            $result = $this->db->query($sql);
+
+            if (count($this->fetchAssoc($result)) == 0) {
+                $sqlInsert = "INSERT INTO " . $table . " 
+					(" . $localKey . ", " . $foreignKey . ") 
+					VALUES ('" . $id . "', '" . intval($relatedId) . "')";
+                $this->db->query($sqlInsert);
+            }
+        }
+    }
+
+
+    public function makeJoinTableName(ORM $relatedModel)
+    {
+        $tableNames = [$this->getTable(false), $relatedModel->getTable(false)];
+        sort($tableNames);
+
+        return $this->getPrefix() . $tableNames[0] . "_has_" . $tableNames[1];
+    }
 
 
 }

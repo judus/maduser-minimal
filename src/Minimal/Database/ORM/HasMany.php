@@ -2,82 +2,60 @@
 
 namespace Maduser\Minimal\Database\ORM;
 
+use Maduser\Minimal\Collections\Collection;
+
 class HasMany extends AbstractRelation
 {
-    protected $pivotTable;
-    protected $foreignPivotKey;
-    protected $localPivotKey;
-
-     /**
-     * @return mixed
-     */
-    public function getPivotTable()
+    public function __construct($class, $foreignKey, $localKey)
     {
-        return $this->pivotTable;
-    }
-
-    /**
-     * @param mixed $pivotTable
-     *
-     * @return HasMany
-     */
-    public function setPivotTable($pivotTable)
-    {
-        $this->pivotTable = $pivotTable;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getForeignPivotKey()
-    {
-        return $this->foreignPivotKey;
-    }
-
-    /**
-     * @param mixed $foreignPivotKey
-     *
-     * @return HasMany
-     */
-    public function setForeignPivotKey($foreignPivotKey)
-    {
-        $this->foreignPivotKey = $foreignPivotKey;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLocalPivotKey()
-    {
-        return $this->localPivotKey;
-    }
-
-    /**
-     * @param mixed $localPivotKey
-     *
-     * @return HasMany
-     */
-    public function setLocalPivotKey($localPivotKey)
-    {
-        $this->localPivotKey = $localPivotKey;
-
-        return $this;
-    }
-
-
-
-    public function __construct(
-        ORM $class, $pivotTable, $foreignPivotKey, $localPivotKey
-    ) {
         $this->setClass($class);
-        $this->setPivotTable($pivotTable);
-        $this->setForeignPivotKey($foreignPivotKey);
-        $this->setLocalPivotKey($localPivotKey);
+        $this->setForeignKey($foreignKey);
+        $this->setLocalKey($localKey);
+    }
+
+    public function resolve($collection, $with, $queryingClass = null)
+    {
+        $localKeys = $collection->extract($this->getLocalKey());
+        $relatedCollection = $this->getWhereIn($localKeys);
+
+        foreach ($collection->getArray() as &$item) {
+            $newCollection = new Collection();
+            foreach ($relatedCollection as $related) {
+                if ($item->{$this->getLocalKey()} ==
+                    $related->{$this->getForeignKey()}) {
+                    $newCollection->add($related);
+                }
+            }
+            $item->addRelated($with, $newCollection);
+        }
+
+    }
+
+    public function resolveInline($queryingClass)
+    {
+        $class = $this->getClass();
+        return $class::create()->where([
+                $this->getForeignKey(),
+                $queryingClass->{$this->getLocalKey()}
+            ]
+        )->getAll();
     }
 
 
+    /**
+     * @param      $array
+     * @param null $relation
+     *
+     * @return mixed
+     */
+    public function getWhereIn($array, $relation = null)
+    {
+        $class = $this->getClass();
+
+        return $class::create()->where([
+            $this->foreignKey,
+            'IN',
+            implode(',', $array)
+        ])->getAll();
+    }
 }

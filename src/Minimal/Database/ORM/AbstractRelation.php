@@ -2,18 +2,43 @@
 
 namespace Maduser\Minimal\Database\ORM;
 
-class AbstractRelation
+/**
+ * Class AbstractRelation
+ *
+ * @package Maduser\Minimal\Database\ORM
+ */
+abstract class AbstractRelation
 {
+    /**
+     * The name of the related class
+     *
+     * @var string
+     */
     protected $class;
 
+    /**
+     * The key name that represents the related class
+     *
+     * @var string
+     */
     protected $foreignKey;
 
+    /**
+     * The key name that represents the querying class
+     *
+     * @var string
+     */
     protected $localKey;
 
-    protected $parent;
+    /**
+     * The name of the many-to-many table
+     *
+     * @var string
+     */
+    protected $pivotTable;
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getClass()
     {
@@ -21,9 +46,9 @@ class AbstractRelation
     }
 
     /**
-     * @param mixed $class
+     * @param $class
      *
-     * @return HasOne
+     * @return $this
      */
     public function setClass($class)
     {
@@ -33,7 +58,7 @@ class AbstractRelation
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getForeignKey()
     {
@@ -41,9 +66,9 @@ class AbstractRelation
     }
 
     /**
-     * @param mixed $foreignKey
+     * @param $foreignKey
      *
-     * @return HasOne
+     * @return $this
      */
     public function setForeignKey($foreignKey)
     {
@@ -53,7 +78,7 @@ class AbstractRelation
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getLocalKey()
     {
@@ -61,9 +86,9 @@ class AbstractRelation
     }
 
     /**
-     * @param mixed $localKey
+     * @param $localKey
      *
-     * @return HasOne
+     * @return $this
      */
     public function setLocalKey($localKey)
     {
@@ -73,41 +98,26 @@ class AbstractRelation
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getParent()
+    public function getPivotTable()
     {
-        return $this->parent;
+        return $this->pivotTable;
     }
 
     /**
-     * @param mixed $parent
+     * @param $pivotTable
      *
-     * @return HasOne
+     * @return $this
      */
-    public function setParent($parent)
+    public function setPivotTable($pivotTable)
     {
-        $this->parent = $parent;
+        $this->pivotTable = $pivotTable;
 
         return $this;
     }
 
-    public function __construct($class, $foreignKey, $localKey, $parent)
+    public function resolve($collection, $with, $queryingClass = null)
     {
-        $this->setClass($class);
-        $this->setForeignKey($foreignKey);
-        $this->setLocalKey($localKey);
-        $this->setParent($parent);
-    }
-
-    public function getWhereIn($array)
-    {
-        $class = $this->getClass();
-
-        return $class::create()->where([
-            $this->foreignKey,
-            'IN',
-            implode(',', $array)
-        ])->getAll();
     }
 }
