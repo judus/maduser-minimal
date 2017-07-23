@@ -87,6 +87,11 @@ class Collection implements CollectionInterface, \Iterator
 		}
 	}
 
+	public function hasItems()
+    {
+        return $this->count() > 0;
+    }
+
 
 	public function extract($key)
     {
@@ -168,5 +173,44 @@ class Collection implements CollectionInterface, \Iterator
     public function rewind()
     {
         reset($this->items);
+    }
+
+    public function toArray()
+    {
+        $items = [];
+        foreach ($this->items as $key => $item) {
+            if ($item instanceof CollectionInterface) {
+                $items[$key] = $item->toArray();
+            } else {
+                $items[$key] = $item->toArray();
+            }
+        }
+
+        return $items;
+    }
+
+    public function __toString()
+    {
+
+        d($this->items);
+
+        foreach ($this->items as $item) {
+            d($item->toArray());
+        }
+
+
+        dd('end');
+
+        /*
+        $items = [];
+        foreach ($this->items as $item) {
+            if ($item instanceof \Maduser\Minimal\Collections\CollectionInterface) {
+                $items[] = $item->getArray();
+            } else {
+                $items[] = $item;
+            }
+        }
+        */
+        return json_encode($this->items);
     }
 }
