@@ -5,6 +5,7 @@ use Maduser\Minimal\Database\Exceptions\DatabaseException;
 use Maduser\Minimal\Database\Exceptions\UndefinedColumnException;
 use Maduser\Minimal\Database\Exceptions\ProtectedColumnException;
 
+use Maduser\Minimal\Database\ORM\ORM;
 use \PDO;
 use PDOException;
 
