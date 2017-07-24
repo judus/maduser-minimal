@@ -7,7 +7,6 @@ use Maduser\Minimal\Collections\CollectionInterface;
 use Maduser\Minimal\Database\Exceptions\DatabaseException;
 use Maduser\Minimal\Database\Connectors\PDO;
 use Maduser\Minimal\Database\QueryBuilder;
-use Maduser\Minimal\Loaders\IOC;
 
 class ORM
 {
@@ -278,7 +277,10 @@ class ORM
      */
     public function setState(array $state): ORM
     {
-        $this->state = $state;
+        if (isset($state[$this->getPrimaryKey()])) {
+            $this->state = $state;
+        }
+
         $this->attributes = $state;
 
         return $this;
@@ -346,11 +348,11 @@ class ORM
 
     /**
      * @param $key
-     * @param $value
+     * @param AbstractRelation $value
      *
      * @return $this
      */
-    public function addRelation($key, $value)
+    public function addRelation($key, AbstractRelation $value)
     {
         $this->relations[$key][$value->getClass()] = $value;
 
@@ -468,12 +470,16 @@ class ORM
     /**
      * @param int $id
      *
-     * @return ORM|null
+     * @return ORM
+     * @throws DatabaseException
      */
-    public static function find(int $id)
+    public static function find(int $id): ORM
     {
-        $newInstance = self::create();
-        return $newInstance->getById($id);
+        if (! ($instance = self::create()->getById($id))) {
+            throw new DatabaseException('Could not find ' . __CLASS__ .
+                ' where primary key is ' . $id);
+        }
+        return $instance;
     }
 
     /**
@@ -534,6 +540,70 @@ class ORM
         }
 
         return null;
+    }
+
+    public function associate($item)
+    {
+        $item = func_get_args();
+        $relation = array_shift($item);
+
+        $this->{$relation->getForeignKey()} = $item[0]->{$item[0]->getPrimaryKey()};
+        $this->save();
+
+        return $this;
+    }
+
+    public function dissociate($relation)
+    {
+        $this->{$relation->getForeignKey()} = null;
+        $this->save();
+
+        return $this;
+    }
+
+    public function attach($args)
+    {
+        return call_user_func_array([$this, 'updateRelation'],
+            ['attach', func_get_args()]);
+    }
+
+    public function detach($args)
+    {
+        return call_user_func_array([$this, 'updateRelation'],
+            ['detach', func_get_args()]);
+    }
+
+    public function updateRelation($method, $args)
+    {
+        $relation = array_shift($args);
+
+        /** @var CollectionInterface $toDetach */
+        foreach ($args as $toUpdate) {
+
+            if ($toUpdate instanceof CollectionInterface) {
+                $item = $toUpdate->first();
+                $items = $toUpdate->extract($item->getPrimaryKey());
+            }
+
+            if ($toUpdate instanceof ORM) {
+                $items = $toUpdate->{$toUpdate->getPrimaryKey()};
+            }
+
+            if (!isset($items)) {
+                throw new DatabaseException("Cannot handle item to " . $method,
+                    $toUpdate);
+            }
+
+            $this->builder->{$method}(
+                $items,
+                $this->{$this->getPrimaryKey()},
+                $relation->getPivotTable(),
+                $relation->getForeignKey(),
+                $relation->getLocalKey()
+            );
+        }
+
+        return $this;
     }
 
     public function resolveRelations(&$collection)
@@ -645,6 +715,7 @@ class ORM
     public function __get($name)
     {
         if (method_exists($this, $name)) {
+            /** @var AbstractRelation $result */
             $result = $this->{$name}();
             if ($result instanceof AbstractRelation) {
 

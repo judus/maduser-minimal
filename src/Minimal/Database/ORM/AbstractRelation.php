@@ -2,6 +2,8 @@
 
 namespace Maduser\Minimal\Database\ORM;
 
+use Maduser\Minimal\Collections\CollectionInterface;
+
 /**
  * Class AbstractRelation
  *
@@ -9,6 +11,8 @@ namespace Maduser\Minimal\Database\ORM;
  */
 abstract class AbstractRelation
 {
+    private $caller;
+
     /**
      * The name of the related class
      *
@@ -36,6 +40,22 @@ abstract class AbstractRelation
      * @var string
      */
     protected $pivotTable;
+
+    /**
+     * @return mixed
+     */
+    public function getCaller()
+    {
+        return $this->caller;
+    }
+
+    /**
+     * @param mixed $caller
+     */
+    public function setCaller($caller)
+    {
+        $this->caller = $caller;
+    }
 
     /**
      * @return string
@@ -117,7 +137,16 @@ abstract class AbstractRelation
         return $this;
     }
 
-    public function resolve($collection, $with, $queryingClass = null)
+    public function resolve(
+        CollectionInterface $collection,
+        string $with,
+        ORM $queryingClass = null
+    ) {
+        return $queryingClass;
+    }
+
+    public function resolveInline(ORM $orm)
     {
+        return $orm;
     }
 }

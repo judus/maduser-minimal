@@ -3,6 +3,7 @@
 namespace Maduser\Minimal\Database\ORM;
 
 use Maduser\Minimal\Collections\Collection;
+use Maduser\Minimal\Collections\CollectionInterface;
 
 class HasMany extends AbstractRelation
 {
@@ -13,8 +14,11 @@ class HasMany extends AbstractRelation
         $this->setLocalKey($localKey);
     }
 
-    public function resolve($collection, $with, $queryingClass = null)
-    {
+    public function resolve(
+        CollectionInterface $collection,
+        string $with,
+        ORM $queryingClass = null
+    ) {
         $localKeys = $collection->extract($this->getLocalKey());
         $relatedCollection = $this->getWhereIn($localKeys);
 
@@ -31,7 +35,7 @@ class HasMany extends AbstractRelation
 
     }
 
-    public function resolveInline($queryingClass)
+    public function resolveInline(ORM $queryingClass)
     {
         $class = $this->getClass();
         return $class::create()->where([

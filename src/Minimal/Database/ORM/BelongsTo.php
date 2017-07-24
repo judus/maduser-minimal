@@ -2,6 +2,9 @@
 
 namespace Maduser\Minimal\Database\ORM;
 
+use Maduser\Minimal\Collections\CollectionInterface;
+use Maduser\Minimal\Database\Exceptions\DatabaseException;
+
 class BelongsTo extends AbstractRelation
 {
     public function __construct($class, $foreignKey, $localKey)
@@ -9,10 +12,14 @@ class BelongsTo extends AbstractRelation
         $this->setClass($class);
         $this->setLocalKey($localKey);
         $this->setForeignKey($foreignKey);
+        $this->setCaller(debug_backtrace()[1]['object']);
     }
 
-    public function resolve($collection, $with, $queryingClass = null)
-    {
+    public function resolve(
+        CollectionInterface $collection,
+        string $with,
+        ORM $queryingClass = null
+    ) {
         $foreignKeys = $collection->extract($this->getForeignKey());
         $relatedCollection = $this->getWhereIn($foreignKeys);
 
@@ -26,7 +33,7 @@ class BelongsTo extends AbstractRelation
         }
     }
 
-    public function resolveInline($queryingClass)
+    public function resolveInline(ORM $queryingClass)
     {
         $class = $this->getClass();
         return $class::create()->where([
@@ -45,4 +52,16 @@ class BelongsTo extends AbstractRelation
             implode(',', $array)
         ])->getAll();
     }
+
+    public function __call($name, $args)
+    {
+        array_unshift($args, $this);
+
+        if (!in_array($name, ['associate', 'dissociate'])) {
+            throw new DatabaseException('Call to undefined method ' . __CLASS__ . '::' . $name . '()');
+        }
+
+        return call_user_func_array([$this->getCaller(), $name], $args);
+    }
+
 }

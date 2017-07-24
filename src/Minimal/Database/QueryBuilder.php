@@ -892,6 +892,8 @@ class QueryBuilder
     
     public function tableExists()
     {
+
+
         $sql = "SELECT * 
             FROM information_schema.tables
             WHERE table_schema = '" . MYSQL_DATABASE . "' 
@@ -951,30 +953,24 @@ class QueryBuilder
 
 
     /**
-     * @param       $relatedModel
-     * @param array $ids
-     * @param       $id
-     * @param null $table
-     * @param null $foreignKey
-     * @param null $localKey
+     * @param array  $ids
+     * @param int    $id
+     * @param string $table
+     * @param string $foreignKey
+     * @param string $localKey
      */
     public function attach(
-        $relatedModel,
         Array $ids,
-        $id,
-        $table = null,
-        $foreignKey = null,
-        $localKey = null
+        int $id,
+        string $table,
+        string $foreignKey,
+        string $localKey
     ) {
-        $relatedIds = [];
-
-        $table = $table ? $table : $this->makeJoinTableName($relatedModel);
-        $foreignKey = $foreignKey ? $foreignKey : $relatedModel->getTable(false) . '_id';
-        $localKey = $localKey ? $localKey : $this->getTable(false) . '_id';
+        is_array($ids) || $ids = [$ids];
 
         foreach ($ids as $relatedId) {
 
-            $sql = "SELECT id FROM " . $table . " 
+            $sql = "SELECT " . $localKey . " FROM " . $table . " 
 				WHERE " . $localKey . " = '" . $id . "' AND " . $foreignKey . " = '" . intval($relatedId) . "'";
 
             $result = $this->db->query($sql);
@@ -988,6 +984,28 @@ class QueryBuilder
         }
     }
 
+    /**
+     * @param array  $ids
+     * @param int    $id
+     * @param string $table
+     * @param string $foreignKey
+     * @param string $localKey
+     */
+    public function detach(
+        Array $ids,
+        int $id,
+        string $table,
+        string $foreignKey,
+        string $localKey
+    ) {
+        is_array($ids) || $ids = [$ids];
+
+        foreach ($ids as $relatedId) {
+            $sql = "DELETE FROM " . $table . "
+				WHERE " . $localKey . " = '" . $id . "' AND " . $foreignKey . " = '" . intval($relatedId) . "'";
+            $this->db->query($sql);
+        }
+    }
 
     public function makeJoinTableName(ORM $relatedModel)
     {

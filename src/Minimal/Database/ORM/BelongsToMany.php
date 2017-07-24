@@ -3,7 +3,8 @@
 namespace Maduser\Minimal\Database\ORM;
 
 use Maduser\Minimal\Collections\Collection;
-use Maduser\Minimal\Database\QueryBuilder;
+use Maduser\Minimal\Collections\CollectionInterface;
+use Maduser\Minimal\Database\Exceptions\DatabaseException;
 
 class BelongsToMany extends AbstractRelation
 {
@@ -17,30 +18,37 @@ class BelongsToMany extends AbstractRelation
         $this->setPivotTable($pivotTable);
         $this->setForeignKey($foreignKey);
         $this->setLocalKey($localKey);
+        $this->setCaller(debug_backtrace()[1]['object']);
     }
 
-    public function resolve($collection, $with, $queryingClass = null)
-    {
+    public function resolve(
+        CollectionInterface $collection,
+        string $with,
+        ORM $queryingClass = null
+    ) {
         $localKeys = $collection->extract($queryingClass->getPrimaryKey());
         $relatedCollection = $this->getWhereIn($localKeys);
 
-        foreach ($collection->getArray() as &$item) {
-            $newCollection = new Collection();
-            foreach ($relatedCollection as $related) {
+        if ($relatedCollection) {
+            /** @var ORM $item */
+            foreach ($collection->getArray() as &$item) {
+                $newCollection = new Collection();
+                foreach ($relatedCollection as $related) {
 
-                if (isset($related->attributes['pivot_' . $this->getLocalKey()]) &&
-                    $item->{$queryingClass->getPrimaryKey()} ==
-                    $related->attributes['pivot_' . $this->getLocalKey()]) {
-                    $related->drop('pivot_' . $this->getLocalKey());
-                    $related->drop('pivot_' . $this->getForeignKey());
-                    $newCollection->add($related);
+                    if (isset($related->attributes['pivot_' . $this->getLocalKey()]) &&
+                        $item->{$queryingClass->getPrimaryKey()} ==
+                        $related->attributes['pivot_' . $this->getLocalKey()]) {
+                        $related->drop('pivot_' . $this->getLocalKey());
+                        $related->drop('pivot_' . $this->getForeignKey());
+                        $newCollection->add($related);
+                    }
                 }
+                $item->addRelated($with, $newCollection);
             }
-            $item->addRelated($with, $newCollection);
         }
     }
 
-    public function resolveInline($queryingClass)
+    public function resolveInline(ORM $queryingClass)
     {
         $localKey = $queryingClass->{$queryingClass->getPrimaryKey()};
 
@@ -49,8 +57,7 @@ class BelongsToMany extends AbstractRelation
 
     public function getWhereIn($localKeys)
     {
-        $builder = new QueryBuilder();
-
+        /** @var ORM $class */
         $class = $this->getClass();
         /** @var ORM $obj */
         $obj = $class::create();
@@ -72,4 +79,16 @@ class BelongsToMany extends AbstractRelation
 
         return $obj->getAll($sql);
     }
+
+    public function __call($name, $args)
+    {
+        array_unshift($args, $this);
+
+        if (! in_array($name, ['attach', 'detach'])) {
+            throw new DatabaseException('Call to undefined method ' . __CLASS__ . '::' . $name . '()');
+        }
+
+        return call_user_func_array([$this->getCaller(), $name], $args);
+    }
+
 }
