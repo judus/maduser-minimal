@@ -110,6 +110,11 @@ class Collection implements CollectionInterface, \Iterator
         return $extracted;
     }
 
+    public function first()
+    {
+        return reset($this->items);
+    }
+
 	/**
 	 * @return array
 	 */

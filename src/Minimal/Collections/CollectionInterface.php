@@ -74,6 +74,18 @@ interface CollectionInterface
     public function count($key = null);
 
     /**
+     * @param null $key
+     *
+     * @return mixed
+     */
+    public function extract($key);
+
+    /**
+     * @return mixed
+     */
+    public function first();
+
+    /**
      * @return array
      */
     public function getArray();
