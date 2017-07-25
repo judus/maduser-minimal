@@ -515,6 +515,7 @@ class QueryBuilder
     public function setLastQuery($string, $params = null)
     {
         $this->lastQuery = [$string, $params];
+        PDO::addExecutedQuery($this->lastQuery);
 
         return $this;
     }
