@@ -6,6 +6,11 @@ use Maduser\Minimal\Collections\Collection;
 use Maduser\Minimal\Database\Exceptions\DatabaseException;
 use Maduser\Minimal\Database\Connectors\PDO;
 
+/**
+ * Class QueryBuilder
+ *
+ * @package Maduser\Minimal\Database
+ */
 class QueryBuilder
 {
     /**
@@ -211,9 +216,24 @@ class QueryBuilder
         return $this;
     }
 
+    /**
+     *
+     */
     public function clearSelect()
     {
         $this->select = "*";
+    }
+
+    /**
+     * @param $select
+     *
+     * @return $this
+     */
+    public function select($select)
+    {
+        $this->setSelect($select);
+
+        return $this;
     }
 
     /**
@@ -499,6 +519,9 @@ class QueryBuilder
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function lastQuery()
     {
         return $this->getLastQuery();
@@ -557,7 +580,7 @@ class QueryBuilder
         }
 
         if ($cond == 'IN') {
-            $value = "(".$value.")";
+            $value = "(" . $value . ")";
         } else {
             $value = $this->db->quote($value);
         }
@@ -571,12 +594,14 @@ class QueryBuilder
     }
 
     /**
+     * @param null $sql
+     *
      * @return $this
      * @throws DatabaseException
      */
     public function query($sql = null)
     {
-        if (! $sql) {
+        if (!$sql) {
             $sqlWhere = '';
             if (!empty($this->getWhere())) {
                 $sqlWhere = $this->getWhere();
@@ -664,7 +689,8 @@ class QueryBuilder
             try {
                 $result = $this->db->query($sql);
             } catch (\PDOException $e) {
-                throw new DatabaseException($e->getMessage(), $this->getLastQuery());
+                throw new DatabaseException($e->getMessage(),
+                    $this->getLastQuery());
             }
 
             $data = $this->fetchAssoc($result);
@@ -699,7 +725,6 @@ class QueryBuilder
 
         return $this->fetchAssoc($result);
 
-
     }
 
     /**
@@ -710,15 +735,13 @@ class QueryBuilder
      */
     public function insert($attributes)
     {
-        $strCols = "";
-        $strValues = "";
-
         $params = [];
         $setStr = "";
 
         foreach ($attributes as $key => $value) {
             if ($key != $this->getPrimaryKey()) {
-                $setStr .= "`" . str_replace("`", "``", $key) . "` = :" . $key . ",";
+                $setStr .= "`" . str_replace("`", "``",
+                        $key) . "` = :" . $key . ",";
                 $value = is_array($value) ? json_encode($value) : $value;
                 $params[':' . $key] = $value;
             }
@@ -742,13 +765,12 @@ class QueryBuilder
             $this->setLastQuery($stmt->queryString, $params);
             $stmt->execute($params);
         } catch (\PDOException $e) {
-            throw new DatabaseException($e->getMessage() . '<br> ' . show([
-                    $sql,
-                    $params
-                ], null, false), $this);
+            throw new DatabaseException(
+                $e->getMessage(), [$sql, $params, $this]
+            );
         }
 
-        $insertId = $this->getInsertId($this->getTable());
+        $insertId = $this->getInsertId();
 
         return $insertId;
     }
@@ -774,13 +796,14 @@ class QueryBuilder
         $setStr = "";
 
         foreach ($attributes as $key => $value) {
-            if ($key != $this->getPrimaryKey() &&
-                $this->timestamps && (
-                    $key != $this->timestampCreatedAt &&
-                    $key != $this->timestampUpdatedAt
-                )
+            if (!in_array($key, [
+                $this->getPrimaryKey(),
+                $this->timestampCreatedAt,
+                $this->timestampUpdatedAt
+            ])
             ) {
-                $setStr .= "`" . str_replace("`", "``", $key) . "` = :" . $key . ",";
+                $setStr .= "`" . str_replace("`", "``",
+                        $key) . "` = :" . $key . ",";
                 $params[':' . $key] = is_array($value) ? json_encode($value) : $value;
             }
         }
@@ -802,7 +825,7 @@ class QueryBuilder
 
             $stmt->execute($params);
         } catch (\PDOException $e) {
-            throw new DatabaseException($e->getMessage() , $this->getLastQuery(),
+            throw new DatabaseException($e->getMessage(), $this->getLastQuery(),
                 $this);
         }
 
@@ -884,19 +907,21 @@ class QueryBuilder
             foreach ($result->fetchAll(\PDO::FETCH_ASSOC) as $row) {
                 $collection->add($row);
             }
+
             return $collection;
         }
 
         return null;
     }
-    
+
+    /**
+     * @return bool
+     */
     public function tableExists()
     {
-
-
         $sql = "SELECT * 
             FROM information_schema.tables
-            WHERE table_schema = '" . MYSQL_DATABASE . "' 
+            WHERE table_schema = '" . PDO::getDatabase() . "' 
                 AND table_name = '" . $this->getTable() . "'
             LIMIT 1;";
 
@@ -905,6 +930,9 @@ class QueryBuilder
         return count($this->fetchAssoc($result)) > 0;
     }
 
+    /**
+     * @return bool|string
+     */
     public function createTable()
     {
         if (!$this->tableExists()) {
@@ -939,6 +967,10 @@ class QueryBuilder
         return true;
     }
 
+    /**
+     * @return bool
+     * @throws DatabaseException
+     */
     public function truncate()
     {
         $sql = "TRUNCATE TABLE `" . $this->getTable(true) . "`;";
@@ -950,7 +982,6 @@ class QueryBuilder
 
         return true;
     }
-
 
     /**
      * @param array  $ids
@@ -1007,13 +1038,17 @@ class QueryBuilder
         }
     }
 
-    public function makeJoinTableName(ORM $relatedModel)
+    /**
+     * @param ORM $relatedModel
+     *
+     * @return string
+     */
+    public function guessPivotTable(ORM $relatedModel)
     {
         $tableNames = [$this->getTable(false), $relatedModel->getTable(false)];
         sort($tableNames);
 
-        return $this->getPrefix() . $tableNames[0] . "_has_" . $tableNames[1];
+        return $this->getPrefix() . $tableNames[0] . "_" . $tableNames[1];
     }
-
 
 }

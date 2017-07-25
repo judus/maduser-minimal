@@ -22,15 +22,19 @@ class HasMany extends AbstractRelation
         $localKeys = $collection->extract($this->getLocalKey());
         $relatedCollection = $this->getWhereIn($localKeys);
 
-        foreach ($collection->getArray() as &$item) {
-            $newCollection = new Collection();
-            foreach ($relatedCollection as $related) {
-                if ($item->{$this->getLocalKey()} ==
-                    $related->{$this->getForeignKey()}) {
-                    $newCollection->add($related);
+        if ($relatedCollection) {
+            /** @var ORM $item */
+            foreach ($collection->getArray() as &$item) {
+                $newCollection = new Collection();
+                foreach ($relatedCollection as $related) {
+                    if ($item->{$this->getLocalKey()} ==
+                        $related->{$this->getForeignKey()}
+                    ) {
+                        $newCollection->add($related);
+                    }
                 }
+                $item->addRelated($with, $newCollection);
             }
-            $item->addRelated($with, $newCollection);
         }
 
     }

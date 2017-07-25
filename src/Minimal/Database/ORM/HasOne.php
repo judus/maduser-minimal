@@ -21,11 +21,15 @@ class HasOne extends AbstractRelation
         $localKeys = $collection->extract($this->getLocalKey());
         $relatedCollection = $this->getWhereIn($localKeys);
 
-        foreach ($collection->getArray() as &$item) {
-            foreach ($relatedCollection as $related) {
-                if ($item->{$this->getLocalKey()} ==
-                    $related->{$this->getForeignKey()}) {
-                    $item->addRelated($with, $related);
+        if ($relatedCollection) {
+            /** @var ORM $item */
+            foreach ($collection->getArray() as &$item) {
+                foreach ($relatedCollection as $related) {
+                    if ($item->{$this->getLocalKey()} ==
+                        $related->{$this->getForeignKey()}
+                    ) {
+                        $item->addRelated($with, $related);
+                    }
                 }
             }
         }

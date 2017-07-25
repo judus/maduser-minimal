@@ -20,17 +20,30 @@ class BelongsTo extends AbstractRelation
         string $with,
         ORM $queryingClass = null
     ) {
+
+        $collection = $collection->filter(function($value) {
+            return ! is_null($value);
+        });
+
         $foreignKeys = $collection->extract($this->getForeignKey());
+
+        if (count($foreignKeys) == 0) return;
+
         $relatedCollection = $this->getWhereIn($foreignKeys);
 
+        if (! $relatedCollection) return;
+
+        /** @var ORM $item */
         foreach ($collection->getArray() as &$item) {
             foreach ($relatedCollection as $related) {
                 if ($item->{$this->getForeignKey()} ==
-                    $related->{$this->getLocalKey()}) {
+                    $related->{$this->getLocalKey()}
+                ) {
                     $item->addRelated($with, $related);
                 }
             }
         }
+
     }
 
     public function resolveInline(ORM $queryingClass)

@@ -442,10 +442,9 @@ class ORM
     public function save()
     {
         $attr = $this->attributes;
-        $id = $this->getPrimaryKey();
+        $key = $this->getPrimaryKey();
 
-        $id = isset($attr[$id]) ? $attr[$id] : null;
-
+        $id = isset($attr[$key]) ? $attr[$key] : null;
         if ($id) {
             $affectedRows = $this->builder->update($id, $attr);
             $id = $affectedRows > 0 ? $id : null;
@@ -546,10 +545,8 @@ class ORM
     {
         $item = func_get_args();
         $relation = array_shift($item);
-
         $this->{$relation->getForeignKey()} = $item[0]->{$item[0]->getPrimaryKey()};
         $this->save();
-
         return $this;
     }
 
