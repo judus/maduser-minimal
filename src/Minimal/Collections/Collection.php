@@ -92,6 +92,20 @@ class Collection implements CollectionInterface, \Iterator
         return $this->count() > 0;
     }
 
+    public function filter(\Closure $closure, $keepKeys = false)
+    {
+        $collection = new Collection();
+
+        $i = 0;
+        foreach ($this->items as $key => $value) {
+            if ( ! $closure($value, $key, $i++)) {
+                $keepKeys || $key = null;
+                $collection->add($value, $key);
+            }
+        }
+
+        return $collection;
+    }
 
 	public function extract($key)
     {
