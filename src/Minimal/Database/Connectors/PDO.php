@@ -79,7 +79,9 @@ class PDO
      */
     private static $connection;
 
-    /**
+    private static $executedQueries = [];
+
+     /**
      * @return object
      */
     public static function getHandler()
@@ -249,6 +251,30 @@ class PDO
     }
 
     /**
+     * @return array
+     */
+    public static function getExecutedQueries(): array
+    {
+        return self::$executedQueries;
+    }
+
+    /**
+     * @param array $executedQueries
+     */
+    public static function setExecutedQueries(array $executedQueries)
+    {
+        self::$executedQueries = $executedQueries;
+    }
+
+    /**
+     * @param $value
+     */
+    public static function addExecutedQuery($value)
+    {
+        self::$executedQueries[] = $value;
+    }
+
+    /**
      * Returns a PDO connection
      *
      * @param null $config
@@ -269,7 +295,7 @@ class PDO
 
         try {
             /** @var \PDO $connection */
-            $connection = $ref->newInstanceArgs([
+            self::$connection = $ref->newInstanceArgs([
                 self::getConnectionString(),
                 self::getUser(),
                 self::getPassword(),
@@ -280,7 +306,7 @@ class PDO
             throw new Exception($e->getMessage());
         }
 
-        return $connection;
+        return self::$connection;
     }
 
     public static function config($config)
