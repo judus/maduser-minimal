@@ -168,7 +168,6 @@ class Router implements RouterInterface
      */
     public function getGroupMiddlewares()
     {
-
         return is_array($this->groupMiddlewares) ?
             $this->groupMiddlewares : [$this->groupMiddlewares];
     }
@@ -386,7 +385,7 @@ class Router implements RouterInterface
         $vars = compact(array_keys(get_defined_vars()));
 
         $vars['namespace'] = isset($vars['namespace']) ? $vars['namespace'] : $this->getGroupNamespace();
-        $vars['middlewares'] = isset($vars['middlewares']) ? array_merge($this->getGroupMiddlewares(), $vars['middlewares']) : [];
+        $vars['middlewares'] = isset($vars['middlewares']) ? array_merge($this->getGroupMiddlewares(), $vars['middlewares']) : $this->getGroupMiddlewares();
         $vars['uriPrefix'] = isset($vars['uriPrefix']) ? $vars['uriPrefix'] : $this->getGroupUriPrefix();
         $vars['closure'] = isset($vars['closure']) ? $vars['closure'] : $this->getClosure();
 
