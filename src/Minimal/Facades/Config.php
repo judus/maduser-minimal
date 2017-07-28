@@ -29,6 +29,18 @@ class Config extends Facade
     }
 
     /**
+     * @return mixed
+     */
+    public static function items(array $items = [])
+    {
+        if (count($items) > 0) {
+            return self::setItems($items);
+        }
+
+        return self::getItems();
+    }
+
+    /**
      * @return bool
      */
     public static function isLiteral(): bool
