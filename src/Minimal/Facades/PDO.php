@@ -10,7 +10,7 @@ class PDO extends Facade
     protected static $instance;
 
     /**
-     * @return CollectionInterface
+     * @return Instance
      */
     public static function getInstance()
     {
@@ -19,5 +19,10 @@ class PDO extends Facade
         }
 
         return static::$instance;
+    }
+
+    public static function connection(array $dbCredentials = [])
+    {
+        return self::call();
     }
 }
