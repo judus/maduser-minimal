@@ -406,4 +406,28 @@ class Route implements RouteInterface
 
 	}
 
+	public function getUriParameters()
+    {
+        preg_match_all('(\([:a-zA-Z0-9]+\))', $this->getUriPattern(), $matches);
+        return $matches[0];
+    }
+
+	public function uri($args = null)
+    {
+        $args = func_get_args();
+
+        $uri = $this->getUriPrefix() . $this->getUriPattern();
+        $params = $this->getUriParameters();
+
+        for ($i = 0; $i < count($params); $i++) {
+            $pos = strpos($uri, $params[$i]);
+            if ($pos !== false) {
+                $uri = substr_replace($uri, $args[$i], $pos,
+                    strlen($params[$i]));
+            }
+        }
+
+        return $uri;
+    }
+
 }
