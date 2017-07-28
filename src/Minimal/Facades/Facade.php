@@ -23,7 +23,8 @@ abstract class Facade
      */
     public static function __callStatic($name, $arguments)
     {
-        return self::getInstance()->{$name}($arguments);
+        return call_user_func_array(
+            [static::getInstance(), $name], $arguments);
     }
 
     /**
