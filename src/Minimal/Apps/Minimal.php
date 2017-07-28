@@ -43,7 +43,7 @@ class Minimal implements AppInterface
     /**
      * @var
      */
-    private $configFile = 'config/config.php';
+    private $configFile = 'config/env.php';
 
     /**
      * @var
@@ -145,7 +145,7 @@ class Minimal implements AppInterface
      */
     public function setBasePath(string $basepath): AppInterface
     {
-        $this->basePath = realpath($basepath);
+        $this->basePath = $basepath;
 
         return $this;
     }
@@ -165,7 +165,7 @@ class Minimal implements AppInterface
      */
     public function setAppPath(string $appPath): AppInterface
     {
-        $this->appPath = realpath($appPath);
+        $this->appPath = $appPath;
 
         return $this;
     }
@@ -185,7 +185,7 @@ class Minimal implements AppInterface
      */
     public function setModulesPath(string $filePath): AppInterface
     {
-        $this->modulesPath = realpath($filePath);
+        $this->modulesPath = $filePath;
 
         return $this;
     }
@@ -205,7 +205,7 @@ class Minimal implements AppInterface
      */
     public function setConfigFile(string $path): AppInterface
     {
-        $this->configFile = realpath($path);
+        $this->configFile = $path;
 
         return $this;
     }
@@ -225,7 +225,7 @@ class Minimal implements AppInterface
      */
     public function setProvidersFile(string $path): AppInterface
     {
-        $this->providersFile = realpath($path);
+        $this->providersFile = $path;
 
         return $this;
     }
@@ -245,7 +245,7 @@ class Minimal implements AppInterface
      */
     public function setBindingsFile(string $path): AppInterface
     {
-        $this->bindingsFile = realpath($path);
+        $this->bindingsFile = $path;
 
         return $this;
     }
@@ -265,7 +265,7 @@ class Minimal implements AppInterface
      */
     public function setRoutesFile(string $path): AppInterface
     {
-        $this->routesFile = realpath($path);
+        $this->routesFile = $path;
 
         return $this;
     }
@@ -471,6 +471,10 @@ class Minimal implements AppInterface
      */
     public function __construct(array $params, $returnInstance = false)
     {
+        if (version_compare(phpversion(), '7.0.0', '<')) {
+            die('Requires PHP version > 7.0.0');
+        }
+
         extract($params);
 
         !isset($basepath) || $this->setBasePath($basepath);
@@ -498,6 +502,8 @@ class Minimal implements AppInterface
         $this->registerRoutes();
         $this->registerModules();
 
+        App::setInstance($this);
+
         return $this;
     }
 
@@ -514,8 +520,10 @@ class Minimal implements AppInterface
             /** @noinspection PhpIncludeInspection */
             $configItems = require_once $filePath;
 
-            foreach ($configItems as $key => $value) {
-                $this->getConfig()->item($key, $value);
+            if (is_array($configItems)) {
+                foreach ($configItems as $key => $value) {
+                    $this->getConfig()->item($key, $value);
+                }
             }
         }
     }
@@ -527,16 +535,22 @@ class Minimal implements AppInterface
     {
         $filePath || $filePath = $this->getBindingsFile();
         is_file($filePath) || $filePath = $this->getBasePath() . $filePath;
+        //show($filePath);
+
 
         if (file_exists($filePath)) {
             /** @noinspection PhpIncludeInspection */
             $bindings = require_once $filePath;
 
-            IOC::config('bindings', $bindings);
+            if (is_array($bindings)) {
+                IOC::config('bindings', $bindings);
 
-            foreach ($bindings as $alias => $binding) {
-                IOC::bind($alias, $binding);
+                foreach ($bindings as $alias => $binding) {
+                    IOC::bind($alias, $binding);
+                }
             }
+
+
         }
     }
 
@@ -552,18 +566,20 @@ class Minimal implements AppInterface
             /** @noinspection PhpIncludeInspection */
             $providers = require_once $filePath;
 
-            IOC::config('providers', $providers);
+            if (is_array($providers)) {
+                IOC::config('providers', $providers);
 
-            foreach ($providers as $alias => $provider) {
-                IOC::register($alias, function () use ($provider) {
-                    return new $provider();
-                });
-                /*
-                if (property_exists($this, strtolower($alias))) {
-                    d($alias);
-                    $this->{strtolower($alias)} = IOC::resolve($alias);
+                foreach ($providers as $alias => $provider) {
+                    IOC::register($alias, function () use ($provider) {
+                        return new $provider();
+                    });
+                    /*
+                    if (property_exists($this, strtolower($alias))) {
+                        d($alias);
+                        $this->{strtolower($alias)} = IOC::resolve($alias);
+                    }
+                    */
                 }
-                */
             }
         }
     }
@@ -650,7 +666,6 @@ class Minimal implements AppInterface
         $this->load();
         $this->execute();
         $this->respond();
-        $this->exit();
     }
 
     /**
