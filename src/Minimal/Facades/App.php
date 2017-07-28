@@ -12,6 +12,11 @@ class App extends Facade
 {
     protected static $instance;
 
+    public static function setInstance($instance)
+    {
+        self::$instance = $instance;
+    }
+
     /**
      * @param            $class
      * @param array|null $options
@@ -22,7 +27,6 @@ class App extends Facade
         $class,
         array $options = null
     ): Implementation {
-
         // TODO: get rid of $_SERVER
         $options || $options = [
             'path' => realpath($_SERVER['DOCUMENT_ROOT'] . '/../') . '/'
@@ -77,14 +81,24 @@ class App extends Facade
      * @param null          $class
      */
     public static function respond(
-        array $options = [],
-        \Closure $closure = null,
+        $options = [],
+        $closure = null,
         $class = null
     ) {
-        /** @var Implementation $app */
-        self::getInstance($class, $options);
+        if (is_callable($options)) {
+            $_closure = $options;
+            $_options = $closure;
+        } else {
+            $_closure = $closure;
+            $_options = $options;
+        }
 
-        is_null($closure) || $closure();
+        is_array($_options) || $_options = [];
+
+        /** @var Implementation $app */
+        self::getInstance($class, $_options);
+
+        is_null($_closure) || $_closure();
 
         self::getInstance()->execute()->respond()->exit();
     }
