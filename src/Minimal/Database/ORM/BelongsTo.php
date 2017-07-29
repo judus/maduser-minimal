@@ -49,7 +49,7 @@ class BelongsTo extends AbstractRelation
     public function resolveInline(ORM $queryingClass)
     {
         $class = $this->getClass();
-        return $class::create()->where([
+        return $class::instance()->where([
                 $this->getLocalKey(),
                 $queryingClass->{$this->getForeignKey()}
         ])->getFirst();
@@ -59,7 +59,7 @@ class BelongsTo extends AbstractRelation
     {
         $class = $this->getClass();
 
-        return $class::create()->where([
+        return $class::instance()->where([
             $this->localKey,
             'IN',
             implode(',', $array)

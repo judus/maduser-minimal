@@ -60,7 +60,7 @@ class BelongsToMany extends AbstractRelation
         /** @var ORM $class */
         $class = $this->getClass();
         /** @var ORM $obj */
-        $obj = $class::create();
+        $obj = $class::instance();
 
         $table = $obj->getTable();
         $pivot = $this->getPivotTable();

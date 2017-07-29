@@ -429,7 +429,7 @@ class ORM
      *
      * @return ORM
      */
-    public static function create(array $data = [])
+    public static function instance(array $data = [])
     {
         /** @var ORM $obj */
         $class = get_called_class();
@@ -437,6 +437,51 @@ class ORM
         $obj->setState($data);
 
         return $obj;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return ORM
+     */
+    public static function create(array $data = [])
+    {
+        if (isset($data[0]) && is_array($data[0])) {
+
+            $collection = new Collection();
+
+            foreach ($data as $row) {
+                /** @var ORM $obj */
+                $class = get_called_class();
+                $obj = new $class();
+                $obj->setState($row);
+                $obj->save();
+
+                $collection->add($obj);
+            }
+
+            return $collection;
+        }
+
+        /** @var ORM $obj */
+        $class = get_called_class();
+        $obj = new $class();
+        $obj->setState($data);
+        $obj->save();
+
+        return $obj;
+    }
+
+    /**
+     * @return CollectionInterface
+     */
+    public static function all()
+    {
+        /** @var ORM $obj */
+        $class = get_called_class();
+        $obj = new $class();
+
+        return $obj->getAll();
     }
 
     public function save()
@@ -474,7 +519,7 @@ class ORM
      */
     public static function find(int $id): ORM
     {
-        if (! ($instance = self::create()->getById($id))) {
+        if (! ($instance = self::instance()->getById($id))) {
             throw new DatabaseException('Could not find ' . __CLASS__ .
                 ' where primary key is ' . $id);
         }
@@ -491,7 +536,7 @@ class ORM
         $result = $this->builder->getById($id);
 
         if (isset($result[0])) {
-            return self::create($result[0]);
+            return self::instance($result[0]);
         }
 
         return null;
@@ -507,10 +552,31 @@ class ORM
         $result = $this->builder->getFirst($sql);
 
         if (isset($result[0])) {
-            return self::create($result[0]);
+            return self::instance($result[0]);
         }
 
         return null;
+    }
+
+    /**
+     * @param null $sql
+     *
+     * @return ORM|null
+     */
+    public function first($sql = null)
+    {
+        $obj = $this->getFirst($sql);
+
+        if ($obj && $this->getWith()) {
+            $collection = new Collection();
+            $collection->add($obj);
+
+            $this->resolveRelations($collection);
+
+            return $collection->first();
+        }
+
+        return $obj;
     }
 
     /**
@@ -530,7 +596,7 @@ class ORM
             $collection = new Collection();
 
             foreach ($results as $key => $row) {
-                $collection->add(self::create($row));
+                $collection->add(self::instance($row));
             }
 
             $this->resolveRelations($collection);
@@ -701,6 +767,15 @@ class ORM
 
     public function __toString()
     {
+        foreach ($this->related as &$related) {
+            if ($related instanceof CollectionInterface) {
+                foreach ($related->getArray() as &$item) {
+                    $item = $item;
+                }
+                $related = $related->toArray();
+            }
+        }
+
         return json_encode(array_merge($this->attributes, $this->related));
     }
 
