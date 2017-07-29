@@ -1,7 +1,5 @@
 <?php namespace Maduser\Minimal\Config;
 
-use Maduser\Minimal\Exceptions\KeyDoesNotExistException;
-
 /**
  * Class Config
  *
@@ -87,6 +85,21 @@ class Config implements ConfigInterface
         $literal = is_null($literal) ? $this->isLiteral() : $literal;
 
         func_num_args() < 2 || $this->items[$name] = $value;
+
+        if (!$literal) {
+            return $this->find($name, $this->items);
+        }
+
+        isset($this->items[$name]) || $this->throwKeyDoesNotExist($name);
+
+        return $this->items[$name];
+    }
+
+    public function merge($name, $value = null, $literal = null)
+    {
+        $literal = is_null($literal) ? $this->isLiteral() : $literal;
+
+        func_num_args() < 2 || $this->items[$name] = array_replace_recursive($this->items[$name], $value);
 
         if (!$literal) {
             return $this->find($name, $this->items);
