@@ -18,7 +18,7 @@ class KeyDoesNotExistException extends MinimalException
             return $this->myMessage->getFile();
         }
 
-        return debug_backtrace()[3]['file'];
+        return debug_backtrace()[6]['file'];
     }
 
     /**
@@ -30,6 +30,6 @@ class KeyDoesNotExistException extends MinimalException
             return $this->myMessage->getLine();
         }
 
-        return debug_backtrace()[3]['line'];
+        return debug_backtrace()[6]['line'];
     }
 }
