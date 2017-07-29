@@ -95,6 +95,14 @@ class Config implements ConfigInterface
         return $this->items[$name];
     }
 
+    /**
+     * @param           $name
+     * @param null      $value
+     * @param null|bool $literal
+     *
+     * @return mixed
+     * @throws KeyDoesNotExistException
+     */
     public function merge($name, $value = null, $literal = null)
     {
         $literal = is_null($literal) ? $this->isLiteral() : $literal;
