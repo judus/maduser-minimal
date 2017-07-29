@@ -381,7 +381,7 @@ class Factory implements FactoryInterface
         !is_array($params) || extract($params);
 
         isset($path) || $path = $this->config->exists(
-            'modules.path', $this->getBasePath());
+            'paths.modules', $this->getBasePath());
 
         isset($bindings) || $bindings = $this->config->exists(
             'modules.bindingsFile', $this->getBindingsFile());
