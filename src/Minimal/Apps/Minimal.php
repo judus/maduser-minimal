@@ -644,7 +644,7 @@ class Minimal implements AppInterface
 
         if (is_file($filePath)) {
             /** @noinspection PhpUnusedLocalVariableInspection */
-            $route = $this->getRouter();
+            $router = $this->getRouter();
 
             /** @noinspection PhpUnusedLocalVariableInspection */
             $response = $this->getResponse();
