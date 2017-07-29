@@ -568,7 +568,11 @@ class Minimal implements AppInterface
 
             if (is_array($configItems)) {
                 foreach ($configItems as $key => $value) {
-                    $this->getConfig()->merge($key, $value);
+                    if ($this->getConfig()->exists($key)) {
+                        $this->getConfig()->merge($key, $value);
+                    } else {
+                        $this->getConfig()->item($key, $value);
+                    }
                 }
             }
 
