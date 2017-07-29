@@ -120,8 +120,8 @@ class IOC
         throw new IocNotResolvableException($_name, [
             'name' => $name,
             'params' => $params,
+            'trace' => debug_backtrace(),
             'registry' => static::$registry,
-            'trace' => debug_backtrace()
         ]);
     }
 
