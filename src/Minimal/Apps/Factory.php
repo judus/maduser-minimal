@@ -391,12 +391,18 @@ class Factory implements FactoryInterface
 
             foreach ($dirs as $dir) {
                 $moduleName = $name[0] . basename($dir);
-                $modules[] = $this->register_($moduleName, $params);
+
+                if (!$this->getModules()->exists($moduleName)) {
+                    $modules[] = $this->register_($moduleName, $params);
+                }
+
             }
 
         } else {
 
-            $modules[] = $this->register_($name, $params);
+            if (!$this->getModules()->exists($name)) {
+                $modules[] = $this->register_($name, $params);
+            }
 
         }
 
