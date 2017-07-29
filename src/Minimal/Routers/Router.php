@@ -510,4 +510,15 @@ class Router implements RouterInterface
         return $this->fetchRoute($uriString);
     }
 
+    public function exists($uriPattern, $requestMethod = 'ALL')
+    {
+        $routes = $this->routes->get($requestMethod);
+
+        if ($routes->exists($uriPattern)) {
+            return true;
+        }
+
+        return false;
+    }
+
 }

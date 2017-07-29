@@ -92,6 +92,12 @@ class Collection implements CollectionInterface, \Iterator
         return $this->count() > 0;
     }
 
+    public function exists($name, $else = null)
+    {
+        return isset($this->items[$name]) ?
+            $this->items[$name] : $else;
+    }
+
     public function filter(\Closure $closure, $keepKeys = false)
     {
         $collection = new Collection();
