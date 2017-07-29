@@ -18,7 +18,14 @@ class DatabaseException extends MinimalException
             return $this->myMessage->getFile();
         }
 
-        return debug_backtrace()[3]['file'];
+        $t = debug_backtrace();
+
+        $item = $t[0];
+        $item = isset($t[1]) && isset($t[1]['file']) ? $t[1] : $item;
+        $item = isset($t[2]) && isset($t[2]['file']) ? $t[2] : $item;
+        $item = isset($t[3]) && isset($t[3]['file']) ? $t[3] : $item;
+
+        return $item['file'];
     }
 
     /**
@@ -30,6 +37,13 @@ class DatabaseException extends MinimalException
             return $this->myMessage->getLine();
         }
 
-        return debug_backtrace()[3]['line'];
+        $t = debug_backtrace();
+
+        $item = $t[0];
+        $item = isset($t[1]) && isset($t[1]['file']) ? $t[1] : $item;
+        $item = isset($t[2]) && isset($t[2]['file']) ? $t[2] : $item;
+        $item = isset($t[3]) && isset($t[3]['file']) ? $t[3] : $item;
+
+        return $item['line'];
     }
 }
