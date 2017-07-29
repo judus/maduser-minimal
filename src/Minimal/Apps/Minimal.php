@@ -401,10 +401,10 @@ class Minimal implements AppInterface
     /**
      * @return mixed
      */
-    public function getModules(): CollectionInterface
+    public function getModules(): FactoryInterface
     {
         if (is_null($this->modules)) {
-            $this->setModules(IOC::resolve('Collection'));
+            $this->setModules(IOC::resolve('Factory'));
         }
 
         return $this->modules;
@@ -415,7 +415,7 @@ class Minimal implements AppInterface
      *
      * @return AppInterface
      */
-    public function setModules(CollectionInterface $modules): AppInterface
+    public function setModules(FactoryInterface $modules): AppInterface
     {
         $this->modules = $modules;
 

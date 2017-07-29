@@ -291,10 +291,10 @@ class Modules extends Facade
      * @param            $name
      * @param array|null $params
      *
-     * @return ModuleInterface
+     * @return array
      * @throws TypeErrorException
      */
-    public static function register($name, array $params = null): ModuleInterface
+    public static function register($name, array $params = null): array
     {
         return self::call();
     }

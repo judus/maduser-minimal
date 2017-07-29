@@ -173,12 +173,12 @@ interface AppInterface
     public function setApp(AppInterface $app): AppInterface;
 
     /**
-     * @return CollectionInterface
+     * @return FactoryInterface
      */
-    public function getModules(): CollectionInterface;
+    public function getModules(): FactoryInterface;
 
     /**
-     * @param CollectionInterface $modules
+     * @param FactoryInterface $modules
      */
-    public function setModules(CollectionInterface $modules);
+    public function setModules(FactoryInterface $modules);
 }

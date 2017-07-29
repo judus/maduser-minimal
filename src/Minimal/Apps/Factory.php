@@ -435,7 +435,6 @@ class Factory implements FactoryInterface
         $this->app->registerProviders($module->getProvidersFile());
         $this->app->registerRoutes($module->getRoutesFile());
 
-        $this->app->getModules()->add($module, $name);
         $this->registerModule($module);
 
         return $module;
