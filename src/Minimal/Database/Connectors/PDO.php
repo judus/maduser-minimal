@@ -1,6 +1,8 @@
 <?php namespace Maduser\Minimal\Database\Connectors;
 
 use Exception;
+use Maduser\Minimal\Database\Exceptions\DatabaseException;
+use Maduser\Minimal\Exceptions\MinimalException;
 
 /**
  * Class PDO
@@ -303,7 +305,7 @@ class PDO
             ]);
 
         } catch (\PDOException $e) {
-            throw new Exception($e->getMessage());
+            throw new DatabaseException($e->getMessage(), $config);
         }
 
         return self::$connection;
