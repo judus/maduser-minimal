@@ -90,13 +90,24 @@ interface ConfigInterface
     public function item($name, $value = null, $literal = null);
 
     /**
+     * @param           $name
+     * @param null      $value
+     * @param null|bool $literal
+     *
+     * @return mixed
+     * @throws KeyDoesNotExistException
+     */
+    public function merge($name, $value = null, $literal = null);
+
+    /**
      * @param      $name
      * @param      $array
+     * @param bool $throw
      * @param null $parent
      *
      * @return mixed
      */
-    public function find($name, $array, $parent = null);
+    public function find($name, $array, $throw = false, $parent = null);
 
     /**
      * @param $name
