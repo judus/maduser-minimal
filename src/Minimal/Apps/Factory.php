@@ -373,10 +373,37 @@ class Factory implements FactoryInterface
      * @param            $name
      * @param array|null $params
      *
-     * @return ModuleInterface
+     * @return array
      * @throws TypeErrorException
      */
-    public function register($name, array $params = null): ModuleInterface
+    public function register($name, array $params = null): array
+    {
+        $modules = [];
+
+        if ($this->endsWith($name, '*')) {
+
+            $name = explode('*', $name);
+
+            isset($path) || $path = $this->config->exists(
+                'paths.modules', $this->getBasePath());
+
+            $dirs = array_filter(glob($this->config->item('paths.system'). '/' .$path . '/' . $name[0] . '*'), 'is_dir');
+
+            foreach ($dirs as $dir) {
+                $moduleName = $name[0] . basename($dir);
+                $modules[] = $this->register_($moduleName, $params);
+            }
+
+        } else {
+
+            $modules[] = $this->register_($name, $params);
+
+        }
+
+        return $modules;
+    }
+
+    public function register_($name, array $params = null): ModuleInterface
     {
         !is_array($params) || extract($params);
 
@@ -432,4 +459,19 @@ class Factory implements FactoryInterface
         return $this->modules->get($name);
     }
 
+    public function startsWith($haystack, $needle)
+    {
+         $length = strlen($needle);
+         return (substr($haystack, 0, $length) === $needle);
+    }
+
+    public function endsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
+    }
 }

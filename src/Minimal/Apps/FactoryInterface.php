@@ -217,10 +217,20 @@ interface FactoryInterface
      * @param            $name
      * @param array|null $params
      *
+     * @return array
+     * @throws TypeErrorException
+     */
+    public function register($name, array $params = null): array;
+
+    /**
+     * @param            $name
+     * @param array|null $params
+     *
      * @return ModuleInterface
      * @throws TypeErrorException
      */
-    public function register($name, array $params = null): ModuleInterface;
+    public function register_($name, array $params = null): ModuleInterface;
+
 
     /**
      * @param ModuleInterface $module
