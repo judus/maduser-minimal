@@ -46,10 +46,11 @@ interface CollectionInterface
     /**
      * @param      $obj
      * @param null $key
+     * @param bool $overwrite
      *
      * @return CollectionInterface
      */
-    public function add($obj, $key = null): CollectionInterface;
+    public function add($obj, $key = null, $overwrite = false): CollectionInterface;
 
     /**
      * @param $key
@@ -73,6 +74,9 @@ interface CollectionInterface
      */
     public function count($key = null);
 
+    public function hasItems(): bool;
+
+    public function exists(string $name, $else = null);
     /**
      * @param null $key
      *
