@@ -36,7 +36,12 @@ class Minimal implements AppInterface
     /**
      * @var
      */
-    private $configFile = 'config/env.php';
+    private $minimalFile = 'config/minimal.php';
+
+    /**
+     * @var
+     */
+    private $configFile = 'config/environment.php';
 
     /**
      * @var
@@ -179,6 +184,26 @@ class Minimal implements AppInterface
     public function setModulesPath(string $filePath): AppInterface
     {
         $this->modulesPath = $filePath;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMinimalFile()
+    {
+        return $this->minimalFile;
+    }
+
+    /**
+     * @param mixed $minimalFile
+     *
+     * @return Minimal
+     */
+    public function setMinimalFile($minimalFile)
+    {
+        $this->minimalFile = $minimalFile;
 
         return $this;
     }
@@ -469,6 +494,7 @@ class Minimal implements AppInterface
         defined('PATH') || define('PATH', $this->getBasePath());
 
         !isset($app) || $this->setAppPath($app);
+        !isset($minimal) || $this->setMinimalFile($minimal);
         !isset($config) || $this->setConfigFile($config);
         !isset($providers) || $this->setProvidersFile($providers);
         !isset($bindings) || $this->setBindingsFile($bindings);
@@ -485,6 +511,7 @@ class Minimal implements AppInterface
     {
         $this->registerBindings();
         $this->registerProviders();
+        $this->registerMinimal();
         $this->registerConfig();
         $this->registerRoutes();
         $this->registerModules();
@@ -492,6 +519,38 @@ class Minimal implements AppInterface
         App::setInstance($this);
 
         return $this;
+    }
+
+    /**
+     * @param null $filePath
+     */
+    public function registerMinimal($filePath = null)
+    {
+        $filePath || $filePath = $this->getMinimalFile();
+
+        is_file($filePath) || $filePath = $this->getBasePath() . $filePath;
+
+        if (file_exists($filePath)) {
+            /** @noinspection PhpIncludeInspection */
+            $configItems = require_once $filePath;
+
+            if (is_array($configItems)) {
+                foreach ($configItems as $key => $value) {
+                    $this->getConfig()->item($key, $value);
+                }
+            }
+
+            if ($this->getConfig()->exists('errors.error_reporting')) {
+                ini_set('error_reporting',
+                    $this->getConfig()->item('errors.error_reporting'));
+            }
+
+            if ($this->getConfig()->exists('errors.display_errors')) {
+                ini_set('display_errors',
+                    $this->getConfig()->item('errors.display_errors'));
+            }
+
+        }
     }
 
     /**
@@ -509,7 +568,7 @@ class Minimal implements AppInterface
 
             if (is_array($configItems)) {
                 foreach ($configItems as $key => $value) {
-                    $this->getConfig()->item($key, $value);
+                    $this->getConfig()->merge($key, $value);
                 }
             }
 
