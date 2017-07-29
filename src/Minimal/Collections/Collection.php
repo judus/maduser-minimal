@@ -218,26 +218,19 @@ class Collection implements CollectionInterface, \Iterator
 
     public function __toString()
     {
-
-        d($this->items);
-
-        foreach ($this->items as $item) {
-            d($item->toArray());
-        }
-
-
-        dd('end');
-
-        /*
         $items = [];
         foreach ($this->items as $item) {
-            if ($item instanceof \Maduser\Minimal\Collections\CollectionInterface) {
+            if ($item instanceof $this) {
                 $items[] = $item->getArray();
             } else {
-                $items[] = $item;
+                if (is_object($item) && method_exists($item, 'toArray')) {
+                    $items[] = $item->toArray();
+                } else {
+                    $items[] = $item;
+                }
             }
         }
-        */
-        return json_encode($this->items);
+
+        return json_encode($items);
     }
 }
