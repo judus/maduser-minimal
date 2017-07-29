@@ -21,12 +21,12 @@ class Response implements ResponseInterface
 	 */
 	private $jsonEncodeArray = true;
 
-	/**
+    /**
      * Config option json encode if $content is object
      *
      * @var bool
-	 */
-	private $jsonEncodeObject = true;
+     */
+    private $jsonEncodeObject = true;
 
     /**
      * @param $content
@@ -176,7 +176,12 @@ class Response implements ResponseInterface
     {
         if ($this->getJsonEncodeObject() && is_object($content)) {
             $this->header('Content-Type: application/json');
-            return json_encode($content);
+
+            if (method_exists($content, '__toString')) {
+                return (string)$content;
+            } else {
+                return json_encode($content);
+            }
         }
 
         return $content;
