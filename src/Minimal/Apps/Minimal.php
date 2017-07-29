@@ -1,22 +1,15 @@
 <?php namespace Maduser\Minimal\Apps;
 
-use Maduser\Minimal\Exceptions\TypeErrorException;
 use Maduser\Minimal\Facades\App;
-use Maduser\Minimal\Apps\AppInterface;
 use Maduser\Minimal\Collections\CollectionInterface;
 use Maduser\Minimal\Config\ConfigInterface;
 use Maduser\Minimal\Interfaces\DispatcherInterface;
-use Maduser\Minimal\Apps\FactoryInterface;
 use Maduser\Minimal\Middlewares\MiddlewareInterface;
-use Maduser\Minimal\Apps\MinimalAppInterface;
-use Maduser\Minimal\Apps\MinimalFactoryInterface;
-use Maduser\Minimal\Apps\ModuleInterface;
 use Maduser\Minimal\Http\RequestInterface;
 use Maduser\Minimal\Http\ResponseInterface;
 use Maduser\Minimal\Routers\RouterInterface;
 use Maduser\Minimal\Controllers\FrontControllerInterface;
 use Maduser\Minimal\Loaders\IOC;
-
 
 /**
  * Class Minimal
@@ -438,12 +431,6 @@ class Minimal implements AppInterface
      */
     public function getFrontController()
     {
-        /*
-        if (is_null($this->frontController)) {
-            $this->setFrontController(IOC::resolve('FrontController'));
-        }
-        */
-
         return IOC::resolve('FrontController');
     }
 
@@ -469,7 +456,7 @@ class Minimal implements AppInterface
      * @param array $params
      * @param bool  $returnInstance
      */
-    public function __construct(array $params, $returnInstance = false)
+    public function __construct(array $params = [], $returnInstance = false)
     {
         if (version_compare(phpversion(), '7.0.0', '<')) {
             die('Requires PHP version > 7.0.0');
@@ -525,6 +512,16 @@ class Minimal implements AppInterface
                     $this->getConfig()->item($key, $value);
                 }
             }
+
+            if ($this->getConfig()->exists('errors.error_reporting')) {
+                ini_set('error_reporting',
+                    $this->getConfig()->item('errors.error_reporting'));
+            }
+
+            if ($this->getConfig()->exists('errors.display_errors')) {
+                ini_set('display_errors',
+                    $this->getConfig()->item('errors.display_errors'));
+            }
         }
     }
 
@@ -535,8 +532,6 @@ class Minimal implements AppInterface
     {
         $filePath || $filePath = $this->getBindingsFile();
         is_file($filePath) || $filePath = $this->getBasePath() . $filePath;
-        //show($filePath);
-
 
         if (file_exists($filePath)) {
             /** @noinspection PhpIncludeInspection */
@@ -549,8 +544,6 @@ class Minimal implements AppInterface
                     IOC::bind($alias, $binding);
                 }
             }
-
-
         }
     }
 
@@ -573,12 +566,6 @@ class Minimal implements AppInterface
                     IOC::register($alias, function () use ($provider) {
                         return new $provider();
                     });
-                    /*
-                    if (property_exists($this, strtolower($alias))) {
-                        d($alias);
-                        $this->{strtolower($alias)} = IOC::resolve($alias);
-                    }
-                    */
                 }
             }
         }
@@ -666,6 +653,7 @@ class Minimal implements AppInterface
         $this->load();
         $this->execute();
         $this->respond();
+        $this->exit();
     }
 
     /**
