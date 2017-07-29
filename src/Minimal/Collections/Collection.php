@@ -20,16 +20,18 @@ class Collection implements CollectionInterface, \Iterator
      * @param      $obj
      * @param null $key
      *
+     * @param bool $overwrite
+     *
      * @return \Maduser\Minimal\Collections\CollectionInterface
      * @throws \Maduser\Minimal\Collections\InvalidKeyException
      * @throws \Maduser\Minimal\Collections\KeyInUseException
      */
-	public function add($obj, $key = null): CollectionInterface
+	public function add($obj, $key = null, $overwrite = false): CollectionInterface
 	{
 		if ($key == null) {
 			$this->items[] = $obj;
 		} else {
-			if (isset($this->items[$key])) {
+			if (isset($this->items[$key]) && !$overwrite) {
 				throw new KeyInUseException("Collection key '".$key."' is already in use.", $this);
 			} else {
 			    if (!is_string($key) || is_int($key)) {
@@ -87,12 +89,12 @@ class Collection implements CollectionInterface, \Iterator
 		}
 	}
 
-	public function hasItems()
+	public function hasItems(): bool
     {
         return $this->count() > 0;
     }
 
-    public function exists($name, $else = null)
+    public function exists(string $name, $else = null)
     {
         return isset($this->items[$name]) ?
             $this->items[$name] : $else;

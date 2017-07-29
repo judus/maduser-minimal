@@ -71,6 +71,11 @@ class Router implements RouterInterface
     private $closure = null;
 
     /**
+     * @var bool
+     */
+    private $overwriteExistingRoute = true;
+
+    /**
      * @return RequestInterface
      */
     public function getRequest(): RequestInterface
@@ -215,6 +220,26 @@ class Router implements RouterInterface
     }
 
     /**
+     * @return bool
+     */
+    public function shouldOverwriteExistingRoute(): bool
+    {
+        return $this->overwriteExistingRoute;
+    }
+
+    /**
+     * @param bool $overwriteExistingRoute
+     *
+     * @return Router
+     */
+    public function setOverwriteExistingRoute(bool $overwriteExistingRoute
+    ): Router {
+        $this->overwriteExistingRoute = $overwriteExistingRoute;
+
+        return $this;
+    }
+
+    /**
      * Routes constructor.
      *
      * @param ConfigInterface            $config
@@ -341,7 +366,6 @@ class Router implements RouterInterface
             $options = [];
         }
 
-
         $this->setClosure(null);
 
         extract($this->getGroupValues());
@@ -351,24 +375,8 @@ class Router implements RouterInterface
                     '/') : $uriPattern;
         }
 
-        // Direct output
         if (is_callable($callback)) {
             $this->setClosure($callback);
-            /*
-            // If we have a literal match, we execute the closure, send the
-            // response and exit PHP
-            if ($this->matchLiteral($this->getGroupUriPrefix() . $uriPattern)) {
-                //$this->response->send($callback())->exit();
-            }
-
-            // If we have a wildcard  match, we pass the wildcard value to
-            // the closure, execute it, send the response and exit PHP
-            if ($matches = $this->matchWildcard($this->getGroupUriPrefix() . $uriPattern)) {
-                $this->response->send(
-                    call_user_func_array($callback, $matches)
-                )->exit();
-            }
-            */
         }
 
         if (is_string($options)) {
@@ -394,8 +402,15 @@ class Router implements RouterInterface
         $uriPattern = !empty($this->getGroupUriPrefix()) ?
             $this->getGroupUriPrefix() . $uriPattern : $uriPattern;
 
-        $this->routes->get('ALL')->add($route, strtoupper($requestMethod).'::'.$uriPattern);
-        $this->routes->get(strtoupper($requestMethod))->add($route, $uriPattern);
+        $this->routes->get('ALL')->add(
+            $route,
+            strtoupper($requestMethod).'::'.$uriPattern,
+            $this->shouldOverwriteExistingRoute()
+        );
+
+        $this->routes->get(strtoupper($requestMethod))->add(
+            $route, $uriPattern, $this->shouldOverwriteExistingRoute()
+        );
     }
 
     /**
@@ -510,7 +525,13 @@ class Router implements RouterInterface
         return $this->fetchRoute($uriString);
     }
 
-    public function exists($uriPattern, $requestMethod = 'ALL')
+    /**
+     * @param        $uriPattern
+     * @param string $requestMethod
+     *
+     * @return bool
+     */
+    public function exists(string $uriPattern, string $requestMethod = 'ALL')
     {
         $routes = $this->routes->get($requestMethod);
 
