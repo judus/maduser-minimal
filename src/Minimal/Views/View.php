@@ -303,7 +303,7 @@ class View implements ViewInterface
     /**
      * @return string
      */
-    public function yield()
+    public function view()
     {
         return $this->renderView($this->getView(), $this->getData());
 	}

@@ -18,10 +18,10 @@ class Config
         /** @var Minimal minimal */
         $this->minimal = $minimal;
 
-        $this->list();
+        $this->all();
     }
 
-    protected function list()
+    protected function all()
     {
         $thead = [['Alias', 'Value']];
         $tbody = [];

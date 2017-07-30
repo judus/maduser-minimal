@@ -165,7 +165,7 @@ class Response extends Facade
     /**
      * Exit PHP
      */
-    public static function exit()
+    public static function terminate()
     {
         return self::call();
     }

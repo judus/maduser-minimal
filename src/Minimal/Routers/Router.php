@@ -436,7 +436,7 @@ class Router implements RouterInterface
      *
      * @return CollectionInterface
      */
-    public function list($requestMethod = 'ALL'): CollectionInterface
+    public function all($requestMethod = 'ALL'): CollectionInterface
     {
         return $this->routes->get($requestMethod);
     }
@@ -453,7 +453,7 @@ class Router implements RouterInterface
         $uriString = $uriString ? $uriString : $this->request->getUriString();
 
         // Get the registered routes by http request method
-        $routes = $this->list(
+        $routes = $this->all(
             $this->request->getRequestMethod()
         )->getArray();
         // Look for a literal match

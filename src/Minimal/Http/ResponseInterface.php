@@ -153,5 +153,5 @@ interface ResponseInterface
     /**
      * Exit PHP
      */
-    public function exit();
+    public function terminate();
 }

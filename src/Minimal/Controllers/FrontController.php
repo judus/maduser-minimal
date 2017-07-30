@@ -466,7 +466,7 @@ class FrontController implements FrontControllerInterface
     public function dispatch(RouteInterface $route = null, \Closure $function = null)
     {
         /** @var RouteInterface $route */
-        $route ? $this->setRoute($route) : null;
+        is_null($route) || $this->setRoute($route);
 
         if (is_callable($function)) {
 
@@ -501,8 +501,8 @@ class FrontController implements FrontControllerInterface
     /**
      *
      */
-    public function exit()
+    public function terminate()
     {
-        $this->response->exit();
+        $this->response->terminate();
     }
 }

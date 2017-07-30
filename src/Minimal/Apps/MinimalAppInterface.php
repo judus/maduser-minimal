@@ -243,7 +243,7 @@ interface MinimalAppInterface
     /**
      *
      */
-    public function exit();
+    public function terminate();
 
     /**
      *

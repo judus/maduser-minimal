@@ -100,6 +100,6 @@ class App extends Facade
 
         is_null($_closure) || $_closure();
 
-        self::getInstance()->execute()->respond()->exit();
+        self::getInstance()->execute()->respond()->terminate();
     }
 }

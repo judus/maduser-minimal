@@ -94,7 +94,7 @@ class Router extends Facade
      *
      * @return CollectionInterface
      */
-    public static function list($requestMethod = 'ALL'): CollectionInterface
+    public static function all($requestMethod = 'ALL'): CollectionInterface
     {
         return self::call();
     }

@@ -716,13 +716,13 @@ class Minimal implements AppInterface
         $this->load();
         $this->execute();
         $this->respond();
-        $this->exit();
+        $this->terminate();
     }
 
     /**
      *
      */
-    public function exit()
+    public function terminate()
     {
         exit();
     }

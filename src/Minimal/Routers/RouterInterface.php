@@ -207,7 +207,7 @@ interface RouterInterface
      *
      * @return CollectionInterface
      */
-    public function list($requestMethod = 'ALL'): CollectionInterface;
+    public function all($requestMethod = 'ALL'): CollectionInterface;
 
     /**
      * @param null $uriString

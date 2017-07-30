@@ -237,23 +237,15 @@ class MinimalException extends \Exception implements ExceptionInterface
      */
     protected function handleError($prettyMessage, $message)
     {
-        $this->die($prettyMessage);
+        $this->terminate($prettyMessage);
     }
 
     /**
      * @param null $exitMessage
      */
-    protected function exit($exitMessage = null)
+    protected function terminate($exitMessage = null)
     {
         exit($exitMessage);
-    }
-
-    /**
-     * @param null $exitMessage
-     */
-    protected function die($exitMessage = null)
-    {
-        die($exitMessage);
     }
 
     protected function isMessageObject()
@@ -292,8 +284,6 @@ class MinimalException extends \Exception implements ExceptionInterface
     public function template(array $vars)
     {
         extract($vars);
-
-
 
         $title = isset($title) ? $title : null;
         $message = isset($message) ? $message : null;

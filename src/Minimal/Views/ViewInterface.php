@@ -195,7 +195,7 @@ interface ViewInterface
     /**
      * @return string
      */
-    public function yield();
+    public function view();
 
     /**
      * @param            $viewPath

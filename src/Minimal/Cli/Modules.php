@@ -21,10 +21,10 @@ class Modules
         /** @var Minimal minimal */
         $this->minimal = $minimal;
 
-        $this->list();
+        $this->all();
     }
 
-    protected function list()
+    protected function all()
     {
         $modules = $this->minimal->getFactory()->getModules()->getArray();
 
