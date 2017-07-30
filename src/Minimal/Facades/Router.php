@@ -44,7 +44,7 @@ class Router extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * @param $uriPattern
      * @param $action
@@ -55,7 +55,7 @@ class Router extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * @param $uriPattern
      * @param $action

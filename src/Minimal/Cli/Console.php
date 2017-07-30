@@ -9,8 +9,6 @@ class Console
 
     public function table($tbody = [], $thead = [])
     {
-        $width = [];
-
         $data = array_merge($tbody, $thead);
         $widths = $this->getColWidths($data);
         $totalWidth = $this->getTotalWidth($widths);

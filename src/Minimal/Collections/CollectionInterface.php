@@ -1,7 +1,7 @@
 <?php
 /**
  * CollectionInterface.php
- * 7/15/17 - 1:46 AM
+ * 7/30/17 - 5:02 PM
  *
  * PHP version 7
  *
@@ -37,7 +37,7 @@
 namespace Maduser\Minimal\Collections;
 
 /**
- * Class Collection
+ * Interface CollectionInterface
  *
  * @package Maduser\Minimal\Collections
  */
@@ -46,11 +46,18 @@ interface CollectionInterface
     /**
      * @param      $obj
      * @param null $key
+     *
      * @param bool $overwrite
      *
-     * @return CollectionInterface
+     * @return \Maduser\Minimal\Collections\CollectionInterface
+     * @throws \Maduser\Minimal\Collections\InvalidKeyException
+     * @throws \Maduser\Minimal\Collections\KeyInUseException
      */
-    public function add($obj, $key = null, $overwrite = false): CollectionInterface;
+    public function add(
+        $obj,
+        $key = null,
+        $overwrite = false
+    ) : CollectionInterface;
 
     /**
      * @param $key
@@ -74,11 +81,29 @@ interface CollectionInterface
      */
     public function count($key = null);
 
-    public function hasItems(): bool;
-
-    public function exists(string $name, $else = null);
     /**
-     * @param null $key
+     * @return bool
+     */
+    public function hasItems() : bool;
+
+    /**
+     * @param string $name
+     * @param null   $else
+     *
+     * @return mixed
+     */
+    public function exists(string $name, $else = null);
+
+    /**
+     * @param \Closure $closure
+     * @param bool     $keepKeys
+     *
+     * @return mixed
+     */
+    public function filter(\Closure $closure, $keepKeys = false);
+
+    /**
+     * @param $key
      *
      * @return mixed
      */
@@ -93,4 +118,55 @@ interface CollectionInterface
      * @return array
      */
     public function getArray();
+
+    /**
+     * Return the current element
+     *
+     * @link  http://php.net/manual/en/iterator.current.php
+     * @return mixed Can return any type.
+     * @since 5.0.0
+     */
+    public function current();
+
+    /**
+     * Move forward to next element
+     *
+     * @link  http://php.net/manual/en/iterator.next.php
+     * @return void Any returned value is ignored.
+     * @since 5.0.0
+     */
+    public function next();
+
+    /**
+     * Return the key of the current element
+     *
+     * @link  http://php.net/manual/en/iterator.key.php
+     * @return mixed scalar on success, or null on failure.
+     * @since 5.0.0
+     */
+    public function key();
+
+    /**
+     * Checks if current position is valid
+     *
+     * @link  http://php.net/manual/en/iterator.valid.php
+     * @return boolean The return value will be casted to boolean and then evaluated.
+     *        Returns true on success or false on failure.
+     * @since 5.0.0
+     */
+    public function valid();
+
+    /**
+     * Rewind the Iterator to the first element
+     *
+     * @link  http://php.net/manual/en/iterator.rewind.php
+     * @return void Any returned value is ignored.
+     * @since 5.0.0
+     */
+    public function rewind();
+
+    /**
+     * @return mixed
+     */
+    public function toArray();
 }

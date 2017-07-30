@@ -96,6 +96,7 @@ class Assets implements AssetsInterface
      * @var array
      */
     private $externalJs = [];
+    private $vendorFiles;
 
     /**
      * @param $path
@@ -294,8 +295,9 @@ class Assets implements AssetsInterface
     }
 
     /**
-     * @param      $urls
-     * @param null $key
+     * @param       $urls
+     * @param null  $key
+     * @param array $attr
      */
     public function addJs($urls, $key = null, array $attr = null)
     {
@@ -333,15 +335,17 @@ class Assets implements AssetsInterface
         }
         return false;
     }
+
     /**
-     * @param      $urls
-     * @param null $key
+     * @param       $urls
+     * @param null  $key
+     * @param array $attr
      */
     public function addVendorCss($urls, $key = null, array $attr = null)
     {
         if (is_array($urls)) {
             foreach ($urls as $url) {
-                $this->addVendorCSS($url, $key, $attr);
+                $this->addVendorCss($url, $key, $attr);
             }
         }
 
@@ -359,8 +363,9 @@ class Assets implements AssetsInterface
     }
 
     /**
-     * @param      $urls
-     * @param null $key
+     * @param       $urls
+     * @param null  $key
+     * @param array $attr
      */
     public function addVendorJs($urls, $key = null, array $attr = null)
     {
@@ -385,6 +390,8 @@ class Assets implements AssetsInterface
 
     /**
      * @param null $key
+     *
+     * @param null $concatFilename
      *
      * @return string
      */
@@ -414,6 +421,8 @@ class Assets implements AssetsInterface
 
     /**
      * @param null $key
+     *
+     * @param null $concatFilename
      *
      * @return string
      */
@@ -473,6 +482,8 @@ class Assets implements AssetsInterface
     /**
      * @param null $key
      *
+     * @param null $concatFilename
+     *
      * @return string
      */
     public function getVendorJs($key = null, $concatFilename = null)
@@ -499,8 +510,9 @@ class Assets implements AssetsInterface
     }
 
     /**
-     * @param      $urls
-     * @param null $key
+     * @param       $urls
+     * @param null  $key
+     * @param array $attr
      */
     public function addExternalCss($urls, $key = null, array $attr = null)
     {
@@ -526,11 +538,14 @@ class Assets implements AssetsInterface
             $externalCss = $this->externalCss[$this->key($key)];
             return $this->getCssTags($externalCss);
         }
+
+        return null;
     }
 
     /**
-     * @param      $urls
-     * @param null $key
+     * @param       $urls
+     * @param null  $key
+     * @param array $attr
      */
     public function addExternalJs($urls, $key = null, array $attr = null)
     {
@@ -556,6 +571,8 @@ class Assets implements AssetsInterface
             $externalJs = $this->externalJs[$this->key($key)];
             return $this->getJsTags($externalJs);
         }
+
+        return null;
     }
 
     /**
@@ -584,6 +601,8 @@ class Assets implements AssetsInterface
 
             return $html;
         }
+
+        return null;
     }
 
     public function getCssTags(array $cssFiles)

@@ -58,10 +58,8 @@ interface FactoryInterface
 
     /**
      * @param string $path
-     *
-     * @return AppInterface
      */
-    public function setBasePath(string $path): AppInterface;
+    public function setBasePath(string $path);
 
     /**
      * @return string

@@ -2,8 +2,6 @@
 
 namespace Maduser\Minimal\Facades;
 
-use Maduser\Minimal\Assets\AssetsInterface;
-use Maduser\Minimal\Views\ViewInterface;
 use Maduser\Minimal\Views\ViewNotFoundException;
 use Maduser\Minimal\Views\View as Implementation;
 
@@ -54,8 +52,9 @@ class View
      */
     public static function getAssets()
     {
-        self::call();
+        return self::call();
     }
+
 
     /**
      * @param mixed $assets
@@ -70,8 +69,9 @@ class View
      */
     public static function getDir()
     {
-        self::call();
+        return self::call();
     }
+
 
     /**
      * @param mixed $dir
@@ -86,8 +86,9 @@ class View
      */
     public static function getView()
     {
-        self::call();
+        return self::call();
     }
+
 
     /**
      * @param mixed $view
@@ -102,8 +103,9 @@ class View
      */
     public static function getFileExt()
     {
-        self::call();
+        return self::call();
     }
+
 
     /**
      * @param mixed $fileExt
@@ -118,8 +120,9 @@ class View
      */
     public static function getBase()
     {
-        self::call();
+        return self::call();
     }
+
 
     /**
      * @param mixed $base
@@ -134,8 +137,9 @@ class View
      */
     public static function getTheme()
     {
-        self::call();
+        return self::call();
     }
+
 
     /**
      * @param mixed $theme
@@ -150,7 +154,7 @@ class View
      */
     public static function getLayout()
     {
-        self::call();
+        return self::call();
     }
 
     /**
@@ -166,8 +170,9 @@ class View
      */
     public static function getSharedData()
     {
-        self::call();
+        return self::call();
     }
+
 
     /**
      * @param $key
@@ -178,6 +183,7 @@ class View
         self::call();
     }
 
+
     /**
      * @param $key
      *
@@ -185,8 +191,9 @@ class View
      */
     public static function shared($key)
     {
-        self::call();
+        return self::call();
     }
+
 
     /**
      * @param array $data
@@ -201,8 +208,9 @@ class View
      */
     public static function getData()
     {
-        self::call();
+        return self::call();
     }
+
 
     /**
      * @param $key
@@ -213,6 +221,7 @@ class View
         self::call();
     }
 
+
     /**
      * @param $key
      *
@@ -220,7 +229,7 @@ class View
      */
     public static function get($key)
     {
-        self::call();
+        return self::call();
     }
 
     /**
@@ -228,7 +237,7 @@ class View
      */
     public static function getPath()
     {
-        self::call();
+        return self::call();
     }
 
     /**
@@ -236,7 +245,7 @@ class View
      */
     public static function getViewPath()
     {
-        self::call();
+        return self::call();
     }
 
     /**
@@ -244,7 +253,7 @@ class View
      */
     public static function getLayoutPath()
     {
-        self::call();
+        return self::call();
     }
 
     /**
@@ -252,8 +261,9 @@ class View
      */
     public static function isAjax()
     {
-        self::call();
+        return self::call();
     }
+
 
     /**
      * @param       $viewPath
@@ -264,7 +274,7 @@ class View
      */
     public static function render($viewPath, array $data = null, $bypass = false)
     {
-        self::call();
+        return self::call();
     }
 
     /**
@@ -272,8 +282,9 @@ class View
      */
     public static function yield()
     {
-        self::call();
+        return self::call();
     }
+
 
     /**
      * @param            $viewPath
@@ -284,8 +295,9 @@ class View
      */
     public static function renderView($viewPath, array $data = null)
     {
-        self::call();
+        return self::call();
     }
+
 
     /**
      * @param array|null $data
@@ -294,6 +306,6 @@ class View
      */
     public static function renderLayout(array $data = null)
     {
-        self::call();
+        return self::call();
     }
 }

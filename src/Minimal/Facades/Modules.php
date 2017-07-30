@@ -10,7 +10,7 @@ use Maduser\Minimal\Factories\MinimalFactoryInterface;
 use Maduser\Minimal\Apps\ModuleInterface;
 use Maduser\Minimal\Http\RequestInterface;
 use Maduser\Minimal\Http\ResponseInterface;
-use Maduser\Minimal\Http\RouterInterface;
+use Maduser\Minimal\Routers\RouterInterface;
 
 class Modules extends Facade
 {
@@ -167,7 +167,7 @@ class Modules extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * @param CollectionInterface $collection
      *
@@ -185,7 +185,7 @@ class Modules extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * @param ModuleInterface $module
      *
@@ -203,7 +203,7 @@ class Modules extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * @param MinimalFactoryInterface $collectionFactory
      *
@@ -222,7 +222,7 @@ class Modules extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * @param ConfigInterface $config
      *
@@ -240,7 +240,7 @@ class Modules extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * @param RequestInterface $request
      *
@@ -258,7 +258,7 @@ class Modules extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * @param RouterInterface $router
      *
@@ -276,7 +276,7 @@ class Modules extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * @param ResponseInterface $response
      *
@@ -308,7 +308,7 @@ class Modules extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * @param $name
      *

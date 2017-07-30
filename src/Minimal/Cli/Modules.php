@@ -2,10 +2,10 @@
 
 namespace Maduser\Minimal\Cli;
 
-use Maduser\Minimal\Collections\Collection;
+
 use Maduser\Minimal\Apps\Minimal;
 use Maduser\Minimal\Apps\Module;
-use Maduser\Minimal\Routers\Route;
+
 
 class Modules
 {
@@ -27,6 +27,8 @@ class Modules
     protected function all()
     {
         $modules = $this->minimal->getFactory()->getModules()->getArray();
+
+        $array = [];
 
         foreach ($modules as $module) {
             /** @var Module $module */

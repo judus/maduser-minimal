@@ -1,5 +1,7 @@
 <?php namespace Maduser\Minimal\Loaders;
 
+use Maduser\Minimal\Exceptions\ClassDoesNotExistException;
+
 /**
  * Class IOC
  *
@@ -45,6 +47,8 @@ class IOC
         } else {
             return static::$config[$key];
         }
+
+        return null;
     }
 
     /**
@@ -126,12 +130,15 @@ class IOC
     }
 
     /**
-     * @param $name
+     * @param      $name
+     *
+     * @param bool $debug
      *
      * @return bool
      */
     public static function registered($name, $debug = false)
     {
+        /** @noinspection PhpUndefinedFunctionInspection */
         !$debug || d(static::$registry, 'Looking in registry for ' . $name);
 
         if (array_key_exists($name, static::$singletons)) {
@@ -193,8 +200,7 @@ class IOC
         if ($constructor = $reflected->getConstructor()) {
             $parameters = $constructor->getParameters();
             foreach ($parameters as $parameter) {
-                $dependencies[] = self::getDependency($parameter, $reflected,
-                    $parameters);
+                $dependencies[] = self::getDependency($parameter);
             }
         }
         return $dependencies;
@@ -205,16 +211,8 @@ class IOC
      *
      * @return mixed|null
      */
-    public static function getDependency(\ReflectionParameter $parameter, \ReflectionClass $reflected, $parameters)
+    public static function getDependency(\ReflectionParameter $parameter)
     {
-/*
-        if (!$parameter->isCallable()) {
-            throw new IocNotResolvableException('Class does not exist', [
-                'Reflected class' => $reflected,
-                'Constructor params' => $parameters
-            ]);
-        }
-*/
         if ($parameter->isArray() || !$parameter->getClass()) {
             return null;
         }
@@ -237,11 +235,12 @@ class IOC
     /**
      * @param array $dependencies
      *
+     * @param bool  $debug
+     *
      * @return array
      */
     public static function resolveDependencies(array $dependencies, $debug = false)
     {
-        //show($dependencies);
         foreach ($dependencies as &$dependency) {
             if (is_null($dependency)) {
                 $dependency =  null;
@@ -261,6 +260,8 @@ class IOC
      * @param            $class
      * @param array|null $params
      *
+     * @param bool       $debug
+     *
      * @return object
      * @throws IocNotResolvableException
      * @throws UnresolvedDependenciesException
@@ -279,10 +280,12 @@ class IOC
 
         $dependencies = self::getDependencies($reflected);
 
+        /** @noinspection PhpUndefinedFunctionInspection */
         !$debug || d($dependencies);
 
         $instanceArgs = self::resolveDependencies($dependencies, $debug);
 
+        /** @noinspection PhpUndefinedFunctionInspection */
         !$debug || d($instanceArgs);
 
         if (is_array($params)) {

@@ -66,11 +66,10 @@ class App extends Facade
 
     /**
      * @param null  $uri
-     * @param array $options
      *
      * @return $this
      */
-    public static function run($uri = null, $options = null)
+    public static function run($uri = null)
     {
         return self::getInstance()->execute($uri)->getResult();
     }

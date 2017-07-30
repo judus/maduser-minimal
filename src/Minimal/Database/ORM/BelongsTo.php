@@ -49,16 +49,19 @@ class BelongsTo extends AbstractRelation
     public function resolveInline(ORM $queryingClass)
     {
         $class = $this->getClass();
+
+        /** @noinspection PhpUndefinedMethodInspection */
         return $class::instance()->where([
                 $this->getLocalKey(),
                 $queryingClass->{$this->getForeignKey()}
         ])->getFirst();
     }
 
-    public function getWhereIn($array, $relation = null)
+    public function getWhereIn($array)
     {
         $class = $this->getClass();
 
+        /** @noinspection PhpUndefinedMethodInspection */
         return $class::instance()->where([
             $this->localKey,
             'IN',

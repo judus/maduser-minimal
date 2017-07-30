@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Controllers;
 
-use Maduser\Minimal\Controllers\ControllerFactory;
+
 use Maduser\Minimal\Providers\Provider;
 
 class ControllerFactoryProvider extends Provider

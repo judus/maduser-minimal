@@ -42,6 +42,8 @@ class HasMany extends AbstractRelation
     public function resolveInline(ORM $queryingClass)
     {
         $class = $this->getClass();
+
+        /** @noinspection PhpUndefinedMethodInspection */
         return $class::instance()->where([
                 $this->getForeignKey(),
                 $queryingClass->{$this->getLocalKey()}
@@ -52,14 +54,14 @@ class HasMany extends AbstractRelation
 
     /**
      * @param      $array
-     * @param null $relation
      *
      * @return mixed
      */
-    public function getWhereIn($array, $relation = null)
+    public function getWhereIn($array)
     {
         $class = $this->getClass();
 
+        /** @noinspection PhpUndefinedMethodInspection */
         return $class::instance()->where([
             $this->foreignKey,
             'IN',

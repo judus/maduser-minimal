@@ -36,7 +36,7 @@
 
 namespace Maduser\Minimal\Config;
 
-use Maduser\Minimal\Config\KeyDoesNotExistException;
+
 
 
 /**

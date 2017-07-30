@@ -29,6 +29,8 @@ class Config extends Facade
     }
 
     /**
+     * @param array $items
+     *
      * @return mixed
      */
     public static function items(array $items = [])

@@ -2,8 +2,6 @@
 
 namespace Maduser\Minimal\Facades;
 
-use Maduser\Minimal\Interfaces\RequestInterface;
-
 /**
  * Class Request
  *
@@ -23,7 +21,7 @@ class Request extends Facade
     {
         return self::call();
     }
-
+   
     /**
      * Setter $uriString
      *
@@ -45,7 +43,7 @@ class Request extends Facade
     {
         return self::call();
     }
-
+   
     /**
      * Setter $requestMethod
      *

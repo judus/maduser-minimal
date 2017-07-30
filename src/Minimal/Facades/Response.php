@@ -2,12 +2,12 @@
 
 namespace Maduser\Minimal\Facades;
 
-use Maduser\Minimal\Interfaces\ResponseInterface;
+use Maduser\Minimal\Http\ResponseInterface;
 
 class Response extends Facade
 {
     protected static $instance;
-    
+
     /**
      * @param $content
      *
@@ -33,13 +33,13 @@ class Response extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * @param mixed $jsonEncodeArray
      *
      * @return ResponseInterface
      */
-    public static function setJsonEncodeArray($jsonEncodeArray)
+    public static function setJsonEncodeArray($jsonEncodeArray): ResponseInterface
     {
         return self::call();
     }
@@ -51,7 +51,7 @@ class Response extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * @param mixed $jsonEncodeObject
      *
@@ -73,7 +73,7 @@ class Response extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * @param null $content
      *
@@ -83,7 +83,7 @@ class Response extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * Prepares and send the response to the client
      *
@@ -117,7 +117,7 @@ class Response extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * Encode object to json if configured
      *
@@ -129,7 +129,7 @@ class Response extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * Does a print_r with objects and array recursive
      *
@@ -141,7 +141,7 @@ class Response extends Facade
     {
         return self::call();
     }
-
+    
     /**
      * Redirect location
      *

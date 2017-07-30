@@ -1,10 +1,9 @@
-<?php namespace Maduser\Minimal\Libraries\Content;
+<?php namespace Maduser\Minimal\Content\Content;
 
-use Maduser\Minimal\Interfaces\ConfigInterface;
-use Maduser\Minimal\Interfaces\ContentInterface;
-use Maduser\Minimal\Interfaces\ViewInterface;
+use Maduser\Minimal\Config\ConfigInterface;
 
-class Content implements ContentInterface
+
+class Content
 {
     private $editMode = true;
     private $config;
@@ -135,7 +134,10 @@ class Content implements ContentInterface
 
         return null;
     }
-        /**
+
+    /**
+     * @param array $elementNames
+     *
      * @return mixed
      */
     public function getElements(array $elementNames)
@@ -163,6 +165,7 @@ class Content implements ContentInterface
         ($data)? extract($data): null;
 
         ob_start();
+        /** @noinspection PhpIncludeInspection */
         include __DIR__ .'/'.$viewFileName.'.php';
         $result = ob_get_contents();
         ob_end_clean();

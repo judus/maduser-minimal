@@ -1,14 +1,14 @@
 <?php namespace Maduser\Minimal\Apps;
 
 use Maduser\Minimal\Exceptions\TypeErrorException;
-use Maduser\Minimal\Apps\AppInterface;
+
 use Maduser\Minimal\Collections\CollectionFactoryInterface;
 use Maduser\Minimal\Collections\CollectionInterface;
 use Maduser\Minimal\Config\ConfigInterface;
-use Maduser\Minimal\Apps\FactoryInterface;
+
 use Maduser\Minimal\Factories\MinimalFactoryInterface;
-use Maduser\Minimal\Apps\ModuleFactoryInterface;
-use Maduser\Minimal\Apps\ModuleInterface;
+
+
 use Maduser\Minimal\Http\RequestInterface;
 use Maduser\Minimal\Http\ResponseInterface;
 use Maduser\Minimal\Routers\RouterInterface;
@@ -46,7 +46,7 @@ class Factory implements FactoryInterface
     private $routesFile = 'config/routes.php';
 
     /**
-     * @var \Maduser\Minimal\Core\Minimal $app
+     * @var \Maduser\Minimal\Apps\Minimal $app
      */
     protected $app;
 
@@ -102,14 +102,10 @@ class Factory implements FactoryInterface
 
     /**
      * @param string $path
-     *
-     * @return AppInterface
      */
-    public function setBasePath(string $path): AppInterface
+    public function setBasePath(string $path)
     {
         $this->basePath = $path;
-
-        return $this;
     }
 
     /**

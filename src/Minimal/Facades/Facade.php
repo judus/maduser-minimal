@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Facades;
 
-use Maduser\Minimal\Loaders\IOC;
+
 use ReflectionClass;
 
 /**

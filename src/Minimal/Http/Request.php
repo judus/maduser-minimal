@@ -139,14 +139,6 @@ class Request implements RequestInterface
 		$uri = $_SERVER['REQUEST_URI'];
         $uri = parse_url($uri)['path'];
 
-        // Remove script name (index.php) from uri
-/*
-		if (strpos($uri, $_SERVER['SCRIPT_NAME']) === 0) {
-            $uri = substr($uri, strlen($_SERVER['SCRIPT_NAME']));
-        } elseif (strpos($uri, dirname($_SERVER['SCRIPT_NAME'])) === 0) {
-			$uri = substr($uri, strlen(dirname($_SERVER['SCRIPT_NAME'])));
-		}
-*/
         // Further cleaning of the uri
 		$uri = str_replace(array('//', '../'), '/', trim($uri, '/'));
 
@@ -207,5 +199,7 @@ class Request implements RequestInterface
         if (isset($this->getSegments()[$n])) {
             return $this->getSegments()[$n];
         }
+
+        return null;
     }
 }

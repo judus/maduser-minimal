@@ -2,6 +2,7 @@
 
 use Maduser\Minimal\Factories\MinimalFactory;
 use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Loaders\IocNotResolvableException;
 
 /**
  * Class ControllerFactory

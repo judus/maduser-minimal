@@ -123,11 +123,13 @@ class ORM
     }
 
     /**
+     * @param bool $withPrefix
+     *
      * @return mixed
      */
-    public function getTable()
+    public function getTable($withPrefix = true)
     {
-        return $this->table;
+        return $withPrefix ? $this->getPrefix() . $this->table : $this->table;
     }
 
     /**
@@ -429,7 +431,7 @@ class ORM
      *
      * @return ORM
      */
-    public static function instance(array $data = [])
+    public static function instance(array $data = []): ORM
     {
         /** @var ORM $obj */
         $class = get_called_class();
@@ -442,7 +444,7 @@ class ORM
     /**
      * @param array $data
      *
-     * @return ORM
+     * @return ORM|Collection
      */
     public static function create(array $data = [])
     {
@@ -611,6 +613,7 @@ class ORM
     {
         $item = func_get_args();
         $relation = array_shift($item);
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->{$relation->getForeignKey()} = $item[0]->{$item[0]->getPrimaryKey()};
         $this->save();
         return $this;
@@ -618,6 +621,7 @@ class ORM
 
     public function dissociate($relation)
     {
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->{$relation->getForeignKey()} = null;
         $this->save();
 
@@ -769,9 +773,6 @@ class ORM
     {
         foreach ($this->related as &$related) {
             if ($related instanceof CollectionInterface) {
-                foreach ($related->getArray() as &$item) {
-                    $item = $item;
-                }
                 $related = $related->toArray();
             }
         }

@@ -36,7 +36,7 @@
 
 namespace Maduser\Minimal\Apps;
 
-use Maduser\Minimal\Collections\CollectionInterface;
+
 use Maduser\Minimal\Config\ConfigInterface;
 use Maduser\Minimal\Http\RequestInterface;
 use Maduser\Minimal\Http\ResponseInterface;

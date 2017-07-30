@@ -2,7 +2,7 @@
 
 namespace Maduser\Minimal\Middlewares;
 
-use Maduser\Minimal\Views\ViewInterface;
+
 
 abstract class AbstractMiddleware implements MiddlewareInterface
 {

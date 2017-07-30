@@ -1,8 +1,8 @@
 <?php namespace Maduser\Minimal\Collections;
 
-use Maduser\Minimal\Collections\Collection;
-use Maduser\Minimal\Collections\CollectionFactoryInterface;
-use Maduser\Minimal\Collections\CollectionInterface;
+
+
+
 use Maduser\Minimal\Loaders\IOC;
 
 

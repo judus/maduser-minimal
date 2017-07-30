@@ -2,7 +2,7 @@
 
 use Exception;
 use Maduser\Minimal\Database\Exceptions\DatabaseException;
-use Maduser\Minimal\Exceptions\MinimalException;
+
 
 /**
  * Class PDO

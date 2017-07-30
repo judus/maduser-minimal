@@ -13,6 +13,7 @@ class UndefinedColumnException extends DatabaseException
     public function getMyFile()
     {
         if ($this->isMessageObject()) {
+            /** @noinspection PhpUndefinedMethodInspection */
             return $this->myMessage->getFile();
         }
 
@@ -25,6 +26,7 @@ class UndefinedColumnException extends DatabaseException
     public function getMyLine()
     {
         if ($this->isMessageObject()) {
+            /** @noinspection PhpUndefinedMethodInspection */
             return $this->myMessage->getLine();
         }
 

@@ -21,7 +21,9 @@ class PDO extends Facade
         return static::$instance;
     }
 
-    public static function connection(array $dbCredentials = [])
+    public static function connection(
+        /** @noinspection PhpUnusedParameterInspection */
+        array $dbCredentials = [])
     {
         return self::call();
     }

@@ -22,7 +22,10 @@ class Collection extends Facade
         }
 
         return static::$instance;
-    }
+    }/** @noinspection PhpUnusedParameterInspection */
+    /** @noinspection PhpUnusedParameterInspection */
+    /** @noinspection PhpUnusedParameterInspection */
+    /** @noinspection PhpUnusedParameterInspection */
 
     /**
      * @param      $obj

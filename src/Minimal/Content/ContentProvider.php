@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Libraries\Content;
 
-use Maduser\Minimal\Core\IOC;
+use Maduser\Minimal\Loaders\IOC;
 use Maduser\Minimal\Providers\Provider;
 
 class ContentProvider extends Provider

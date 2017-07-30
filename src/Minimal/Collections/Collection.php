@@ -1,15 +1,14 @@
 <?php namespace Maduser\Minimal\Collections;
 
-use Maduser\Minimal\Collections\InvalidKeyException;
-use Maduser\Minimal\Collections\KeyInUseException;
-use Maduser\Minimal\Collections\CollectionInterface;
+
+
 
 /**
  * Class Collection
  *
  * @package Maduser\Minimal\Collections
  */
-class Collection implements CollectionInterface, \Iterator
+class Collection implements \Iterator, CollectionInterface
 {
 	/**
 	 * @var array
@@ -165,7 +164,7 @@ class Collection implements CollectionInterface, \Iterator
      */
     public function next()
     {
-        return next($this->items);
+        next($this->items);
     }
 
     /**

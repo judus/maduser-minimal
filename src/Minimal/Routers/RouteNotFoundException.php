@@ -15,6 +15,7 @@ class RouteNotFoundException extends MinimalException
     public function getMyFile()
     {
         if ($this->isMessageObject()) {
+            /** @noinspection PhpUndefinedMethodInspection */
             return $this->myMessage->getFile();
         }
 
@@ -27,6 +28,7 @@ class RouteNotFoundException extends MinimalException
     public function getMyLine()
     {
         if ($this->isMessageObject()) {
+            /** @noinspection PhpUndefinedMethodInspection */
             return $this->myMessage->getLine();
         }
 

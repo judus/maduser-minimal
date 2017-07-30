@@ -39,21 +39,25 @@ class HasOne extends AbstractRelation
     public function resolveInline(ORM $queryingClass)
     {
         $class = $this->getClass();
+
+        /** @noinspection PhpUndefinedMethodInspection */
         return $class::instance()->where([
             $this->getForeignKey(), $queryingClass->{$this->getLocalKey()}]
         )->getFirst();
     }
 
     /**
-     * @param      $array
-     * @param null $relation
+     * @param $array
      *
      * @return mixed
+     * @internal param null $relation
+     *
      */
-    public function getWhereIn($array, $relation = null)
+    public function getWhereIn($array)
     {
         $class = $this->getClass();
 
+        /** @noinspection PhpUndefinedMethodInspection */
         return $class::instance()->where([
             $this->foreignKey,
             'IN',

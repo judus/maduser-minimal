@@ -4,6 +4,7 @@
         padding: 0;
     }
 
+    /*noinspection CssUnusedSymbol*/
     .minimal-content-area .minimal.clear:after {
         content: "";
         display: block;
@@ -11,6 +12,7 @@
 
     }
 
+    /*noinspection CssUnusedSymbol,CssUnusedSymbol,CssUnusedSymbol,CssUnusedSymbol*/
     .minimal-content-area .minimal.area-top-bar,
     .minimal-content-area .minimal.edit-top-bar,
     .minimal-content-area .minimal.area-bottom-bar,
@@ -31,6 +33,7 @@
         color: white;
     }
 
+    /*noinspection CssUnusedSymbol,CssUnusedSymbol*/
     .minimal-content-area .minimal.edit-top-bar,
     .minimal-content-area .minimal.edit-bottom-bar {
         background: #939b25;
@@ -39,13 +42,14 @@
         border-bottom-color: #7e8624;
     }
 
-
+    /*noinspection CssUnusedSymbol,CssUnusedSymbol*/
     .minimal-content-area .minimal.area-top-bar,
     .minimal-content-area .minimal.edit-top-bar {
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
     }
 
+    /*noinspection CssUnusedSymbol,CssUnusedSymbol*/
     .minimal-content-area .minimal.area-bottom-bar,
     .minimal-content-area .minimal.edit-bottom-bar {
         border-bottom-left-radius: 8px;
@@ -53,6 +57,7 @@
         text-align: right;
     }
 
+    /*noinspection CssOverwrittenProperties,CssOverwrittenProperties*/
     .minimal-content-area .minimal button {
         box-sizing: border-box;
         -moz-box-sizing: border-box;
@@ -77,18 +82,22 @@
         outline: 0;
     }
 
+    /*noinspection CssUnusedSymbol*/
     .minimal-content-area .form-check-label {
         padding-left: 1.75rem;
     }
 
+    /*noinspection CssUnusedSymbol*/
     .minimal-content-area  .form-check-input {
         margin-left: -1.75rem;
     }
 
+    /*noinspection CssUnusedSymbol*/
     .minimal-content-area .edit-top-bar .title {
         float: left;
     }
 
+    /*noinspection CssUnusedSymbol*/
     .minimal-content-area .edit-top-bar .controls {
         float: right;
     }

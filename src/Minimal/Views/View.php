@@ -1,7 +1,7 @@
 <?php namespace Maduser\Minimal\Views;
 
 use Maduser\Minimal\Assets\AssetsInterface;
-use Maduser\Minimal\Views\ViewInterface;
+
 
 /**
  * Class View

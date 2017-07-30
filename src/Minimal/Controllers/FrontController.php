@@ -1,11 +1,11 @@
 <?php namespace Maduser\Minimal\Controllers;
 
 use Maduser\Minimal\Exceptions\MethodNotExistsException;
-use Maduser\Minimal\Controllers\FrontControllerInterface;
+
 use Maduser\Minimal\Models\ModelFactoryInterface;
 use Maduser\Minimal\Routers\RouteInterface;
 use Maduser\Minimal\Views\ViewFactoryInterface;
-use Maduser\Minimal\Controllers\ControllerFactoryInterface;
+
 use Maduser\Minimal\Routers\RouterInterface;
 use Maduser\Minimal\Http\ResponseInterface;
 
@@ -333,7 +333,7 @@ class FrontController implements FrontControllerInterface
         ViewFactoryInterface $viewFactory,
         ControllerFactoryInterface $controllerFactory
     ) {
-        /** @var \Maduser\Minimal\Core\Router $router */
+        /** @var \Maduser\Minimal\Routers\Router $router */
         $this->router = $router;
         $this->response = $response;
         $this->modelFactory = $modelFactory;

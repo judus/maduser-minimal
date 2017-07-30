@@ -3,10 +3,10 @@
 use Maduser\Minimal\Collections\CollectionFactoryInterface;
 use Maduser\Minimal\Collections\CollectionInterface;
 use Maduser\Minimal\Config\ConfigInterface;
-use Maduser\Minimal\Routers\RouteNotFoundException;
+
 use Maduser\Minimal\Http\RequestInterface;
 use Maduser\Minimal\Http\ResponseInterface;
-use Maduser\Minimal\Routers\RouteInterface;
+
 
 /**
  * Class Router
@@ -59,11 +59,6 @@ class Router implements RouterInterface
      * @var array
      */
     private $groupValues = [];
-
-    /**
-     * @var bool
-     */
-    private $isClosure = false;
 
     /**
      * @var \Closure
@@ -465,6 +460,7 @@ class Router implements RouterInterface
         // Look for wild-cards
         foreach ($routes as $key => $options) {
             if ($matches = $this->matchWildcard($key, $uriString)) {
+                /** @noinspection PhpUndefinedMethodInspection */
                 $routes[$key]->setParams($matches);
                 $this->route = $routes[$key];
                 return $routes[$key];

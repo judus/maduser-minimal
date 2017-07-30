@@ -32,6 +32,7 @@ class SafePDO extends \PDO
     public static function exception_handler($exception)
     {
         // Output the exception details
+        /** @noinspection PhpUndefinedMethodInspection */
         die('Uncaught exception: ' . $exception->getMessage());
     }
 }

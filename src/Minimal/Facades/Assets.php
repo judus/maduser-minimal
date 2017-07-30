@@ -44,7 +44,9 @@ class Assets
         return self::$instance;
     }
 
-    public static function setSource($path)
+    public static function setSource(
+        /** @noinspection PhpUnusedParameterInspection */
+        $path)
     {
         return self::call();
     }
@@ -57,7 +59,9 @@ class Assets
         return self::call();
     }
 
-    public static function setBase($path)
+    public static function setBase(
+        /** @noinspection PhpUnusedParameterInspection */
+        $path)
     {
         return self::call();
     }
@@ -70,7 +74,9 @@ class Assets
         return self::call();
     }
 
-    public static function setTheme($path)
+    public static function setTheme(
+        /** @noinspection PhpUnusedParameterInspection */
+        $path)
     {
         return self::call();
     }
@@ -83,7 +89,9 @@ class Assets
         return self::call();
     }
 
-    public static function setCssDir($path)
+    public static function setCssDir(
+        /** @noinspection PhpUnusedParameterInspection */
+        $path)
     {
         return self::call();
     }
@@ -95,6 +103,7 @@ class Assets
     {
         return self::call();
     }
+
 
     /**
      * @param $path

@@ -13,7 +13,8 @@ class ClassDoesNotExistException extends MinimalException
     public function getMyFile()
     {
         if ($this->isMessageObject()) {
-            return $this->myMessage->getFile();
+            /** @noinspection PhpUndefinedMethodInspection */
+            return $this->getMyMessage()->getFile();
         }
 
         return debug_backtrace()[4]['file'];
@@ -25,7 +26,8 @@ class ClassDoesNotExistException extends MinimalException
     public function getMyLine()
     {
         if ($this->isMessageObject()) {
-            return $this->myMessage->getLine();
+            /** @noinspection PhpUndefinedMethodInspection */
+            return $this->getMyMessage()->getLine();
         }
 
         return debug_backtrace()[4]['line'];

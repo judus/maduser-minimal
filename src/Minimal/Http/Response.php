@@ -188,7 +188,7 @@ class Response implements ResponseInterface
     }
 
     /**
-     * Does a print_r withobjects and array recursive
+     * Does a print_r with objects and array recursive
      *
      * @param $content
      *
@@ -198,7 +198,8 @@ class Response implements ResponseInterface
     {
         if (is_array($content) || is_object($content)) {
             ob_start();
-            show($content);
+            /** @noinspection PhpUndefinedFunctionInspection */
+            d($content);
             $content = ob_get_contents();
             ob_end_clean();
         }

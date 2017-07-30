@@ -1,5 +1,6 @@
 <!-- Modal -->
-<div class="modal fade" id="modal-<?=$areaName?>" tabindex="-1" role="dialog"
+<div class="modal fade" id="modal-<?= /** @noinspection PhpUndefinedVariableInspection */
+$areaName?>" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -11,7 +12,8 @@
                 <h4 class="modal-title" id="myModalLabel">Select content type</h4>
             </div>
             <div class="modal-body">
-                <?= $elements ?>
+                <?= /** @noinspection PhpUndefinedVariableInspection */
+                $elements ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary"

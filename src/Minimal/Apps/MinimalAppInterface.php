@@ -36,6 +36,13 @@
 
 namespace Maduser\Minimal\Apps;
 
+use Maduser\Minimal\Config\ConfigInterface;
+use Maduser\Minimal\Controllers\FrontControllerInterface;
+use Maduser\Minimal\Http\RequestInterface;
+use Maduser\Minimal\Http\ResponseInterface;
+use Maduser\Minimal\Middlewares\MiddlewareInterface;
+use Maduser\Minimal\Routers\RouterInterface;
+
 /**
  * Class Minimal
  *
@@ -168,17 +175,17 @@ interface MinimalAppInterface
      *
      * @return MiddlewareInterface
      */
-    public function getMiddleware($middlewares);
+    public function getMiddleware($middlewares): MiddlewareInterface;
 
     /**
      * @return mixed
      */
-    public function getModules(): ModulesInterface;
+    public function getModules(): FactoryInterface;
 
     /**
      * @param mixed $modules
      */
-    public function setModules(ModulesInterface $modules);
+    public function setModules(FactoryInterface $modules);
 
     /**
      * @param FrontControllerInterface $frontController

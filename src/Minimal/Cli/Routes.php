@@ -31,13 +31,13 @@ class Routes
         /** @var Collection $routes */
         $routes = $router->getRoutes();
 
-        //var_dump();die();
         $routesAll = $routes->get('ALL');
 
-        foreach ($routesAll->getArray() as $route) {
-            /** @var Collection $collection */
-            /** @var Route $route */
+        $array = [];
 
+        foreach ($routesAll->getArray() as $route) {
+
+            /** @var Route $route */
 
             $mws = $route->getMiddlewares();
             $str = '';

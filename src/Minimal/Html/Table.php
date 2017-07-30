@@ -313,6 +313,8 @@ class Table
     /**
      * @param array|null $thead
      *
+     * @param bool       $useKeyName
+     *
      * @return Table
      */
     public function setThead(array $thead = null, $useKeyName = false): Table
@@ -335,6 +337,8 @@ class Table
 
     /**
      * @param array|null $tfoot
+     *
+     * @param bool       $useKeyName
      *
      * @return Table
      */
@@ -423,10 +427,10 @@ class Table
     {
         if (is_bool($show)) {
             $data = $this->getData();
-            $firstrow = array_slice($data, 0, 1);
-            $key = key($firstrow);
-            $firstcol = array_slice($firstrow[$key], 0, 1);
-            $primary = key($firstcol);
+            $firstRow = array_slice($data, 0, 1);
+            $key = key($firstRow);
+            $firstCol = array_slice($firstRow[$key], 0, 1);
+            $primary = key($firstCol);
         } else {
             $primary = $show;
         }

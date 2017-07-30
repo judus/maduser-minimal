@@ -1,6 +1,8 @@
 <?php namespace Maduser\Minimal\Exceptions;
 
-use Symfony\Component\VarDumper\VarDumper;
+use/** @noinspection PhpUndefinedClassInspection */
+    /** @noinspection PhpUndefinedNamespaceInspection */
+    Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class MinimalException
@@ -53,6 +55,7 @@ class MinimalException extends \Exception implements ExceptionInterface
      * @var
      */
     protected $prettyMessage;
+    private $MyMessage;
 
     /**
      * @return int
@@ -85,6 +88,7 @@ class MinimalException extends \Exception implements ExceptionInterface
     public function getMyMessage()
     {
         if ($this->isMessageObject()) {
+            /** @noinspection PhpUndefinedMethodInspection */
             return $this->MyMessage->getMessage();
         }
 
@@ -110,6 +114,7 @@ class MinimalException extends \Exception implements ExceptionInterface
     public function getMyFile()
     {
         if ($this->isMessageObject()) {
+            /** @noinspection PhpUndefinedMethodInspection */
             return $this->myMessage->getFile();
         }
 
@@ -130,6 +135,7 @@ class MinimalException extends \Exception implements ExceptionInterface
     public function getMyLine()
     {
         if ($this->isMessageObject()) {
+            /** @noinspection PhpUndefinedMethodInspection */
             return $this->myMessage->getLine();
         }
 
@@ -166,6 +172,7 @@ class MinimalException extends \Exception implements ExceptionInterface
     public function getMyTraces()
     {
         if ($this->isMessageObject()) {
+            /** @noinspection PhpUndefinedMethodInspection */
             return $this->MyMessage->getTrace();
         }
 
@@ -224,18 +231,13 @@ class MinimalException extends \Exception implements ExceptionInterface
 			throw new $this('Unknown ' . get_class($this));
 		}
 
-        $this->handleError(
-            $this->prettyMessage($message, $data, get_class($this)),
-            $message,
-            get_class($this)
-        );
+        $this->handleError($this->prettyMessage($message));
     }
 
     /**
      * @param $prettyMessage
-     * @param $message
      */
-    protected function handleError($prettyMessage, $message)
+    protected function handleError($prettyMessage)
     {
         $this->terminate($prettyMessage);
     }
@@ -293,7 +295,9 @@ class MinimalException extends \Exception implements ExceptionInterface
         $data = isset($data) ? $data : null;
         $footer = isset($footer) ? $footer : null;
 
+        /** @noinspection PhpUndefinedClassInspection */
         if (class_exists(VarDumper::class)) {
+            /** @noinspection PhpUndefinedFunctionInspection */
             $data = d($data, null, true);
         }
 
@@ -329,7 +333,7 @@ class MinimalException extends \Exception implements ExceptionInterface
             margin: 0;
             padding: 2em;
             background-color: #ddd;
-            font-family: verdana, Helvetica;
+            font-family: verdana, Helvetica, monospace;
             color: #204D74;
         }
 
@@ -367,9 +371,9 @@ class MinimalException extends \Exception implements ExceptionInterface
             display: block;
             font-size: 1.2em;
             color: transparent;
-            height: 0px;
+            height: 0;
             margin: -1px 0 1em;
-            padding: 1em 0 0em;
+            padding: 1em 0 0;
 	        border: 0;
             border-bottom: 1px dashed #333333;
         }

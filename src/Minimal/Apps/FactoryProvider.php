@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Apps;
 
-use Maduser\Minimal\Apps\Factory;
+
 use Maduser\Minimal\Loaders\IOC;
 use Maduser\Minimal\Providers\Provider;
 

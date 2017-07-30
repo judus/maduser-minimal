@@ -47,7 +47,6 @@ class Benchmark
     public function getPeriod($marks, $i)
     {
         if ($i > 0) {
-            $marks_ = array_slice($marks, 0, $i);
             return round($marks[$i][1] - $marks[$i-1][1], 3);
         }
 

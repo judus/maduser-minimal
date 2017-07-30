@@ -5,6 +5,7 @@ namespace Maduser\Minimal\Database;
 use Maduser\Minimal\Collections\Collection;
 use Maduser\Minimal\Database\Exceptions\DatabaseException;
 use Maduser\Minimal\Database\Connectors\PDO;
+use Maduser\Minimal\Database\ORM\ORM;
 
 /**
  * Class QueryBuilder
@@ -750,8 +751,6 @@ class QueryBuilder
 
         if ($this->timestamps && !is_null($this->timestampCreatedAt)) {
             $params[':' . $this->timestampCreatedAt] = date('Y-m-d H:i:s');
-            $setStr .= "`" . str_replace("`", "``", $this->timestampCreatedAt) .
-                "` = :" . $this->timestampCreatedAt . ",";
         }
 
         $paramStr = implode("`" . ',', array_keys($params));
@@ -939,6 +938,8 @@ class QueryBuilder
         if (!$this->tableExists()) {
 
             $str = '';
+            /** @noinspection PhpUndefinedMethodInspection */
+            // TODO: protect columns
             foreach ($this->getColumns() as $column) {
 
                 if ($column['type']) {
@@ -960,7 +961,7 @@ class QueryBuilder
                 $this->db->exec($sql);
 
                 return $sql;
-            } catch (PDOException $e) {
+            } catch (DatabaseException $e) {
                 return $e->getMessage() . ': ' . $sql;
             }
         }
@@ -976,7 +977,7 @@ class QueryBuilder
     {
         $sql = "TRUNCATE TABLE `" . $this->getTable(true) . "`;";
         try {
-            $results = $this->db->query($sql);
+            $this->db->query($sql);
         } catch (\PDOException $e) {
             throw new DatabaseException($e->getMessage() . '<br>' . $sql);
         }

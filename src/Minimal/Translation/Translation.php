@@ -211,7 +211,7 @@ class Translation
             strtolower($httpAcceptLanguage), $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
 
-            list($a, $b) = explode('-', $match[1]) + array('', '');
+            list($a) = explode('-', $match[1]) + array('', '');
             $value = isset($match[2]) ? (float)$match[2] : 1.0;
 
             if (isset($availableLanguages[$match[1]])) {
