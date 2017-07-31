@@ -426,7 +426,7 @@ class Factory implements FactoryInterface
 
         $module = new Module();
         $module->setName($name);
-        $module->setBasePath($this->getBasePath() . $name);
+        $module->setBasePath(rtrim($path, '/') . '/' . $name);
         $module->setBindingsFile($module->getBasePath() . $bindings);
         $module->setProvidersFile($module->getBasePath() . $providers);
         $module->setConfigFile($module->getBasePath() . $config);
