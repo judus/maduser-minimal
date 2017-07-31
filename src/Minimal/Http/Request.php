@@ -361,8 +361,10 @@ class Request implements RequestInterface
 
         if (php_sapi_name() != 'cli' && !defined('STDIN')) {
 
-            $diff = str_replace($_SERVER['DOCUMENT_ROOT'], '',
-                dirname($_SERVER['SCRIPT_FILENAME']));
+            $dirname = dirname($_SERVER['SCRIPT_FILENAME']);
+            $dirname !== '.' || $dirname = '';
+
+            $diff = str_replace($_SERVER['DOCUMENT_ROOT'], '', $dirname);
 
             $this->setBaseUri($diff);
 
