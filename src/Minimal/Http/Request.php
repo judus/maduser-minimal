@@ -310,9 +310,18 @@ class Request implements RequestInterface
      */
     public function __construct()
     {
+        $this->fetchServerInfo();
         $this->fetchRequestMethod();
         $this->fetchUriString();
         $this->explodeSegments();
+    }
+
+    public function fetchServerInfo()
+    {
+        $this->getHost();
+        $this->getScheme();
+        $this->getHttp();
+        $this->getIp();
     }
 
     /**
