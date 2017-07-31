@@ -129,7 +129,7 @@ class Assets implements AssetsInterface
     public function getBase()
     {
         $base = rtrim($this->base, '/') . '/';
-        $base = '/' . ltrim($base, '/');
+        //$base = '/' . ltrim($base, '/');
         return $base;
     }
 
