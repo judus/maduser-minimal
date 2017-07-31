@@ -21,7 +21,7 @@ class Config
         $this->all();
     }
 
-    protected function all()
+    public function all()
     {
         $thead = [['Alias', 'Value']];
         $tbody = [];
