@@ -130,7 +130,7 @@ class PathGenerator
         $base = $this->request->getBaseUri();
         empty($base) || $base = $base . '/';
 
-        $base = '/' . $base;
+        $base = '/' . ltrim($base, '/');
 
         if (is_null($item)) {
             return $base;
