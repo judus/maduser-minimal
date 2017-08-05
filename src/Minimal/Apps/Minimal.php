@@ -9,7 +9,7 @@ use Maduser\Minimal\Http\RequestInterface;
 use Maduser\Minimal\Http\ResponseInterface;
 use Maduser\Minimal\Routers\RouterInterface;
 use Maduser\Minimal\Controllers\FrontControllerInterface;
-use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Facades\IOC;
 
 /**
  * Class Minimal
@@ -599,13 +599,8 @@ class Minimal implements AppInterface
         if (file_exists($filePath)) {
             /** @noinspection PhpIncludeInspection */
             $bindings = require_once $filePath;
-
             if (is_array($bindings)) {
-                IOC::config('bindings', $bindings);
-
-                foreach ($bindings as $alias => $binding) {
-                    IOC::bind($alias, $binding);
-                }
+                IOC::addBindings($bindings);
             }
         }
     }
@@ -623,13 +618,7 @@ class Minimal implements AppInterface
             $providers = require_once $filePath;
 
             if (is_array($providers)) {
-                IOC::config('providers', $providers);
-
-                foreach ($providers as $alias => $provider) {
-                    IOC::register($alias, function () use ($provider) {
-                        return new $provider();
-                    });
-                }
+                IOC::addProviders($providers);
             }
         }
     }
@@ -666,13 +655,6 @@ class Minimal implements AppInterface
 
             /** @noinspection PhpIncludeInspection */
             $mods = require_once $filePath;
-
-            if (is_array($mods)) {
-                foreach ($mods as $alias => $config) {
-                    $config = isset($config['path']) ? $config : ['path' => $config];
-                    $modules->register($alias, $config);
-                }
-            }
         }
     }
 

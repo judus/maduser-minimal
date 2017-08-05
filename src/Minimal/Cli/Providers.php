@@ -2,7 +2,7 @@
 
 namespace Maduser\Minimal\Cli;
 
-use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Facades\IOC;
 use Maduser\Minimal\Apps\Minimal;
 
 class Providers

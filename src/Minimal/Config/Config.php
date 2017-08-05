@@ -3,7 +3,7 @@
 /**
  * Class Config
  *
- * @package Maduser\Minimal\Core
+ * @package Maduser\Minimal\Config
  */
 class Config implements ConfigInterface
 {

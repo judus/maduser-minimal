@@ -1,8 +1,8 @@
 <?php namespace Maduser\Minimal\Controllers;
 
 use Maduser\Minimal\Factories\MinimalFactory;
-use Maduser\Minimal\Loaders\IOC;
-use Maduser\Minimal\Loaders\IocNotResolvableException;
+use Maduser\Minimal\Facades\IOC;
+use Maduser\Minimal\Services\Exceptions\IocNotResolvableException;
 
 /**
  * Class ControllerFactory
@@ -20,12 +20,6 @@ class ControllerFactory extends MinimalFactory implements ControllerFactoryInter
             return IOC::resolve($class);
         }
 
-        try {
-            return IOC::make($class, $params, false);
-
-        } catch (\Exception $e) {
-            throw new IocNotResolvableException('ControllerFactory could not create class ' . $class,
-                $e);
-        }
+        return IOC::make($class, $params);
     }
 }

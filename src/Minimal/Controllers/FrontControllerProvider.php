@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Controllers;
 
-use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Facades\IOC;
 use Maduser\Minimal\Providers\Provider;
 
 class FrontControllerProvider extends Provider

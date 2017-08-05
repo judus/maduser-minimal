@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Facades;
 
-use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Facades\IOC;
 use Maduser\Minimal\Collections\InvalidKeyException;
 use Maduser\Minimal\Collections\KeyInUseException;
 use Maduser\Minimal\Collections\CollectionInterface;

@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Facades;
 
-use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Facades\IOC;
 use Maduser\Minimal\Apps\Minimal as Implementation;
 
 /**
@@ -49,7 +49,6 @@ class App extends Facade
         /** @var Implementation $instance */
         if (is_null(self::$instance)) {
             if (is_null($class)) {
-
                 self::$instance = self::makeInstance(
                     Implementation::class, $options
                 );

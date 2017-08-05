@@ -1,7 +1,7 @@
 <?php namespace Maduser\Minimal\Apps;
 
 
-use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Facades\IOC;
 use Maduser\Minimal\Providers\Provider;
 
 class FactoryProvider extends Provider

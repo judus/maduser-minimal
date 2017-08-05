@@ -11,7 +11,7 @@ use Illuminate\Routing\UrlGenerator;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Factory;
 use Illuminate\View\FileViewFinder;
-use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Facades\IOC;
 
 class FormProvider
 {

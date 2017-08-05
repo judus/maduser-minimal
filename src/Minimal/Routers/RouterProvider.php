@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Routers;
 
-use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Facades\IOC;
 use Maduser\Minimal\Providers\Provider;
 
 class RouterProvider extends Provider

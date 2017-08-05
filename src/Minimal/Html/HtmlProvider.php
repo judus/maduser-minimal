@@ -12,7 +12,7 @@ use Illuminate\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\View\FileViewFinder;
-use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Facades\IOC;
 
 
 class HtmlProvider

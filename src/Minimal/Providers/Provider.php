@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Providers;
 
-use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Facades\IOC;
 
 /**
  * Class Provider
@@ -49,10 +49,10 @@ class Provider implements ProviderInterface
      */
     public function singleton($name, $object)
     {
-        if (isset(IOC::$singletons[$name])) {
-            return IOC::$singletons[$name];
+        if (IOC::hasSingleton($name)) {
+            return IOC::singleton($name);
         } else {
-            IOC::$singletons[$name] = $object;
+            IOC::singleton($name, $object);
             return $object;
         }
     }

@@ -117,6 +117,7 @@ class IOC
 
         if ($name = static::registered($name)) {
             $name = static::$registry[$name];
+
             return $name()->resolve($params);
         }
 
@@ -184,7 +185,7 @@ class IOC
         try {
             return new \ReflectionClass($class);
         } catch (\Exception $e) {
-            throw new ClassDoesNotExistException('Class '. $class.' does not exist');
+            throw new ClassDoesNotExistException('Class ' . $class . ' does not exist');
         }
     }
 
@@ -203,6 +204,7 @@ class IOC
                 $dependencies[] = self::getDependency($parameter);
             }
         }
+
         return $dependencies;
     }
 
@@ -239,11 +241,13 @@ class IOC
      *
      * @return array
      */
-    public static function resolveDependencies(array $dependencies, $debug = false)
-    {
+    public static function resolveDependencies(
+        array $dependencies,
+        $debug = false
+    ) {
         foreach ($dependencies as &$dependency) {
             if (is_null($dependency)) {
-                $dependency =  null;
+                $dependency = null;
             } else {
                 if (IOC::registered($dependency, $debug)) {
                     $dependency = IOC::resolve($dependency);
@@ -253,6 +257,7 @@ class IOC
                 }
             }
         }
+
         return $dependencies;
     }
 
@@ -275,6 +280,7 @@ class IOC
             if ($reflected->isInterface()) {
                 throw new IocNotResolvableException('Cannot instantiate ' . $reflected->getName());
             }
+
             return $reflected->newInstance();
         }
 
@@ -289,7 +295,7 @@ class IOC
         !$debug || d($instanceArgs);
 
         if (is_array($params)) {
-            foreach($params as $param) {
+            foreach ($params as $param) {
                 foreach ($instanceArgs as &$instanceArg) {
                     if (is_null($instanceArg)) {
                         $instanceArg = $param;

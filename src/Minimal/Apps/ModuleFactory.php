@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Apps;
 
-use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Facades\IOC;
 use Maduser\Minimal\Factories\MinimalFactory;
 
 class ModuleFactory extends MinimalFactory implements ModuleFactoryInterface

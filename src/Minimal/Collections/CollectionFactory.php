@@ -3,7 +3,7 @@
 
 
 
-use Maduser\Minimal\Loaders\IOC;
+use Maduser\Minimal\Facades\IOC;
 
 
 /**
