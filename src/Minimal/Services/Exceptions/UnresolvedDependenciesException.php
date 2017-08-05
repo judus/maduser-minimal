@@ -1,13 +1,10 @@
 <?php namespace Maduser\Minimal\Services\Exceptions;
 
-use Maduser\Minimal\Exceptions\MinimalException;
-
-
 /**
  * Class UnresolvedDependenciesException
  *
- * @package Maduser\Minimal\Exceptions
+ * @package Maduser\Minimal\Services\Exceptions
  */
-class UnresolvedDependenciesException extends MinimalException
+class UnresolvedDependenciesException extends \Exception
 {
 }

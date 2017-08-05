@@ -1,7 +1,8 @@
 <?php namespace Maduser\Minimal\Collections;
 
-
-
+use Maduser\Minimal\Collections\Contracts\CollectionInterface;
+use Maduser\Minimal\Collections\Exceptions\InvalidKeyException;
+use Maduser\Minimal\Collections\Exceptions\KeyInUseException;
 
 /**
  * Class Collection
@@ -21,9 +22,9 @@ class Collection implements \Iterator, CollectionInterface
      *
      * @param bool $overwrite
      *
-     * @return \Maduser\Minimal\Collections\CollectionInterface
-     * @throws \Maduser\Minimal\Collections\InvalidKeyException
-     * @throws \Maduser\Minimal\Collections\KeyInUseException
+     * @return CollectionInterface
+     * @throws InvalidKeyException
+     * @throws KeyInUseException
      */
 	public function add($obj, $key = null, $overwrite = false): CollectionInterface
 	{

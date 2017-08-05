@@ -3,7 +3,7 @@
 namespace Maduser\Minimal\Database\ORM;
 
 use Maduser\Minimal\Collections\Collection;
-use Maduser\Minimal\Collections\CollectionInterface;
+use Maduser\Minimal\Collections\Contracts\CollectionInterface;
 
 class HasMany extends AbstractRelation
 {

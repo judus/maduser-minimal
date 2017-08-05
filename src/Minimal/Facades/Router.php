@@ -2,9 +2,9 @@
 
 namespace Maduser\Minimal\Facades;
 
-use Maduser\Minimal\Collections\CollectionInterface;
-use Maduser\Minimal\Routers\RouteInterface;
-use Maduser\Minimal\Routers\RouterInterface;
+use Maduser\Minimal\Collections\Contracts\CollectionInterface;
+use Maduser\Minimal\Routers\Contracts\RouteInterface;
+use Maduser\Minimal\Routers\Contracts\RouterInterface;
 
 /**
  * Class Router

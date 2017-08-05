@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Routers;
 
-
+use Maduser\Minimal\Routers\Contracts\RouteInterface;
 
 /**
  * Class Route

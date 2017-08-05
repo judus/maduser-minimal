@@ -3,8 +3,8 @@
 namespace Maduser\Minimal\Cli;
 
 
-use Maduser\Minimal\Apps\Minimal;
-use Maduser\Minimal\Apps\Module;
+use Maduser\Minimal\Framework\Minimal;
+use Maduser\Minimal\Framework\Module;
 
 
 class Modules

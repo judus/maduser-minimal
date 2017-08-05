@@ -3,7 +3,7 @@
 namespace Maduser\Minimal\Database\ORM;
 
 use Maduser\Minimal\Collections\Collection;
-use Maduser\Minimal\Collections\CollectionInterface;
+use Maduser\Minimal\Collections\Contracts\CollectionInterface;
 use Maduser\Minimal\Database\Exceptions\DatabaseException;
 
 class BelongsToMany extends AbstractRelation

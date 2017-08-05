@@ -8,6 +8,6 @@ use Maduser\Minimal\Exceptions\MinimalException;
  *
  * @package Maduser\Minimal\Exceptions
  */
-class UnresolvedDependenciesException extends MinimalException
+class UnresolvedDependenciesException extends \Exception
 {
 }

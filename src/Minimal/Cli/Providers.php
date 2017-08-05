@@ -3,7 +3,7 @@
 namespace Maduser\Minimal\Cli;
 
 use Maduser\Minimal\Facades\IOC;
-use Maduser\Minimal\Apps\Minimal;
+use Maduser\Minimal\Framework\Minimal;
 
 class Providers
 {

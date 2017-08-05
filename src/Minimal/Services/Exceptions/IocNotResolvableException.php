@@ -1,13 +1,10 @@
 <?php namespace Maduser\Minimal\Services\Exceptions;
 
-use Maduser\Minimal\Exceptions\MinimalException;
-
-
 /**
  * Class IocNotResolvableException
  *
- * @package Maduser\Minimal\Loaders\IocNotResolvableException
+ * @package Maduser\Minimal\Services\Exceptions
  */
-class IocNotResolvableException extends MinimalException
+class IocNotResolvableException extends \Exception
 {
 }

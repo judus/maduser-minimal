@@ -1,5 +1,6 @@
 <?php namespace Maduser\Minimal\Services;
 
+use Maduser\Minimal\Services\Contracts\AbstractProviderInterface;
 use Maduser\Minimal\Services\Exceptions\IocNotResolvableException;
 use Maduser\Minimal\Services\Provider;
 
@@ -49,12 +50,7 @@ class Resolver
             return $registered;
         }
 
-        throw new IocNotResolvableException($name, [
-            'name' => $name,
-            'params' => $params,
-            'trace' => debug_backtrace(),
-            'registry' => $this->provider->providers()
-        ]);
+        throw new IocNotResolvableException($name);
     }
 
     /**
@@ -64,8 +60,13 @@ class Resolver
      */
     public function isProvider($instance)
     {
-        return $instance instanceof Provider ||
-            is_subclass_of($instance, \Maduser\Minimal\Providers\Provider::class);
+        $interfaces = class_implements($instance);
+
+        if (isset($interfaces[AbstractProviderInterface::class])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -76,7 +77,7 @@ class Resolver
     public function registered($name)
     {
         if ($this->provider->hasSingleton($name)) {
-            return $this->provider->getSingleton($name);
+            return $this->provider->singleton($name);
         }
 
         if ($this->provider->hasProvider($name)) {

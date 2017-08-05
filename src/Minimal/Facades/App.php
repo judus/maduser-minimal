@@ -1,7 +1,7 @@
 <?php namespace Maduser\Minimal\Facades;
 
 use Maduser\Minimal\Facades\IOC;
-use Maduser\Minimal\Apps\Minimal as Implementation;
+use Maduser\Minimal\Framework\Minimal as Implementation;
 
 /**
  * Class App

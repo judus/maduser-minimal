@@ -1,5 +1,8 @@
 <?php namespace Maduser\Minimal\Config;
 
+use Maduser\Minimal\Config\Contracts\ConfigInterface;
+use Maduser\Minimal\Config\Exceptions\KeyDoesNotExistException;
+
 /**
  * Class Config
  *

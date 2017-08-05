@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Content\Content;
 
-use Maduser\Minimal\Config\ConfigInterface;
+use Maduser\Minimal\Config\Contracts\ConfigInterface;
 
 
 class Content

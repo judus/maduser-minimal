@@ -3,7 +3,7 @@
 namespace Maduser\Minimal\Cli;
 
 use Maduser\Minimal\Collections\Collection;
-use Maduser\Minimal\Apps\Minimal;
+use Maduser\Minimal\Framework\Minimal;
 use Maduser\Minimal\Routers\Route;
 
 class Routes

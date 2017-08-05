@@ -1,12 +1,14 @@
 <?php namespace Maduser\Minimal\Routers;
 
-use Maduser\Minimal\Collections\CollectionFactoryInterface;
-use Maduser\Minimal\Collections\CollectionInterface;
-use Maduser\Minimal\Config\ConfigInterface;
-
-use Maduser\Minimal\Http\RequestInterface;
-use Maduser\Minimal\Http\ResponseInterface;
-
+use Maduser\Minimal\Collections\Collection;
+use Maduser\Minimal\Framework\Factories\Contracts\CollectionFactoryInterface;
+use Maduser\Minimal\Collections\Contracts\CollectionInterface;
+use Maduser\Minimal\Config\Contracts\ConfigInterface;
+use Maduser\Minimal\Http\Contracts\RequestInterface;
+use Maduser\Minimal\Http\Contracts\ResponseInterface;
+use Maduser\Minimal\Routers\Contracts\RouteInterface;
+use Maduser\Minimal\Routers\Contracts\RouterInterface;
+use Maduser\Minimal\Routers\Exceptions\RouteNotFoundException;
 
 /**
  * Class Router
@@ -241,28 +243,26 @@ class Router implements RouterInterface
      * @param RequestInterface           $request
      * @param RouteInterface             $route
      * @param ResponseInterface          $response
-     * @param CollectionFactoryInterface $collection
      */
     public function __construct(
         ConfigInterface $config,
         RequestInterface $request,
         RouteInterface $route,
-        ResponseInterface $response,
-        CollectionFactoryInterface $collection
+        ResponseInterface $response
     ) {
         $this->config = $config;
         $this->request = $request;
         $this->route = $route;
         $this->response = $response;
 
-        $this->routes = $collection->create();
+        $this->routes = new Collection();
 
-        $this->routes->add($collection->create(), 'ALL')
-                     ->add($collection->create(), 'POST')
-                     ->add($collection->create(), 'GET')
-                     ->add($collection->create(), 'PUT')
-                     ->add($collection->create(), 'PATCH')
-                     ->add($collection->create(), 'DELETE');
+        $this->routes->add(new Collection(), 'ALL')
+                     ->add(new Collection(), 'POST')
+                     ->add(new Collection(), 'GET')
+                     ->add(new Collection(), 'PUT')
+                     ->add(new Collection(), 'PATCH')
+                     ->add(new Collection(), 'DELETE');
     }
 
     /**
@@ -466,10 +466,10 @@ class Router implements RouterInterface
                 return $routes[$key];
             }
         }
-
+        d($this);
         throw new RouteNotFoundException(
             "Route for '" .$this->request->getRequestMethod() . ' '
-            . $uriString."' not found", $this);
+            . $uriString."' not found");
     }
 
     /**

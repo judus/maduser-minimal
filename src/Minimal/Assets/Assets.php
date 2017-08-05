@@ -1,5 +1,7 @@
 <?php namespace Maduser\Minimal\Assets;
 
+use Maduser\Minimal\Assets\Contracts\AssetsInterface;
+
 /**
  * Class Asset
  *

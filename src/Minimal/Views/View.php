@@ -1,6 +1,8 @@
 <?php namespace Maduser\Minimal\Views;
 
-use Maduser\Minimal\Assets\AssetsInterface;
+use Maduser\Minimal\Assets\Contracts\AssetsInterface;
+use Maduser\Minimal\Views\Contracts\ViewInterface;
+use Maduser\Minimal\Views\Exceptions\ViewNotFoundException;
 
 
 /**
@@ -334,7 +336,7 @@ class View implements ViewInterface
         } else {
             throw new ViewNotFoundException('View '. rtrim(
                     $this->getViewPath(), $this->getFileExt()
-                ) . $this->getFileExt().' not found', $this);
+                ) . $this->getFileExt().' not found');
         }
 
         $rendered = ob_get_contents();

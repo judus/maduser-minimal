@@ -2,8 +2,8 @@
 
 namespace Maduser\Minimal\Paths;
 
-use Maduser\Minimal\Config\ConfigInterface;
-use Maduser\Minimal\Http\RequestInterface;
+use Maduser\Minimal\Config\Contracts\ConfigInterface;
+use Maduser\Minimal\Http\Contracts\RequestInterface;
 
 /**
  * Class PathGenerator

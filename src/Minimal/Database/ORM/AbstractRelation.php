@@ -2,7 +2,7 @@
 
 namespace Maduser\Minimal\Database\ORM;
 
-use Maduser\Minimal\Collections\CollectionInterface;
+use Maduser\Minimal\Collections\Contracts\CollectionInterface;
 
 /**
  * Class AbstractRelation

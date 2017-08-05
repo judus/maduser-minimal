@@ -1,7 +1,7 @@
 <?php namespace Maduser\Minimal\Facades;
 
-use Maduser\Minimal\Config\KeyDoesNotExistException;
-use Maduser\Minimal\Config\ConfigInterface;
+use Maduser\Minimal\Config\Exceptions\KeyDoesNotExistException;
+use Maduser\Minimal\Config\Contracts\ConfigInterface;
 
 class Config extends Facade
 {

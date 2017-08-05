@@ -1,5 +1,7 @@
 <?php namespace Maduser\Minimal\Http;
 
+use Maduser\Minimal\Http\Contracts\RequestInterface;
+
 /**
  * Class Request
  *

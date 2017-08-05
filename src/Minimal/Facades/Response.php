@@ -2,7 +2,7 @@
 
 namespace Maduser\Minimal\Facades;
 
-use Maduser\Minimal\Http\ResponseInterface;
+use Maduser\Minimal\Http\Contracts\ResponseInterface;
 
 class Response extends Facade
 {

@@ -3,7 +3,7 @@
 namespace Maduser\Minimal\Database\ORM;
 
 use Maduser\Minimal\Collections\Collection;
-use Maduser\Minimal\Collections\CollectionInterface;
+use Maduser\Minimal\Collections\Contracts\CollectionInterface;
 use Maduser\Minimal\Database\Exceptions\DatabaseException;
 use Maduser\Minimal\Database\Connectors\PDO;
 use Maduser\Minimal\Database\QueryBuilder;
@@ -657,8 +657,7 @@ class ORM
             }
 
             if (!isset($items)) {
-                throw new DatabaseException("Cannot handle item to " . $method,
-                    $toUpdate);
+                throw new DatabaseException("Cannot handle item to " . $method);
             }
 
             $this->builder->{$method}(

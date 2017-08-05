@@ -2,15 +2,15 @@
 
 namespace Maduser\Minimal\Facades;
 
-use Maduser\Minimal\Apps\Factory as CoreModules;
+use Maduser\Minimal\Framework\Factory as CoreModules;
 use Maduser\Minimal\Exceptions\TypeErrorException;
 use Maduser\Minimal\Collections\CollectionInterface;
-use Maduser\Minimal\Config\ConfigInterface;
+use Maduser\Minimal\Config\Contracts\ConfigInterface;
 use Maduser\Minimal\Factories\MinimalFactoryInterface;
-use Maduser\Minimal\Apps\ModuleInterface;
-use Maduser\Minimal\Http\RequestInterface;
-use Maduser\Minimal\Http\ResponseInterface;
-use Maduser\Minimal\Routers\RouterInterface;
+use Maduser\Minimal\Framework\Contracts\ModuleInterface;
+use Maduser\Minimal\Http\Contracts\RequestInterface;
+use Maduser\Minimal\Http\Contracts\ResponseInterface;
+use Maduser\Minimal\Routers\Contracts\RouterInterface;
 
 class Modules extends Facade
 {
