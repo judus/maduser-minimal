@@ -39,7 +39,7 @@ namespace Maduser\Minimal\Framework\Contracts;
 use Maduser\Minimal\Config\Contracts\ConfigInterface;
 use Maduser\Minimal\Http\Contracts\RequestInterface;
 use Maduser\Minimal\Http\Contracts\ResponseInterface;
-use Maduser\Minimal\Routers\Contracts\RouterInterface;
+use Maduser\Minimal\Routing\Contracts\RouterInterface;
 
 /**
  * Class Modules

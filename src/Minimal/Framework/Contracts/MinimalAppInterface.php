@@ -40,7 +40,7 @@ use Maduser\Minimal\Config\Contracts\ConfigInterface;
 use Maduser\Minimal\Controllers\Contracts\FrontControllerInterface;
 use Maduser\Minimal\Http\Contracts\RequestInterface;
 use Maduser\Minimal\Http\Contracts\ResponseInterface;
-use Maduser\Minimal\Routers\Contracts\RouterInterface;
+use Maduser\Minimal\Routing\Contracts\RouterInterface;
 
 /**
  * Class Minimal

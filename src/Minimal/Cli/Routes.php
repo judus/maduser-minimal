@@ -4,7 +4,7 @@ namespace Maduser\Minimal\Cli;
 
 use Maduser\Minimal\Collections\Collection;
 use Maduser\Minimal\Framework\Minimal;
-use Maduser\Minimal\Routers\Route;
+use Maduser\Minimal\Routing\Route;
 
 class Routes
 {

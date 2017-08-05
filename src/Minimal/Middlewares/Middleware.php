@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Middlewares;
 
-use Maduser\Minimal\Facades\IOC;
+use Maduser\Minimal\Framework\Facades\IOC;
 
 /**
  * Class Middleware

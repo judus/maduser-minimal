@@ -5,12 +5,12 @@ use Maduser\Minimal\Framework\Contracts\FactoryInterface;
 use Maduser\Minimal\Collections\Contracts\CollectionInterface;
 use Maduser\Minimal\Controllers\Contracts\FrontControllerInterface;
 use Maduser\Minimal\Config\Contracts\ConfigInterface;
-use Maduser\Minimal\Facades\App;
-use Maduser\Minimal\Facades\IOC;
+use Maduser\Minimal\Framework\Facades\App;
+use Maduser\Minimal\Framework\Facades\IOC;
 use Maduser\Minimal\Http\Contracts\RequestInterface;
 use Maduser\Minimal\Http\Contracts\ResponseInterface;
 use Maduser\Minimal\Middlewares\Middleware;
-use Maduser\Minimal\Routers\Contracts\RouterInterface;
+use Maduser\Minimal\Routing\Contracts\RouterInterface;
 
 /**
  * Class Minimal

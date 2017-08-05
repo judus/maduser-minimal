@@ -1,7 +1,7 @@
 <?php namespace Maduser\Minimal\Framework\Providers;
 
 use Maduser\Minimal\Controllers\FrontController;
-use Maduser\Minimal\Facades\IOC;
+use Maduser\Minimal\Framework\Facades\IOC;
 
 /**
  * Class FrontControllerProvider

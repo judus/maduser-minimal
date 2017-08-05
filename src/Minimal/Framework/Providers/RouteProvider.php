@@ -1,6 +1,6 @@
 <?php namespace Maduser\Minimal\Framework\Providers;
 
-use Maduser\Minimal\Routers\Route;
+use Maduser\Minimal\Routing\Route;
 
 /**
  * Class RouteProvider

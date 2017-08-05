@@ -2,7 +2,7 @@
 
 use Maduser\Minimal\Collections\Collection;
 use Maduser\Minimal\Collections\Contracts\CollectionInterface;
-use Maduser\Minimal\Facades\IOC;
+use Maduser\Minimal\Framework\Facades\IOC;
 use Maduser\Minimal\Framework\Factories\Contracts\CollectionFactoryInterface;
 
 /**

@@ -1,7 +1,7 @@
 <?php namespace Maduser\Minimal\Framework\Providers;
 
-use Maduser\Minimal\Facades\IOC;
-use Maduser\Minimal\Routers\Router;
+use Maduser\Minimal\Framework\Facades\IOC;
+use Maduser\Minimal\Routing\Router;
 
 /**
  * Class RouterProvider

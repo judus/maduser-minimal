@@ -42,7 +42,7 @@ use Maduser\Minimal\Exceptions\TypeErrorException;
 use Maduser\Minimal\Framework\Factories\Contracts\MinimalFactoryInterface;
 use Maduser\Minimal\Http\Contracts\RequestInterface;
 use Maduser\Minimal\Http\Contracts\ResponseInterface;
-use Maduser\Minimal\Routers\Contracts\RouterInterface;
+use Maduser\Minimal\Routing\Contracts\RouterInterface;
 
 /**
  * Class Modules

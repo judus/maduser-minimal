@@ -2,7 +2,7 @@
 
 namespace Maduser\Minimal\Cli;
 
-use Maduser\Minimal\Facades\IOC;
+use Maduser\Minimal\Framework\Facades\IOC;
 use Maduser\Minimal\Framework\Minimal;
 
 class Bindings

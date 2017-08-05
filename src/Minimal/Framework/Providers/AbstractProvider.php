@@ -1,7 +1,7 @@
 <?php namespace Maduser\Minimal\Framework\Providers;
 
-use Maduser\Minimal\Facades\IOC;
-use Maduser\Minimal\Services\Contracts\AbstractProviderInterface;
+use Maduser\Minimal\Framework\Facades\IOC;
+use Maduser\Minimal\Provider\Contracts\AbstractProviderInterface;
 
 /**
  * Class Provider

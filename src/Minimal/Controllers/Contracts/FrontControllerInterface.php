@@ -1,8 +1,8 @@
 <?php namespace Maduser\Minimal\Controllers\Contracts;
 
 use Maduser\Minimal\Http\Contracts\ResponseInterface;
-use Maduser\Minimal\Routers\Contracts\RouteInterface;
-use Maduser\Minimal\Routers\Contracts\RouterInterface;
+use Maduser\Minimal\Routing\Contracts\RouteInterface;
+use Maduser\Minimal\Routing\Contracts\RouterInterface;
 
 /**
  * Interface FrontControllerInterface

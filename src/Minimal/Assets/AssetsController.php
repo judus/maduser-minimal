@@ -7,7 +7,7 @@ use Maduser\Minimal\Assets\Contracts\AssetsInterface;
 use Maduser\Minimal\Config\Contracts\ConfigInterface;
 use Maduser\Minimal\Http\Contracts\RequestInterface;
 use Maduser\Minimal\Http\Contracts\ResponseInterface;
-use Maduser\Minimal\Routers\Contracts\RouterInterface;
+use Maduser\Minimal\Routing\Contracts\RouterInterface;
 use Maduser\Minimal\Views\Contracts\ViewInterface;
 
 class AssetsController
@@ -75,7 +75,7 @@ class AssetsController
     ) {
         /** @var \Maduser\Minimal\Config\Config $config */
         /** @var \Maduser\Minimal\Http\Request $request */
-        /** @var \Maduser\Minimal\Routers\Router $router */
+        /** @var \Maduser\Minimal\Routing\Router $router */
         /** @var \Maduser\Minimal\Http\Response $response */
         /** @var \Maduser\Minimal\Views\View $view */
         /** @var \Maduser\Minimal\Assets\Assets $assets */

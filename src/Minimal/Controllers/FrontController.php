@@ -6,8 +6,8 @@ use Maduser\Minimal\Controllers\Factories\Contracts\ControllerFactoryInterface;
 use Maduser\Minimal\Controllers\Factories\Contracts\ModelFactoryInterface;
 use Maduser\Minimal\Controllers\Factories\Contracts\ViewFactoryInterface;
 use Maduser\Minimal\Http\Contracts\ResponseInterface;
-use Maduser\Minimal\Routers\Contracts\RouteInterface;
-use Maduser\Minimal\Routers\Contracts\RouterInterface;
+use Maduser\Minimal\Routing\Contracts\RouteInterface;
+use Maduser\Minimal\Routing\Contracts\RouterInterface;
 
 
 /**

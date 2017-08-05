@@ -1,7 +1,7 @@
 <?php namespace Maduser\Minimal\Controllers\Factories;
 
 use Maduser\Minimal\Controllers\Factories\Contracts\FactoryInterface;
-use Maduser\Minimal\Facades\IOC;
+use Maduser\Minimal\Framework\Facades\IOC;
 
 /**
  * Class MinimalFactory
