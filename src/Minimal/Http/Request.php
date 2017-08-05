@@ -9,8 +9,14 @@ use Maduser\Minimal\Http\Contracts\RequestInterface;
  */
 class Request implements RequestInterface
 {
+    /**
+     * @var
+     */
     private $scheme;
 
+    /**
+     * @var
+     */
     private $http;
 
     /**
@@ -68,6 +74,79 @@ class Request implements RequestInterface
      * @var array
      */
     private $segments = [];
+
+    /**
+     * @param null $key
+     *
+     * @return mixed
+     */
+    public function get($key = null)
+    {
+        if ($key) {
+            return $_GET['key'];
+        }
+
+        return $_GET;
+    }
+
+    /**
+     * @param null $key
+     *
+     * @return mixed
+     */
+    public function post($key = null)
+    {
+        if ($key) {
+            return $_POST['key'];
+        }
+
+        return $_POST;
+    }
+
+    /**
+     * @param null $key
+     *
+     * @return mixed
+     */
+    public function request($key = null)
+    {
+        if ($key) {
+            return $_REQUEST['key'];
+        }
+
+        return $_REQUEST;
+    }
+
+    /**
+     * @param null $key
+     *
+     * @return array
+     */
+    public function files($key = null)
+    {
+        $keys = [];
+        foreach ($_FILES['name'] as $key => $value) {
+            $keys[] = $key;
+        };
+
+        $newFilesArray = [];
+        $i = 0;
+        foreach ($keys as $key) {
+            $newFilesArray[$key] = [
+                'name' => $_FILES['name'][$key],
+                'type' => $_FILES['type'][$key],
+                'tmp_name' => $_FILES['tmp_name'][$key],
+                'error' => $_FILES['error'][$key],
+                'size' => $_FILES['size'][$key]
+            ];
+            $i++;
+        }
+
+        return $newFilesArray;
+    }
+
+
+
 
     /**
      * @return mixed
@@ -318,6 +397,9 @@ class Request implements RequestInterface
         $this->explodeSegments();
     }
 
+    /**
+     *
+     */
     public function fetchServerInfo()
     {
         $this->getHost();
